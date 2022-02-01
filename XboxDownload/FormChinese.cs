@@ -32,6 +32,7 @@ namespace XboxDownload
                 new Games("动物园大亨", "只能在国服显示中文", "brwjs8p512vf", "http://dlassets.xboxlive.cn/public/content/0d1608fb-6778-4677-a347-e14eced0a0a6/dc0b0525-21f0-4b43-a00e-bfd0abc27b25/1.0.1502.50616.5bd00a39-533f-4c1a-85af-8689407951c2/MSTycoon.final_1.0.1502.50616_x64__fnyef6rby9x8m"),
                 new Games("飞速骑行", "", "c5d7449r6sdr", "http://assets1.xboxlive.cn/9/c4019ca4-f894-410e-acc8-e0966a55b773/f21c9f4e-5cda-465a-af62-57a03189668e/1.0.0.0.96f1f474-764a-45bd-a9d0-bc968a10f85c/RideCN_1.0.0.0_x64__g5fme4n6j55tr"),
                 new Games("光之子", "国语配音", "bq9q620nc614", "http://dlassets.xboxlive.cn/public/content/77d0d59a-34b7-4482-a1c7-c0abbed17de2/fe238acf-b298-408c-94c5-97c921640c02/1.0.0.1.7c96decd-b0bf-47e0-ab50-c593d2c2983a/ChildOfLight-CH_1.0.0.1_x64__b6krnev7r9sf8"),
+                new Games("极限竞速5", "国语配音", "bqlk685tm311", "http://assets1.xboxlive.cn/14/bbdf448c-0c0f-40cf-bf56-a226e396deb0/814a20e5-8e33-4e54-bb88-bd666837710e/1.0.0.25.ae996efe-4af8-4d70-8370-d7b210ced6ca/Forza_1.0.0.25_x64__8wekyb3d8bbwe"),
                 new Games("雷曼传奇", "国语配音", "c26k4dvgr45b", "http://assets1.xboxlive.cn/2/2c2ad744-e3cb-4745-b040-af74e152d858/76c9a201-ff14-4091-b009-3b7cbcd5b4a9/1.0.0.2.2b4add40-4969-4029-b7da-84299b95dc7c/RaymanLegendsCN27BDEA18_1.0.0.2_x64__b6krnev7r9sf8"),
                 new Games("麦克斯：兄弟魔咒", "国语配音", "c0sfcf4pbrsz", "http://dlassets.xboxlive.cn/public/content/1d6640d3-3441-42bd-bffd-953d7d09ff5c/1e2131e1-299c-4df1-bdb6-84a38e07ea9f/1.5.0.0.6bd5e6cb-7547-4c90-a84c-ee06ba0bdf5b/Microsoft.Max_1.5.0.0_neutral__ph1m9x8skttmg"),
                 new Games("明星高尔夫", "国语配音", "bnq94hh98ztp", "http://dlassets.xboxlive.cn/public/content/19ebfc97-9d8d-4cd7-8493-4ec727e8de46/26c330df-ce8a-4ee3-8ab9-ee99d7c40add/1.4.3.0.d2a5120c-72d2-4465-bf04-c1bd318dac70/PowerstarGolf_1.4.3.0_x64__zjr0dfhgjwvde"),
@@ -50,7 +51,7 @@ namespace XboxDownload
                 new Games("真•三国无双７ 帝国", "国服简中", "bvg8190qslw6", "http://assets1.xboxlive.cn/4/878a830c-f90a-490a-8fd5-66141c2b0a78/2d456c8a-fc28-4873-a536-bacff51bba25/1.2.1.0.d9ff4e56-dc51-451c-8937-ff4efcbcb376/SM7EMPCN_1.2.1.0_x64__zph8pnx224h38"),
                 new Games("最终幻想15", "国服简中", "c45d79qvkztp", "http://assets1.xboxlive.cn/6/1de847b6-ea75-4b82-9409-0a7c8c8b2fd7/faa27552-be23-44e9-aec3-9e2c383dfef4/1.3.1.0.4e600e32-28f3-4097-9fae-01152ef2d92e/ffxv-China_1.3.1.0_x64__0ygzwnwk70gy4")
             };
-            //games.Sort((x, y) => string.Compare(x.name, y.name));
+            games.Sort((x, y) => string.Compare(x.name, y.name));
 
             List<DataGridViewRow> list = new List<DataGridViewRow>();
             foreach (var game in games)
