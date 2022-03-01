@@ -469,9 +469,9 @@ namespace XboxDownload
             // 
             this.groupBox2.Controls.Add(this.lvLog);
             this.groupBox2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox2.Location = new System.Drawing.Point(3, 388);
+            this.groupBox2.Location = new System.Drawing.Point(3, 389);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(1464, 384);
+            this.groupBox2.Size = new System.Drawing.Size(1464, 383);
             this.groupBox2.TabIndex = 2;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "日志";
@@ -491,7 +491,7 @@ namespace XboxDownload
             this.lvLog.Margin = new System.Windows.Forms.Padding(4);
             this.lvLog.MultiSelect = false;
             this.lvLog.Name = "lvLog";
-            this.lvLog.Size = new System.Drawing.Size(1458, 357);
+            this.lvLog.Size = new System.Drawing.Size(1458, 356);
             this.lvLog.TabIndex = 4;
             this.lvLog.UseCompatibleStateImageBehavior = false;
             this.lvLog.View = System.Windows.Forms.View.Details;
@@ -536,12 +536,12 @@ namespace XboxDownload
             // 
             this.linkEADesktopRecovery.AutoSize = true;
             this.linkEADesktopRecovery.Enabled = false;
-            this.linkEADesktopRecovery.Location = new System.Drawing.Point(1107, 10);
+            this.linkEADesktopRecovery.Location = new System.Drawing.Point(1141, 10);
             this.linkEADesktopRecovery.Name = "linkEADesktopRecovery";
-            this.linkEADesktopRecovery.Size = new System.Drawing.Size(143, 18);
+            this.linkEADesktopRecovery.Size = new System.Drawing.Size(107, 18);
             this.linkEADesktopRecovery.TabIndex = 3;
             this.linkEADesktopRecovery.TabStop = true;
-            this.linkEADesktopRecovery.Text = "修复 EA Desktop";
+            this.linkEADesktopRecovery.Text = "修复 EA app";
             this.linkEADesktopRecovery.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkEADesktopRecovery_LinkClicked);
             // 
             // label8
@@ -585,7 +585,7 @@ namespace XboxDownload
             this.ckbRecordLog.AutoSize = true;
             this.ckbRecordLog.Checked = true;
             this.ckbRecordLog.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.ckbRecordLog.Location = new System.Drawing.Point(1267, 10);
+            this.ckbRecordLog.Location = new System.Drawing.Point(1266, 10);
             this.ckbRecordLog.Name = "ckbRecordLog";
             this.ckbRecordLog.Size = new System.Drawing.Size(106, 22);
             this.ckbRecordLog.TabIndex = 4;
@@ -667,7 +667,7 @@ namespace XboxDownload
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Top;
             this.groupBox1.Location = new System.Drawing.Point(3, 3);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(1464, 385);
+            this.groupBox1.Size = new System.Drawing.Size(1464, 386);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "设置";
@@ -832,9 +832,9 @@ namespace XboxDownload
             this.label52.AutoSize = true;
             this.label52.Location = new System.Drawing.Point(514, 192);
             this.label52.Name = "label52";
-            this.label52.Size = new System.Drawing.Size(287, 18);
+            this.label52.Size = new System.Drawing.Size(251, 18);
             this.label52.TabIndex = 113;
-            this.label52.Text = "同上，支持 EA Desktop && Origin.";
+            this.label52.Text = "同上，支持 EA app && Origin.";
             // 
             // tbEAIP
             // 
@@ -1085,11 +1085,11 @@ namespace XboxDownload
             // labelDNS
             // 
             this.labelDNS.AutoSize = true;
-            this.labelDNS.Location = new System.Drawing.Point(206, 22);
+            this.labelDNS.Location = new System.Drawing.Point(161, 22);
             this.labelDNS.Name = "labelDNS";
-            this.labelDNS.Size = new System.Drawing.Size(98, 18);
+            this.labelDNS.Size = new System.Drawing.Size(143, 18);
             this.labelDNS.TabIndex = 0;
-            this.labelDNS.Text = "DNS 服务器";
+            this.labelDNS.Text = "上游 DNS 服务器";
             // 
             // tabSpeedTest
             // 
@@ -1224,7 +1224,7 @@ namespace XboxDownload
             // linkFindIpArea
             // 
             this.linkFindIpArea.AutoSize = true;
-            this.linkFindIpArea.Location = new System.Drawing.Point(756, 11);
+            this.linkFindIpArea.Location = new System.Drawing.Point(756, 10);
             this.linkFindIpArea.Name = "linkFindIpArea";
             this.linkFindIpArea.Size = new System.Drawing.Size(44, 18);
             this.linkFindIpArea.TabIndex = 11;
@@ -2044,7 +2044,7 @@ namespace XboxDownload
             // 
             // columnHeader4
             // 
-            this.columnHeader4.Text = "下载链接 (右键复制)";
+            this.columnHeader4.Text = "下载链接 (已失效)";
             this.columnHeader4.Width = 1500;
             // 
             // panel8
@@ -2359,7 +2359,7 @@ namespace XboxDownload
             // 
             this.butGame.Location = new System.Drawing.Point(1268, 27);
             this.butGame.Name = "butGame";
-            this.butGame.Size = new System.Drawing.Size(142, 28);
+            this.butGame.Size = new System.Drawing.Size(142, 30);
             this.butGame.TabIndex = 3;
             this.butGame.Text = "提交";
             this.butGame.UseVisualStyleBackColor = true;

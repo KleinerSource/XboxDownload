@@ -897,7 +897,7 @@ namespace XboxDownload
             Clipboard.SetDataObject(text);
             if (Regex.IsMatch(text, @"^https?://(origin-a\.akamaihd\.net|ssl-lvlt\.cdn\.ea\.com|lvlt\.cdn\.ea\.com)"))
             {
-                MessageBox.Show("EA游戏下载地址未连接的情况下会在5分钟后过期，请尽快开始下载。\n\n离线包安装方法：下载完成后删除安装目录下的所有文件，把解压缩文件复制到安装目录，回到 EA Desktop 或者 Origin 选择继续下载，等待游戏验证完成后即可。\n\nPS: 下载软件推荐使用IDM或者FDM，可以随时修改下载地址。", "提示信息", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("EA游戏下载地址未连接的情况下会在5分钟后过期，请尽快开始下载。\n\n离线包安装方法：下载完成后删除安装目录下的所有文件，把解压缩文件复制到安装目录，回到 EA app 或者 Origin 选择继续下载，等待游戏验证完成后即可。\n\nPS: 下载软件推荐使用IDM或者FDM，可以随时修改下载地址。", "提示信息", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 
@@ -916,7 +916,7 @@ namespace XboxDownload
 
         private void LinkEADesktopRecovery_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            if (MessageBox.Show("EA Desktop 没法正常监听或者下载，请先退出 EA Desktop, 然后再点击 “是” 修复。", "修复 EA Desktop", MessageBoxButtons.YesNo, MessageBoxIcon.Information, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
+            if (MessageBox.Show("EA app 没法正常监听或者下载，请先退出 EA app, 然后再点击 “是” 修复。", "修复 EA app", MessageBoxButtons.YesNo, MessageBoxIcon.Information, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
             {
                 bool completed = false;
                 ServiceController[] services = ServiceController.GetServices();
@@ -940,7 +940,7 @@ namespace XboxDownload
                         }
                         service.Start();
                         service.WaitForStatus(ServiceControllerStatus.Running);
-                        MessageBox.Show("修复完成，请重启 EA Desktop. \n\n如果还不能正常工作，可以点击 EA Desktop 左上角功能菜单\n帮助 -> 应用程序恢复 -> 清理缓存", "修复 EA Desktop", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MessageBox.Show("修复完成，请重启 EA app. \n\n如果还不能正常工作，可以点击 EA app 左上角功能菜单\n帮助 -> 应用程序恢复 -> 清理缓存", "修复 EA app", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         completed = true;
                         break;
                     }
@@ -962,7 +962,7 @@ namespace XboxDownload
                 }
                 else
                 {
-                    MessageBox.Show("没有找到服务。", "修复 EA Desktop", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show("没有找到服务。", "修复 EA app", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
         }
@@ -1226,7 +1226,7 @@ namespace XboxDownload
                         sb.AppendLine(ip + " origin-a.akamaihd.net # " + Form1.appName);
                         sb.AppendLine(ip + " blzddist1-a.akamaihd.net # " + Form1.appName);
                         sb.AppendLine(ip + " atum.hac.lp1.d4c.nintendo.net # " + Form1.appName);
-                        msg = "系统Hosts文件写入成功，以下规则已写入系统Hosts文件\n\n" + sb.ToString() + "\nEA Desktop & Origin CDN服务器使用 Akamai 可以直接加速，不需要启动下载助手监听。Origin 的用户可以在“工具 -> EA Origin 切换CDN服务器”中切换使用 Akamai，EA Desktop 暂时不能切换，如果你的 EA Desktop 不是使用Akamai CDN服务器，此方法无效，请使用监听方式加速。\n\n暴雪战网只能用监听方式加速。";
+                        msg = "系统Hosts文件写入成功，以下规则已写入系统Hosts文件\n\n" + sb.ToString() + "\nEA app & Origin CDN服务器使用 Akamai 可以直接加速，不需要启动下载助手监听。Origin 的用户可以在“工具 -> EA Origin 切换CDN服务器”中切换使用 Akamai，EA app 暂时不能切换，如果你的 EA app 不是使用Akamai CDN服务器，此方法无效，请使用监听方式加速。\n\n暴雪战网只能用监听方式加速。";
                         break;
                     case "epicgames-download1-1251447533.file.myqcloud.com":
                         sHosts = Regex.Replace(sHosts, @"\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\s+" + host + @"\s+# " + Form1.appName + "\r\n", "");
@@ -1684,7 +1684,7 @@ namespace XboxDownload
                     {
                         LinkLabel lb1 = new LinkLabel()
                         {
-                            Tag = "http://assets1.xboxlive.com/Z/47d17c78-f0f5-4b81-8946-e0225364f880/0698b936-d300-4451-b9a0-0be0514bbbe5/1.3266.27842.0.5d961733-e572-48e0-8976-787972bbbb7f/Microsoft.254428597CFE2_1.3266.27842.0_neutral__8wekyb3d8bbwe_xs.xvc",
+                            Tag = "http://assets1.xboxlive.com/12/77f7f64e-72dc-456a-955f-6d20b91cac21/0698b936-d300-4451-b9a0-0be0514bbbe5/1.3308.47340.0.7dabf634-b22a-4dca-9cab-f236bad46736/Microsoft.254428597CFE2_1.3308.47340.0_neutral__8wekyb3d8bbwe_xs.xvc",
                             Text = "光环:无限",
                             AutoSize = true,
                             Parent = this.flpTestUrl
@@ -1692,7 +1692,7 @@ namespace XboxDownload
                         lb1.LinkClicked += new LinkLabelLinkClickedEventHandler(this.LinkTestUrl_LinkClicked);
                         LinkLabel lb2 = new LinkLabel()
                         {
-                            Tag = "http://assets1.xboxlive.com/5/20060dc3-d6a5-4d82-a181-883240479932/7401a627-f4a2-461f-af22-7ee7b7e26b9a/3.417.812.0.b0fef9b7-7955-42ab-a509-77dcc6151343/Microsoft.624F8B84B80_3.417.812.0_neutral__8wekyb3d8bbwe_xs.xvc",
+                            Tag = "http://assets1.xboxlive.com/11/83e9af36-b9ec-47b0-8455-11469a7d5177/7401a627-f4a2-461f-af22-7ee7b7e26b9a/3.430.371.0.be162a3b-07b0-44c3-97ae-714d6466908c/Microsoft.624F8B84B80_3.430.371.0_neutral__8wekyb3d8bbwe_xs.xvc",
                             Text = "极限竞速:地平线5",
                             AutoSize = true,
                             Parent = this.flpTestUrl
@@ -1717,7 +1717,7 @@ namespace XboxDownload
                     {
                         LinkLabel lb1 = new LinkLabel()
                         {
-                            Tag = "http://assets1.xboxlive.cn/Z/47d17c78-f0f5-4b81-8946-e0225364f880/0698b936-d300-4451-b9a0-0be0514bbbe5/1.3266.27842.0.5d961733-e572-48e0-8976-787972bbbb7f/Microsoft.254428597CFE2_1.3266.27842.0_neutral__8wekyb3d8bbwe_xs.xvc",
+                            Tag = "http://assets1.xboxlive.cn/12/77f7f64e-72dc-456a-955f-6d20b91cac21/0698b936-d300-4451-b9a0-0be0514bbbe5/1.3308.47340.0.7dabf634-b22a-4dca-9cab-f236bad46736/Microsoft.254428597CFE2_1.3308.47340.0_neutral__8wekyb3d8bbwe_xs.xvc",
                             Text = "光环:无限",
                             AutoSize = true,
                             Parent = this.flpTestUrl
@@ -1725,7 +1725,7 @@ namespace XboxDownload
                         lb1.LinkClicked += new LinkLabelLinkClickedEventHandler(this.LinkTestUrl_LinkClicked);
                         LinkLabel lb2 = new LinkLabel()
                         {
-                            Tag = "http://assets1.xboxlive.cn/5/20060dc3-d6a5-4d82-a181-883240479932/7401a627-f4a2-461f-af22-7ee7b7e26b9a/3.417.812.0.b0fef9b7-7955-42ab-a509-77dcc6151343/Microsoft.624F8B84B80_3.417.812.0_neutral__8wekyb3d8bbwe_xs.xvc",
+                            Tag = "http://assets1.xboxlive.cn/11/83e9af36-b9ec-47b0-8455-11469a7d5177/7401a627-f4a2-461f-af22-7ee7b7e26b9a/3.430.371.0.be162a3b-07b0-44c3-97ae-714d6466908c/Microsoft.624F8B84B80_3.430.371.0_neutral__8wekyb3d8bbwe_xs.xvc",
                             Text = "极限竞速:地平线5",
                             AutoSize = true,
                             Parent = this.flpTestUrl
@@ -1777,8 +1777,8 @@ namespace XboxDownload
                     {
                         LinkLabel lb1 = new LinkLabel()
                         {
-                            Tag = "https://origin-a.akamaihd.net/EA-Desktop-Client-Download/installer-releases/EAapp-12.0.171.5063-737.msi",
-                            Text = "EA Desktop",
+                            Tag = "https://origin-a.akamaihd.net/EA-Desktop-Client-Download/installer-releases/EAapp-12.0.179.5090-783.msi",
+                            Text = "EA app",
                             AutoSize = true,
                             Parent = this.flpTestUrl
                         };
@@ -2382,7 +2382,7 @@ namespace XboxDownload
             else
             {
                 //Match result = Regex.Match(url, @"/(?<productId>[a-zA-Z0-9]{12})$|/(?<productId>[a-zA-Z0-9]{12})(\?|#)|^(?<productId>[a-zA-Z0-9]{12})$");
-                Match result = Regex.Match(url, @"/(?<productId>[a-zA-Z0-9]{12})$|/(?<productId>[a-zA-Z0-9]{12})(\?|#)|/(?<productId>[a-zA-Z0-9]{12})/0001|^(?<productId>[a-zA-Z0-9]{12})$");
+                Match result = Regex.Match(url, @"/(?<productId>[a-zA-Z0-9]{12})/?$|/(?<productId>[a-zA-Z0-9]{12})(\?|#)|/(?<productId>[a-zA-Z0-9]{12})/0001|^(?<productId>[a-zA-Z0-9]{12})$");
                 if (result.Success)
                 {
                     pbGame.Image = pbGame.InitialImage;
