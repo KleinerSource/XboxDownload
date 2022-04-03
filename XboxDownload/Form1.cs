@@ -39,6 +39,7 @@ namespace XboxDownload
         {
             InitializeComponent();
 
+
             if (!File.Exists(Application.StartupPath + "\\Interop.TaskScheduler.dll"))
                 ThreadPool.QueueUserWorkItem(delegate { UpdateFile.Download("Interop.TaskScheduler.dll"); });
             Form1.dpixRatio = Environment.OSVersion.Version.Major >= 10 ? CreateGraphics().DpiX / 96 : Program.Utility.DpiX / 96;
@@ -1510,9 +1511,6 @@ namespace XboxDownload
                 case 5:
                     host = "epicgames-download1-1251447533.file.myqcloud.com";
                     break;
-                case 6:
-                    host = "uplaypc-s-ubisoft.cdn.ubi.com";
-                    break;
             }
             dgvIpList.Tag = host;
             groupBox4.Text = "IP 列表 (" + host + ")";
@@ -1692,7 +1690,7 @@ namespace XboxDownload
                         lb1.LinkClicked += new LinkLabelLinkClickedEventHandler(this.LinkTestUrl_LinkClicked);
                         LinkLabel lb2 = new LinkLabel()
                         {
-                            Tag = "http://assets1.xboxlive.com/11/83e9af36-b9ec-47b0-8455-11469a7d5177/7401a627-f4a2-461f-af22-7ee7b7e26b9a/3.430.371.0.be162a3b-07b0-44c3-97ae-714d6466908c/Microsoft.624F8B84B80_3.430.371.0_neutral__8wekyb3d8bbwe_xs.xvc",
+                            Tag = "http://assets1.xboxlive.com/7/c75d6b84-30b8-455d-9082-d6931bf0a89e/7401a627-f4a2-461f-af22-7ee7b7e26b9a/3.435.64.0.c03fb588-3568-41f2-9473-6eb7e0de440b/Microsoft.624F8B84B80_3.435.64.0_neutral__8wekyb3d8bbwe_xs.xvc",
                             Text = "极限竞速:地平线5",
                             AutoSize = true,
                             Parent = this.flpTestUrl
@@ -1725,7 +1723,7 @@ namespace XboxDownload
                         lb1.LinkClicked += new LinkLabelLinkClickedEventHandler(this.LinkTestUrl_LinkClicked);
                         LinkLabel lb2 = new LinkLabel()
                         {
-                            Tag = "http://assets1.xboxlive.cn/11/83e9af36-b9ec-47b0-8455-11469a7d5177/7401a627-f4a2-461f-af22-7ee7b7e26b9a/3.430.371.0.be162a3b-07b0-44c3-97ae-714d6466908c/Microsoft.624F8B84B80_3.430.371.0_neutral__8wekyb3d8bbwe_xs.xvc",
+                            Tag = "http://assets1.xboxlive.cn/7/c75d6b84-30b8-455d-9082-d6931bf0a89e/7401a627-f4a2-461f-af22-7ee7b7e26b9a/3.435.64.0.c03fb588-3568-41f2-9473-6eb7e0de440b/Microsoft.624F8B84B80_3.435.64.0_neutral__8wekyb3d8bbwe_xs.xvc",
                             Text = "极限竞速:地平线5",
                             AutoSize = true,
                             Parent = this.flpTestUrl
@@ -1777,7 +1775,7 @@ namespace XboxDownload
                     {
                         LinkLabel lb1 = new LinkLabel()
                         {
-                            Tag = "https://origin-a.akamaihd.net/EA-Desktop-Client-Download/installer-releases/EAapp-12.0.179.5090-783.msi",
+                            Tag = "https://origin-a.akamaihd.net/EA-Desktop-Client-Download/installer-releases/EAapp-12.0.193.5134-831.msi",
                             Text = "EA app",
                             AutoSize = true,
                             Parent = this.flpTestUrl
@@ -2004,12 +2002,32 @@ namespace XboxDownload
             e.Row.Cells["Col_Enable"].Value = true;
         }
 
+        private void DgvHosts_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
+        {
+            switch (dgvHosts.Columns[e.ColumnIndex].Name)
+            {
+                case "Col_IPv4":
+                    if (e.FormattedValue.ToString().Trim() != "")
+                    {
+                        if (!IPAddress.TryParse(e.FormattedValue.ToString().Trim(), out IPAddress ip))
+                        {
+                            e.Cancel = true;
+                            dgvHosts.Rows[e.RowIndex].ErrorText = "不是有效IPv4地址";
+                        }
+                    }
+                    break;
+            }
+        }
+
         private void DgvHosts_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
             switch (dgvHosts.Columns[e.ColumnIndex].Name)
             {
                 case "Col_HostName":
                     dgvHosts.CurrentCell.Value = Regex.Replace(dgvHosts.CurrentCell.FormattedValue.ToString(), @"^(https?://)?([^/|:]+).*$", "$2");
+                    break;
+                case "Col_IPv4":
+                    dgvHosts.CurrentCell.Value = dgvHosts.CurrentCell.FormattedValue.ToString().Trim();
                     break;
             }
         }
@@ -2071,10 +2089,9 @@ namespace XboxDownload
                 string hostName = dr["HostName"].ToString().Trim().ToLower();
                 if (Convert.ToBoolean(dr["Enable"]) && !string.IsNullOrEmpty(hostName) && !dicHost.ContainsKey(hostName))
                 {
-                    if (IPAddress.TryParse(dr["IPv4"].ToString(), out IPAddress ip))
+                    if (IPAddress.TryParse(dr["IPv4"].ToString().Trim(), out IPAddress ip))
                     {
-                        string[] ips = ip.ToString().Split('.');
-                        Byte[] ipByte = new byte[4] { byte.Parse(ips[0]), byte.Parse(ips[1]), byte.Parse(ips[2]), byte.Parse(ips[3]) };
+                        Byte[] ipByte = ip.GetAddressBytes();
                         dicHost.AddOrUpdate(hostName, ipByte, (oldkey, oldvalue) => ipByte);
                     }
                 }

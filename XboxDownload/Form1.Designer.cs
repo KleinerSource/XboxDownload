@@ -31,10 +31,10 @@ namespace XboxDownload
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripDropDownButton1 = new System.Windows.Forms.ToolStripDropDownButton();
             this.tsmUpdate = new System.Windows.Forms.ToolStripMenuItem();
@@ -146,10 +146,6 @@ namespace XboxDownload
             this.tabHosts = new System.Windows.Forms.TabPage();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.dgvHosts = new System.Windows.Forms.DataGridView();
-            this.Col_Enable = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.Col_HostName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Col_IPv4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Col_Remark = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.panel3 = new System.Windows.Forms.Panel();
             this.linkXbox360HostName = new System.Windows.Forms.LinkLabel();
             this.linkHostClear = new System.Windows.Forms.LinkLabel();
@@ -281,6 +277,10 @@ namespace XboxDownload
             this.contextMenuStrip2 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.tsmCopyUrl1 = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmCopyUrl2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.Col_Remark = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Col_IPv4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Col_HostName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Col_Enable = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.toolStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabService.SuspendLayout();
@@ -1162,9 +1162,9 @@ namespace XboxDownload
             // 
             // Col_TTL
             // 
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle1.Format = "N0";
-            this.Col_TTL.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle9.Format = "N0";
+            this.Col_TTL.DefaultCellStyle = dataGridViewCellStyle9;
             this.Col_TTL.HeaderText = "TTL";
             this.Col_TTL.MinimumWidth = 8;
             this.Col_TTL.Name = "Col_TTL";
@@ -1172,9 +1172,9 @@ namespace XboxDownload
             // 
             // Col_RoundtripTime
             // 
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle2.Format = "N0";
-            this.Col_RoundtripTime.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle10.Format = "N0";
+            this.Col_RoundtripTime.DefaultCellStyle = dataGridViewCellStyle10;
             this.Col_RoundtripTime.HeaderText = "响应时间(ms)";
             this.Col_RoundtripTime.MinimumWidth = 8;
             this.Col_RoundtripTime.Name = "Col_RoundtripTime";
@@ -1182,9 +1182,9 @@ namespace XboxDownload
             // 
             // Col_Speed
             // 
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle3.Format = "N2";
-            this.Col_Speed.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle11.Format = "N2";
+            this.Col_Speed.DefaultCellStyle = dataGridViewCellStyle11;
             this.Col_Speed.HeaderText = "下载速度(MB/s)";
             this.Col_Speed.MinimumWidth = 8;
             this.Col_Speed.Name = "Col_Speed";
@@ -1293,8 +1293,7 @@ namespace XboxDownload
             "Xbox & 微软商店 (国际域名)",
             "PlayStation 3/4/5 游戏下载",
             "EA & 战网 & Switch (Akamai)",
-            "Epic Games (腾讯云)",
-            "Ubisoft Connect"});
+            "Epic Games (腾讯云)"});
             this.cbImportIP.Location = new System.Drawing.Point(932, 8);
             this.cbImportIP.Name = "cbImportIP";
             this.cbImportIP.Size = new System.Drawing.Size(280, 26);
@@ -1499,47 +1498,10 @@ namespace XboxDownload
             this.dgvHosts.RowHeadersWidth = 35;
             this.dgvHosts.Size = new System.Drawing.Size(1458, 731);
             this.dgvHosts.TabIndex = 1;
+            this.dgvHosts.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.DgvHosts_CellValidating);
             this.dgvHosts.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.DgvHosts_CellValueChanged);
             this.dgvHosts.DefaultValuesNeeded += new System.Windows.Forms.DataGridViewRowEventHandler(this.DgvHosts_DefaultValuesNeeded);
             this.dgvHosts.RowPostPaint += new System.Windows.Forms.DataGridViewRowPostPaintEventHandler(this.Dgv_RowPostPaint);
-            // 
-            // Col_Enable
-            // 
-            this.Col_Enable.DataPropertyName = "Enable";
-            this.Col_Enable.HeaderText = "启用";
-            this.Col_Enable.MinimumWidth = 8;
-            this.Col_Enable.Name = "Col_Enable";
-            this.Col_Enable.Width = 43;
-            // 
-            // Col_HostName
-            // 
-            this.Col_HostName.DataPropertyName = "HostName";
-            this.Col_HostName.HeaderText = "域名（不带 HTTP(S)://）";
-            this.Col_HostName.MaxInputLength = 64;
-            this.Col_HostName.MinimumWidth = 8;
-            this.Col_HostName.Name = "Col_HostName";
-            this.Col_HostName.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.Col_HostName.Width = 300;
-            // 
-            // Col_IPv4
-            // 
-            this.Col_IPv4.DataPropertyName = "IPv4";
-            this.Col_IPv4.HeaderText = "IPv4 地址";
-            this.Col_IPv4.MaxInputLength = 15;
-            this.Col_IPv4.MinimumWidth = 8;
-            this.Col_IPv4.Name = "Col_IPv4";
-            this.Col_IPv4.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.Col_IPv4.Width = 120;
-            // 
-            // Col_Remark
-            // 
-            this.Col_Remark.DataPropertyName = "Remark";
-            this.Col_Remark.HeaderText = "备注";
-            this.Col_Remark.MaxInputLength = 250;
-            this.Col_Remark.MinimumWidth = 8;
-            this.Col_Remark.Name = "Col_Remark";
-            this.Col_Remark.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.Col_Remark.Width = 420;
             // 
             // panel3
             // 
@@ -1903,8 +1865,8 @@ namespace XboxDownload
             // 
             // Col_Size
             // 
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            this.Col_Size.DefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            this.Col_Size.DefaultCellStyle = dataGridViewCellStyle12;
             this.Col_Size.HeaderText = "容量";
             this.Col_Size.MinimumWidth = 8;
             this.Col_Size.Name = "Col_Size";
@@ -2886,6 +2848,44 @@ namespace XboxDownload
             this.tsmCopyUrl2.Text = "复制(.com替换为.cn)";
             this.tsmCopyUrl2.Click += new System.EventHandler(this.TsmCopyUrl2_Click);
             // 
+            // Col_Remark
+            // 
+            this.Col_Remark.DataPropertyName = "Remark";
+            this.Col_Remark.HeaderText = "备注";
+            this.Col_Remark.MaxInputLength = 250;
+            this.Col_Remark.MinimumWidth = 8;
+            this.Col_Remark.Name = "Col_Remark";
+            this.Col_Remark.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.Col_Remark.Width = 420;
+            // 
+            // Col_IPv4
+            // 
+            this.Col_IPv4.DataPropertyName = "IPv4";
+            this.Col_IPv4.HeaderText = "IPv4 地址";
+            this.Col_IPv4.MaxInputLength = 15;
+            this.Col_IPv4.MinimumWidth = 8;
+            this.Col_IPv4.Name = "Col_IPv4";
+            this.Col_IPv4.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.Col_IPv4.Width = 120;
+            // 
+            // Col_HostName
+            // 
+            this.Col_HostName.DataPropertyName = "HostName";
+            this.Col_HostName.HeaderText = "域名（不带 HTTP(S)://）";
+            this.Col_HostName.MaxInputLength = 64;
+            this.Col_HostName.MinimumWidth = 8;
+            this.Col_HostName.Name = "Col_HostName";
+            this.Col_HostName.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.Col_HostName.Width = 300;
+            // 
+            // Col_Enable
+            // 
+            this.Col_Enable.DataPropertyName = "Enable";
+            this.Col_Enable.HeaderText = "启用";
+            this.Col_Enable.MinimumWidth = 8;
+            this.Col_Enable.Name = "Col_Enable";
+            this.Col_Enable.Width = 43;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
@@ -3137,10 +3137,6 @@ namespace XboxDownload
         private System.Windows.Forms.Label labelStatusEACdn;
         private System.Windows.Forms.Button butEACdn;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn Col_Enable;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Col_HostName;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Col_IPv4;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Col_Remark;
         private System.Windows.Forms.CheckBox ckbEAStore;
         private System.Windows.Forms.CheckBox ckbEAProtocol;
         private System.Windows.Forms.CheckBox ckbEACDN;
@@ -3198,6 +3194,10 @@ namespace XboxDownload
         private System.Windows.Forms.LinkLabel linkFindIpArea;
         public System.Windows.Forms.ToolStripMenuItem tsmUpdate;
         private System.Windows.Forms.Button butStart;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn Col_Enable;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Col_HostName;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Col_IPv4;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Col_Remark;
     }
 }
 
