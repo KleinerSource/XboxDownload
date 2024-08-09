@@ -7,13 +7,9 @@
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
     <ApplicationIcon>XBox.ico</ApplicationIcon>
-    <FileVersion>2.0.2.46</FileVersion>
+    <FileVersion>2.0.2.47</FileVersion>
     <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
   </PropertyGroup>
-
-  <ItemGroup>
-    <None Remove="Form1.cs~RFfc58326.TMP" />
-  </ItemGroup>
 
   <ItemGroup>
     <COMReference Include="NetFwTypeLib">
