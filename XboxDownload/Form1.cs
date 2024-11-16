@@ -410,8 +410,9 @@ namespace XboxDownload
 
         private void TsmAbout_Click(object sender, EventArgs e)
         {
-            string url = "https://github.com/skydevil88/XboxDownload";
-            Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
+            FormAbout dialog = new();
+            dialog.ShowDialog();
+            dialog.Dispose();
         }
 
         private void TsmOpenSite_Click(object sender, EventArgs e)
@@ -2052,8 +2053,8 @@ namespace XboxDownload
                         lb1.LinkClicked += new LinkLabelLinkClickedEventHandler(this.LinkTestUrl_LinkClicked);
                         string[,] games = new string[,]
                         {
-                            {"光环: 无限(XS)", "0698b936-d300-4451-b9a0-0be0514bbbe5_xs", "/1/c6d465e7-df25-4b5c-987d-ad8dc643c24e/0698b936-d300-4451-b9a0-0be0514bbbe5/1.4036.37830.0.138cc93c-6e75-47aa-891f-54e9f29a54a1/Microsoft.254428597CFE2_1.4036.37830.0_neutral__8wekyb3d8bbwe_xs.xvc" },
-                            {"极限竞速: 地平线5(PC)", "3d263e92-93cd-4f9b-90c7-5438150cecbf", "/8/51e320a7-a17e-4545-9f79-057ecd50b052/3d263e92-93cd-4f9b-90c7-5438150cecbf/3.653.463.0.6c56cb81-2e55-4e84-b45a-0efe148ec1a1/Microsoft.624F8B84B80_3.653.463.0_x64__8wekyb3d8bbwe.msixvc" },
+                            {"光环: 无限(XS)", "0698b936-d300-4451-b9a0-0be0514bbbe5_xs", "/8/4b767612-474d-402c-9d7d-5084da586476/0698b936-d300-4451-b9a0-0be0514bbbe5/1.4070.30698.0.09b17da4-ea7a-4a0e-a73a-226f18da5a2c/Microsoft.254428597CFE2_1.4070.30698.0_neutral__8wekyb3d8bbwe_xs.xvc" },
+                            {"极限竞速: 地平线5(PC)", "3d263e92-93cd-4f9b-90c7-5438150cecbf", "/14/55e6c982-6931-44b9-9190-f2dbbc92c741/3d263e92-93cd-4f9b-90c7-5438150cecbf/3.667.430.0.bd271a99-ff4c-4db0-96ba-1f4b2c8e221e/Microsoft.624F8B84B80_3.667.430.0_x64__8wekyb3d8bbwe.msixvc" },
                             {"战争机器5(PC)", "1e66a3e7-2f7b-461c-9f46-3ee0aec64b8c", "/8/82e2c767-56a2-4cff-9adf-bc901fd81e1a/1e66a3e7-2f7b-461c-9f46-3ee0aec64b8c/1.1.967.0.4e71a28b-d845-42e5-86bf-36afdd5eb82f/Microsoft.HalifaxBaseGame_1.1.967.0_x64__8wekyb3d8bbwe.msixvc"}
                         };
                         for (int i = 0; i <= games.GetLength(0) - 1; i++)
@@ -3945,10 +3946,11 @@ namespace XboxDownload
                 butGame.Enabled = false;
                 linkCompare.Enabled = false;
                 linkGameWebsite.Enabled = false;
+                linkOpenMsStore.Enabled = false;
                 this.cbGameBundled.SelectedIndexChanged -= new EventHandler(this.CbGameBundled_SelectedIndexChanged);
                 string productId = result.Groups["productId"].Value.ToUpperInvariant();
-                url = "https://www.microsoft.com/" + language + "/p/_/" + productId;
-                linkGameWebsite.Links[0].LinkData = url;
+                linkGameWebsite.Links[0].LinkData = "https://www.microsoft.com/" + language + "/p/_/" + productId;
+                linkOpenMsStore.Links[0].LinkData = "ms-windows-store://pdp/?productid=" + productId;
                 ThreadPool.QueueUserWorkItem(delegate { XboxStore(market, productId); });
             }
             else
@@ -4231,6 +4233,12 @@ namespace XboxDownload
             if (url != null) Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
         }
 
+        private void LinkOpenMsStore_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            string? url = e.Link.LinkData.ToString();
+            if (url != null) Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
+        }
+
         private void CbGameBundled_SelectedIndexChanged(object? sender, EventArgs? e)
         {
             if (cbGameBundled.SelectedIndex < 0) return;
@@ -4244,6 +4252,7 @@ namespace XboxDownload
             lvGame.Items.Clear();
             linkCompare.Enabled = false;
             linkGameWebsite.Enabled = false;
+            linkOpenMsStore.Enabled = false;
 
             var market = (Market)cbGameBundled.Tag;
             var json = (ClassGame.Game)gbGameInfo.Tag;
@@ -4706,6 +4715,7 @@ namespace XboxDownload
                     }
                     butGame.Enabled = true;
                     linkGameWebsite.Enabled = true;
+                    linkOpenMsStore.Enabled = true;
                 }));
             }
         }
@@ -5751,22 +5761,5 @@ namespace XboxDownload
             }));
         }
         #endregion
-
-        private void tbGameUrl_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void linkLabel3_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            string? ost = "ms-windows-store://pdp/?productid=" + linkProductID.Text;
-            if (ost != null) Process.Start(new ProcessStartInfo(ost) { UseShellExecute = true });
-
-        }
-
-        private void tabPage1_Click(object sender, EventArgs e)
-        {
-
-        }
     }
 }

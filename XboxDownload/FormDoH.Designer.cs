@@ -376,7 +376,7 @@
             Col_Host.MinimumWidth = 8;
             Col_Host.Name = "Col_Host";
             Col_Host.SortMode = DataGridViewColumnSortMode.NotSortable;
-            Col_Host.Width = 190;
+            Col_Host.Width = 195;
             // 
             // Col_DoHServer
             // 
