@@ -4227,13 +4227,7 @@ namespace XboxDownload
             }
         }
 
-        private void LinkGameWebsite_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            string? url = e.Link.LinkData.ToString();
-            if (url != null) Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
-        }
-
-        private void LinkOpenMsStore_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void LinkOpen_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             string? url = e.Link.LinkData.ToString();
             if (url != null) Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });

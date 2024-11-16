@@ -1957,7 +1957,7 @@
             resources.ApplyResources(linkOpenMsStore, "linkOpenMsStore");
             linkOpenMsStore.Name = "linkOpenMsStore";
             linkOpenMsStore.TabStop = true;
-            linkOpenMsStore.LinkClicked += LinkOpenMsStore_LinkClicked;
+            linkOpenMsStore.LinkClicked += LinkOpen_LinkClicked;
             // 
             // linkPcInstall1
             // 
@@ -2111,7 +2111,7 @@
             resources.ApplyResources(linkGameWebsite, "linkGameWebsite");
             linkGameWebsite.Name = "linkGameWebsite";
             linkGameWebsite.TabStop = true;
-            linkGameWebsite.LinkClicked += LinkGameWebsite_LinkClicked;
+            linkGameWebsite.LinkClicked += LinkOpen_LinkClicked;
             // 
             // pbGame
             // 
