@@ -2934,7 +2934,7 @@ namespace XboxDownload
             foreach (DataGridViewRow dgvr in dgvIpList.Rows)
             {
                 if (dgvr.Cells["Col_Speed"].Value == null) continue;
-                if (double.TryParse(dgvr.Cells["Col_Speed"].Value.ToString(), out double speed) && speed >= 10)
+                if (double.TryParse(dgvr.Cells["Col_Speed"].Value.ToString(), out double speed) && speed >= 15)
                 {
                     string? _ip = dgvr.Cells["Col_IPAddress"].Value.ToString();
                     string? _location = dgvr.Cells["Col_Location"].Value.ToString();
@@ -2949,7 +2949,7 @@ namespace XboxDownload
                     }
                 }
             }
-            if (ja.Count >= 1 && MessageBox.Show("此功能针对中国大陆地区用户使用，非中国大陆地区、开通国际精品网、专线 或者使用 加速器、代理软件 测速的用户请不要上传，谢谢合作！\n\n以下 IP （下载速度超过10MB/s）将会上传到 “Akamai 优选 IP” 列表，是否继续？\n" + string.Join("\n", ja.Select(a => a!["ip"] + "\t" + a!["location"] + "\t" + a!["speed"]).ToArray()), "上传更新 Akamai 优选 IP", MessageBoxButtons.YesNo, MessageBoxIcon.Information, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
+            if (ja.Count >= 1 && MessageBox.Show("此功能针对中国大陆地区用户使用，非中国大陆地区、开通国际精品网、专线 或者使用 加速器、代理软件 测速的用户请不要上传，谢谢合作！\n\n以下 IP （下载速度超过15MB/s）将会上传到 “Akamai 优选 IP” 列表，是否继续？\n" + string.Join("\n", ja.Select(a => a!["ip"] + "\t" + a!["location"] + "\t" + a!["speed"]).ToArray()), "上传更新 Akamai 优选 IP", MessageBoxButtons.YesNo, MessageBoxIcon.Information, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
             {
                 linkLabel.Text = text + " (检查位置)";
                 bool bCheckLocation = false;
@@ -3947,10 +3947,12 @@ namespace XboxDownload
                 linkCompare.Enabled = false;
                 linkGameWebsite.Enabled = false;
                 linkOpenMsStore.Enabled = false;
+                linkOpenXboxApp.Enabled = false;
                 this.cbGameBundled.SelectedIndexChanged -= new EventHandler(this.CbGameBundled_SelectedIndexChanged);
                 string productId = result.Groups["productId"].Value.ToUpperInvariant();
                 linkGameWebsite.Links[0].LinkData = "https://www.microsoft.com/" + language + "/p/_/" + productId;
                 linkOpenMsStore.Links[0].LinkData = "ms-windows-store://pdp/?productid=" + productId;
+                linkOpenXboxApp.Links[0].LinkData = "msxbox://game/?productId=" + productId;
                 ThreadPool.QueueUserWorkItem(delegate { XboxStore(market, productId); });
             }
             else
@@ -4247,6 +4249,7 @@ namespace XboxDownload
             linkCompare.Enabled = false;
             linkGameWebsite.Enabled = false;
             linkOpenMsStore.Enabled = false;
+            linkOpenXboxApp.Enabled = false;
 
             var market = (Market)cbGameBundled.Tag;
             var json = (ClassGame.Game)gbGameInfo.Tag;
@@ -4710,6 +4713,7 @@ namespace XboxDownload
                     butGame.Enabled = true;
                     linkGameWebsite.Enabled = true;
                     linkOpenMsStore.Enabled = true;
+                    linkOpenXboxApp.Enabled = true;
                 }));
             }
         }

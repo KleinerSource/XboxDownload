@@ -5317,6 +5317,36 @@
   <data name="&gt;&gt;lvGame.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
+  <data name="linkOpenXboxApp.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="linkOpenXboxApp.Enabled" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="linkOpenXboxApp.Location" type="System.Drawing.Point, System.Drawing">
+    <value>165, 283</value>
+  </data>
+  <data name="linkOpenXboxApp.Size" type="System.Drawing.Size, System.Drawing">
+    <value>96, 24</value>
+  </data>
+  <data name="linkOpenXboxApp.TabIndex" type="System.Int32, mscorlib">
+    <value>12</value>
+  </data>
+  <data name="linkOpenXboxApp.Text" xml:space="preserve">
+    <value>Xbox App</value>
+  </data>
+  <data name="&gt;&gt;linkOpenXboxApp.Name" xml:space="preserve">
+    <value>linkOpenXboxApp</value>
+  </data>
+  <data name="&gt;&gt;linkOpenXboxApp.Type" xml:space="preserve">
+    <value>System.Windows.Forms.LinkLabel, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;linkOpenXboxApp.Parent" xml:space="preserve">
+    <value>panel6</value>
+  </data>
+  <data name="&gt;&gt;linkOpenXboxApp.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
   <data name="linkOpenMsStore.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
@@ -5324,16 +5354,16 @@
     <value>False</value>
   </data>
   <data name="linkOpenMsStore.Location" type="System.Drawing.Point, System.Drawing">
-    <value>151, 285</value>
+    <value>77, 283</value>
   </data>
   <data name="linkOpenMsStore.Size" type="System.Drawing.Size, System.Drawing">
     <value>82, 24</value>
   </data>
   <data name="linkOpenMsStore.TabIndex" type="System.Int32, mscorlib">
-    <value>26</value>
+    <value>11</value>
   </data>
   <data name="linkOpenMsStore.Text" xml:space="preserve">
-    <value>打开商店</value>
+    <value>微软商店</value>
   </data>
   <data name="&gt;&gt;linkOpenMsStore.Name" xml:space="preserve">
     <value>linkOpenMsStore</value>
@@ -5345,7 +5375,7 @@
     <value>panel6</value>
   </data>
   <data name="&gt;&gt;linkOpenMsStore.ZOrder" xml:space="preserve">
-    <value>0</value>
+    <value>1</value>
   </data>
   <data name="linkPcInstall1.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -5372,7 +5402,7 @@
     <value>panel6</value>
   </data>
   <data name="&gt;&gt;linkPcInstall1.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>2</value>
   </data>
   <data name="linkConsoleInstall2.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -5399,7 +5429,7 @@
     <value>panel6</value>
   </data>
   <data name="&gt;&gt;linkConsoleInstall2.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>3</value>
   </data>
   <data name="linkPcInstall2.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -5426,7 +5456,7 @@
     <value>panel6</value>
   </data>
   <data name="&gt;&gt;linkPcInstall2.ZOrder" xml:space="preserve">
-    <value>3</value>
+    <value>4</value>
   </data>
   <data name="linkAppxAdd.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -5453,7 +5483,7 @@
     <value>panel6</value>
   </data>
   <data name="&gt;&gt;linkAppxAdd.ZOrder" xml:space="preserve">
-    <value>4</value>
+    <value>5</value>
   </data>
   <data name="linkWebPage.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -5480,7 +5510,7 @@
     <value>panel6</value>
   </data>
   <data name="&gt;&gt;linkWebPage.ZOrder" xml:space="preserve">
-    <value>5</value>
+    <value>6</value>
   </data>
   <data name="linkCompare.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -5513,7 +5543,7 @@
     <value>panel6</value>
   </data>
   <data name="&gt;&gt;linkCompare.ZOrder" xml:space="preserve">
-    <value>6</value>
+    <value>7</value>
   </data>
   <data name="label42.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -5540,7 +5570,7 @@
     <value>panel6</value>
   </data>
   <data name="&gt;&gt;label42.ZOrder" xml:space="preserve">
-    <value>7</value>
+    <value>8</value>
   </data>
   <data name="tbGamePrice.Location" type="System.Drawing.Point, System.Drawing">
     <value>376, 282</value>
@@ -5564,7 +5594,7 @@
     <value>panel6</value>
   </data>
   <data name="&gt;&gt;tbGamePrice.ZOrder" xml:space="preserve">
-    <value>8</value>
+    <value>9</value>
   </data>
   <data name="label41.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -5597,7 +5627,7 @@
     <value>panel6</value>
   </data>
   <data name="&gt;&gt;label41.ZOrder" xml:space="preserve">
-    <value>9</value>
+    <value>10</value>
   </data>
   <data name="tbGameLanguages.Location" type="System.Drawing.Point, System.Drawing">
     <value>376, 246</value>
@@ -5621,7 +5651,7 @@
     <value>panel6</value>
   </data>
   <data name="&gt;&gt;tbGameLanguages.ZOrder" xml:space="preserve">
-    <value>10</value>
+    <value>11</value>
   </data>
   <data name="label40.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -5654,7 +5684,7 @@
     <value>panel6</value>
   </data>
   <data name="&gt;&gt;label40.ZOrder" xml:space="preserve">
-    <value>11</value>
+    <value>12</value>
   </data>
   <data name="tbGameDescription.Location" type="System.Drawing.Point, System.Drawing">
     <value>376, 86</value>
@@ -5684,7 +5714,7 @@
     <value>panel6</value>
   </data>
   <data name="&gt;&gt;tbGameDescription.ZOrder" xml:space="preserve">
-    <value>12</value>
+    <value>13</value>
   </data>
   <data name="label39.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -5717,7 +5747,7 @@
     <value>panel6</value>
   </data>
   <data name="&gt;&gt;label39.ZOrder" xml:space="preserve">
-    <value>13</value>
+    <value>14</value>
   </data>
   <data name="tbGameOriginalReleaseDate.Location" type="System.Drawing.Point, System.Drawing">
     <value>1298, 48</value>
@@ -5741,7 +5771,7 @@
     <value>panel6</value>
   </data>
   <data name="&gt;&gt;tbGameOriginalReleaseDate.ZOrder" xml:space="preserve">
-    <value>14</value>
+    <value>15</value>
   </data>
   <data name="label38.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -5774,7 +5804,7 @@
     <value>panel6</value>
   </data>
   <data name="&gt;&gt;label38.ZOrder" xml:space="preserve">
-    <value>15</value>
+    <value>16</value>
   </data>
   <data name="tbGameCategory.Location" type="System.Drawing.Point, System.Drawing">
     <value>1002, 48</value>
@@ -5798,7 +5828,7 @@
     <value>panel6</value>
   </data>
   <data name="&gt;&gt;tbGameCategory.ZOrder" xml:space="preserve">
-    <value>16</value>
+    <value>17</value>
   </data>
   <data name="label37.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -5831,7 +5861,7 @@
     <value>panel6</value>
   </data>
   <data name="&gt;&gt;label37.ZOrder" xml:space="preserve">
-    <value>17</value>
+    <value>18</value>
   </data>
   <data name="tbGameDeveloperName.Location" type="System.Drawing.Point, System.Drawing">
     <value>376, 48</value>
@@ -5855,7 +5885,7 @@
     <value>panel6</value>
   </data>
   <data name="&gt;&gt;tbGameDeveloperName.ZOrder" xml:space="preserve">
-    <value>18</value>
+    <value>19</value>
   </data>
   <data name="label36.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -5888,7 +5918,7 @@
     <value>panel6</value>
   </data>
   <data name="&gt;&gt;label36.ZOrder" xml:space="preserve">
-    <value>19</value>
+    <value>20</value>
   </data>
   <data name="cbGameBundled.Location" type="System.Drawing.Point, System.Drawing">
     <value>1126, 8</value>
@@ -5912,7 +5942,7 @@
     <value>panel6</value>
   </data>
   <data name="&gt;&gt;cbGameBundled.ZOrder" xml:space="preserve">
-    <value>20</value>
+    <value>21</value>
   </data>
   <data name="tbGameTitle.Location" type="System.Drawing.Point, System.Drawing">
     <value>376, 10</value>
@@ -5936,7 +5966,7 @@
     <value>panel6</value>
   </data>
   <data name="&gt;&gt;tbGameTitle.ZOrder" xml:space="preserve">
-    <value>21</value>
+    <value>22</value>
   </data>
   <data name="label35.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -5966,7 +5996,7 @@
     <value>panel6</value>
   </data>
   <data name="&gt;&gt;label35.ZOrder" xml:space="preserve">
-    <value>22</value>
+    <value>23</value>
   </data>
   <data name="linkGameWebsite.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -5975,19 +6005,19 @@
     <value>False</value>
   </data>
   <data name="linkGameWebsite.Location" type="System.Drawing.Point, System.Drawing">
-    <value>56, 285</value>
+    <value>26, 283</value>
   </data>
   <data name="linkGameWebsite.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>2, 0, 2, 0</value>
   </data>
   <data name="linkGameWebsite.Size" type="System.Drawing.Size, System.Drawing">
-    <value>82, 24</value>
+    <value>46, 24</value>
   </data>
   <data name="linkGameWebsite.TabIndex" type="System.Int32, mscorlib">
     <value>10</value>
   </data>
   <data name="linkGameWebsite.Text" xml:space="preserve">
-    <value>前往官网</value>
+    <value>官网</value>
   </data>
   <data name="&gt;&gt;linkGameWebsite.Name" xml:space="preserve">
     <value>linkGameWebsite</value>
@@ -5999,7 +6029,7 @@
     <value>panel6</value>
   </data>
   <data name="&gt;&gt;linkGameWebsite.ZOrder" xml:space="preserve">
-    <value>23</value>
+    <value>24</value>
   </data>
   <data name="pbGame.InitialImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
@@ -6192,7 +6222,7 @@
     <value>panel6</value>
   </data>
   <data name="&gt;&gt;pbGame.ZOrder" xml:space="preserve">
-    <value>24</value>
+    <value>25</value>
   </data>
   <data name="panel6.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Top</value>
@@ -9442,7 +9472,7 @@ U盘卷标不能有中文。系统升级、断电等问题自动恢复成国行�
     <value>启动 Xbox App 更新授权</value>
   </data>
   <data name="cmsCopyUrl.Size" type="System.Drawing.Size, System.Drawing">
-    <value>297, 154</value>
+    <value>297, 187</value>
   </data>
   <data name="&gt;&gt;cmsCopyUrl.Name" xml:space="preserve">
     <value>cmsCopyUrl</value>

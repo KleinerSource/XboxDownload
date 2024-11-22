@@ -245,6 +245,7 @@
             columnHeader3 = new ColumnHeader();
             columnHeader4 = new ColumnHeader();
             panel6 = new Panel();
+            linkOpenXboxApp = new LinkLabel();
             linkOpenMsStore = new LinkLabel();
             linkPcInstall1 = new LinkLabel();
             linkConsoleInstall2 = new LinkLabel();
@@ -1924,6 +1925,7 @@
             // 
             // panel6
             // 
+            panel6.Controls.Add(linkOpenXboxApp);
             panel6.Controls.Add(linkOpenMsStore);
             panel6.Controls.Add(linkPcInstall1);
             panel6.Controls.Add(linkConsoleInstall2);
@@ -1951,6 +1953,13 @@
             panel6.Controls.Add(pbGame);
             resources.ApplyResources(panel6, "panel6");
             panel6.Name = "panel6";
+            // 
+            // linkOpenXboxApp
+            // 
+            resources.ApplyResources(linkOpenXboxApp, "linkOpenXboxApp");
+            linkOpenXboxApp.Name = "linkOpenXboxApp";
+            linkOpenXboxApp.TabStop = true;
+            linkOpenXboxApp.LinkClicked += LinkOpen_LinkClicked;
             // 
             // linkOpenMsStore
             // 
@@ -2611,6 +2620,7 @@
             // 
             // tsmCopyUrl2
             // 
+            tsmCopyUrl2.ForeColor = Color.Green;
             tsmCopyUrl2.Name = "tsmCopyUrl2";
             resources.ApplyResources(tsmCopyUrl2, "tsmCopyUrl2");
             tsmCopyUrl2.Click += TsmCopyUrl_Click;
@@ -3040,5 +3050,6 @@
         private ToolStripMenuItem tsmUseIPCn2;
         private LinkLabel linkConsoleInstall1;
         private LinkLabel linkOpenMsStore;
+        private LinkLabel linkOpenXboxApp;
     }
 }
