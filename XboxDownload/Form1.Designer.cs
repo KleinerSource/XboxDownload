@@ -245,8 +245,9 @@
             columnHeader3 = new ColumnHeader();
             columnHeader4 = new ColumnHeader();
             panel6 = new Panel();
-            linkOpenXboxApp = new LinkLabel();
-            linkOpenMsStore = new LinkLabel();
+            pbXboxApp = new PictureBox();
+            pbMsStore = new PictureBox();
+            pbWebsite = new PictureBox();
             linkPcInstall1 = new LinkLabel();
             linkConsoleInstall2 = new LinkLabel();
             linkPcInstall2 = new LinkLabel();
@@ -269,7 +270,6 @@
             cbGameBundled = new ComboBox();
             tbGameTitle = new TextBox();
             label35 = new Label();
-            linkGameWebsite = new LinkLabel();
             pbGame = new PictureBox();
             gbMicrosoftStore = new GroupBox();
             linkGameChinese = new LinkLabel();
@@ -379,6 +379,9 @@
             tabStore.SuspendLayout();
             gbGameInfo.SuspendLayout();
             panel6.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)pbXboxApp).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)pbMsStore).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)pbWebsite).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pbGame).BeginInit();
             gbMicrosoftStore.SuspendLayout();
             tabTools.SuspendLayout();
@@ -1925,8 +1928,9 @@
             // 
             // panel6
             // 
-            panel6.Controls.Add(linkOpenXboxApp);
-            panel6.Controls.Add(linkOpenMsStore);
+            panel6.Controls.Add(pbXboxApp);
+            panel6.Controls.Add(pbMsStore);
+            panel6.Controls.Add(pbWebsite);
             panel6.Controls.Add(linkPcInstall1);
             panel6.Controls.Add(linkConsoleInstall2);
             panel6.Controls.Add(linkPcInstall2);
@@ -1949,24 +1953,33 @@
             panel6.Controls.Add(cbGameBundled);
             panel6.Controls.Add(tbGameTitle);
             panel6.Controls.Add(label35);
-            panel6.Controls.Add(linkGameWebsite);
             panel6.Controls.Add(pbGame);
             resources.ApplyResources(panel6, "panel6");
             panel6.Name = "panel6";
             // 
-            // linkOpenXboxApp
+            // pbXboxApp
             // 
-            resources.ApplyResources(linkOpenXboxApp, "linkOpenXboxApp");
-            linkOpenXboxApp.Name = "linkOpenXboxApp";
-            linkOpenXboxApp.TabStop = true;
-            linkOpenXboxApp.LinkClicked += LinkOpen_LinkClicked;
+            pbXboxApp.Cursor = Cursors.Hand;
+            resources.ApplyResources(pbXboxApp, "pbXboxApp");
+            pbXboxApp.Name = "pbXboxApp";
+            pbXboxApp.TabStop = false;
+            pbXboxApp.Click += PbOpen_Click;
             // 
-            // linkOpenMsStore
+            // pbMsStore
             // 
-            resources.ApplyResources(linkOpenMsStore, "linkOpenMsStore");
-            linkOpenMsStore.Name = "linkOpenMsStore";
-            linkOpenMsStore.TabStop = true;
-            linkOpenMsStore.LinkClicked += LinkOpen_LinkClicked;
+            pbMsStore.Cursor = Cursors.Hand;
+            resources.ApplyResources(pbMsStore, "pbMsStore");
+            pbMsStore.Name = "pbMsStore";
+            pbMsStore.TabStop = false;
+            pbMsStore.Click += PbOpen_Click;
+            // 
+            // pbWebsite
+            // 
+            pbWebsite.Cursor = Cursors.Hand;
+            resources.ApplyResources(pbWebsite, "pbWebsite");
+            pbWebsite.Name = "pbWebsite";
+            pbWebsite.TabStop = false;
+            pbWebsite.Click += PbOpen_Click;
             // 
             // linkPcInstall1
             // 
@@ -2114,13 +2127,6 @@
             // 
             resources.ApplyResources(label35, "label35");
             label35.Name = "label35";
-            // 
-            // linkGameWebsite
-            // 
-            resources.ApplyResources(linkGameWebsite, "linkGameWebsite");
-            linkGameWebsite.Name = "linkGameWebsite";
-            linkGameWebsite.TabStop = true;
-            linkGameWebsite.LinkClicked += LinkOpen_LinkClicked;
             // 
             // pbGame
             // 
@@ -2715,6 +2721,9 @@
             gbGameInfo.ResumeLayout(false);
             panel6.ResumeLayout(false);
             panel6.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)pbXboxApp).EndInit();
+            ((System.ComponentModel.ISupportInitialize)pbMsStore).EndInit();
+            ((System.ComponentModel.ISupportInitialize)pbWebsite).EndInit();
             ((System.ComponentModel.ISupportInitialize)pbGame).EndInit();
             gbMicrosoftStore.ResumeLayout(false);
             gbMicrosoftStore.PerformLayout();
@@ -2909,7 +2918,6 @@
         private ComboBox cbGameXGP2;
         private ComboBox cbGameXGP1;
         private ListView lvGameSearch;
-        private LinkLabel linkGameWebsite;
         private PictureBox pbGame;
         private ComboBox cbGameBundled;
         private TextBox tbGameTitle;
@@ -3049,7 +3057,8 @@
         private Label labelApp;
         private ToolStripMenuItem tsmUseIPCn2;
         private LinkLabel linkConsoleInstall1;
-        private LinkLabel linkOpenMsStore;
-        private LinkLabel linkOpenXboxApp;
+        private PictureBox pbWebsite;
+        private PictureBox pbMsStore;
+        private PictureBox pbXboxApp;
     }
 }

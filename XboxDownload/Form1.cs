@@ -3945,14 +3945,15 @@ namespace XboxDownload
                 lvGame.Items.Clear();
                 butGame.Enabled = false;
                 linkCompare.Enabled = false;
-                linkGameWebsite.Enabled = false;
-                linkOpenMsStore.Enabled = false;
-                linkOpenXboxApp.Enabled = false;
+                pbWebsite.Enabled = pbMsStore.Enabled = pbXboxApp.Enabled = false;
+                pbWebsite.Image = pbWebsite.ErrorImage;
+                pbMsStore.Image = pbMsStore.ErrorImage;
+                pbXboxApp.Image = pbXboxApp.ErrorImage;
                 this.cbGameBundled.SelectedIndexChanged -= new EventHandler(this.CbGameBundled_SelectedIndexChanged);
                 string productId = result.Groups["productId"].Value.ToUpperInvariant();
-                linkGameWebsite.Links[0].LinkData = "https://www.microsoft.com/" + language + "/p/_/" + productId;
-                linkOpenMsStore.Links[0].LinkData = "ms-windows-store://pdp/?productid=" + productId;
-                linkOpenXboxApp.Links[0].LinkData = "msxbox://game/?productId=" + productId;
+                pbWebsite.Tag = "https://www.microsoft.com/" + language + "/p/_/" + productId;
+                pbMsStore.Tag = "ms-windows-store://pdp/?productid=" + productId;
+                pbXboxApp.Tag = "msxbox://game/?productId=" + productId;
                 ThreadPool.QueueUserWorkItem(delegate { XboxStore(market, productId); });
             }
             else
@@ -4229,10 +4230,12 @@ namespace XboxDownload
             }
         }
 
-        private void LinkOpen_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void PbOpen_Click(object sender, EventArgs e)
         {
-            string? url = e.Link.LinkData.ToString();
-            if (url != null) Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
+            if (sender is not PictureBox pb) return;
+            string? url = pb.Tag.ToString();
+            if (string.IsNullOrEmpty(url)) return;
+            Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
         }
 
         private void CbGameBundled_SelectedIndexChanged(object? sender, EventArgs? e)
@@ -4247,9 +4250,10 @@ namespace XboxDownload
             tbGameLanguages.Clear();
             lvGame.Items.Clear();
             linkCompare.Enabled = false;
-            linkGameWebsite.Enabled = false;
-            linkOpenMsStore.Enabled = false;
-            linkOpenXboxApp.Enabled = false;
+            pbWebsite.Enabled = pbMsStore.Enabled = pbXboxApp.Enabled = false;
+            pbWebsite.Image = pbWebsite.ErrorImage;
+            pbMsStore.Image = pbMsStore.ErrorImage;
+            pbXboxApp.Image = pbXboxApp.ErrorImage;
 
             var market = (Market)cbGameBundled.Tag;
             var json = (ClassGame.Game)gbGameInfo.Tag;
@@ -4711,9 +4715,10 @@ namespace XboxDownload
                         lvGame.Items.AddRange(lsDownloadUrl.ToArray());
                     }
                     butGame.Enabled = true;
-                    linkGameWebsite.Enabled = true;
-                    linkOpenMsStore.Enabled = true;
-                    linkOpenXboxApp.Enabled = true;
+                    pbWebsite.Enabled = pbMsStore.Enabled = pbXboxApp.Enabled = true;
+                    pbWebsite.Image = pbWebsite.InitialImage;
+                    pbMsStore.Image = pbMsStore.InitialImage;
+                    pbXboxApp.Image = pbXboxApp.InitialImage;
                 }));
             }
         }
