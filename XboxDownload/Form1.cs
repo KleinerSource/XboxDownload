@@ -327,6 +327,7 @@ namespace XboxDownload
             {
                 ButStart_Click(null, null);
             }
+            cbSpeedTestTimeOut.SelectedIndex = 1;
         }
 
         private class ComboboxItem
@@ -3118,9 +3119,9 @@ namespace XboxDownload
                 Col_Check.ReadOnly = true;
                 var timeout = cbSpeedTestTimeOut.SelectedIndex switch
                 {
-                    1 => 45000,
-                    2 => 60000,
-                    _ => 30000,
+                    0 => 5000,
+                    1 => 10000,
+                    _ => 15000,
                 };
                 Thread thread = new(new ThreadStart(() =>
                 {
@@ -3140,7 +3141,7 @@ namespace XboxDownload
         }
 
         CancellationTokenSource? ctsSpeedTest = null;
-        private void SpeedTest(List<DataGridViewRow> ls, int timeout = 30000)
+        private void SpeedTest(List<DataGridViewRow> ls, int timeout = 15000)
         {
             ctsSpeedTest = new CancellationTokenSource();
             string url = tbDlUrl.Text.Trim();

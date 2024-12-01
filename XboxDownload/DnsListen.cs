@@ -126,7 +126,7 @@ namespace XboxDownload
                 parentForm.Invoke(new Action(() =>
                 {
                     parentForm.pictureBox1.Image = Properties.Resource.Xbox3;
-                    MessageBox.Show($"启用DNS服务失败!\n错误信息: {ex.Message}\n\n两种解决方法：\n1、监听IP选择(Any)。\n2、使用netstat查看并解除 {port} 端口占用。", "启用DNS服务失败", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show($"启用DNS服务失败!\n错误信息: {ex.Message}\n\n两种解决方法：\n1、下载助手右上角监听IP，把本机IP改为(Any)。\n2、使用netstat查看并解除 {port} 端口占用。", "启用DNS服务失败", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }));
                 return;
             }
