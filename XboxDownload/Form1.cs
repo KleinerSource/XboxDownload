@@ -199,7 +199,7 @@ namespace XboxDownload
                 cbLocalIP.SelectedIndex = index;
             }
 
-            tbHosts1Akamai.Text = Properties.Resource.Akamai;
+            tbHosts1Akamai.Text = Regex.Replace(Properties.Resource.Akamai, "\r?\n", Environment.NewLine);
             string akamaiFilePath = Path.Combine(resourceDirectory, "Akamai.txt");
             if (File.Exists(akamaiFilePath))
             {
