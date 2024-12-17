@@ -3141,7 +3141,7 @@ namespace XboxDownload
         }
 
         CancellationTokenSource? ctsSpeedTest = null;
-        private void SpeedTest(List<DataGridViewRow> ls, int timeout = 15000)
+        private void SpeedTest(List<DataGridViewRow> ls, int timeout = 10000)
         {
             ctsSpeedTest = new CancellationTokenSource();
             string url = tbDlUrl.Text.Trim();

@@ -14,7 +14,7 @@ namespace XboxDownload
     {
         private Socket? socket = null;
         private readonly Form1 parentForm;
-        public static string[,] dohs = { { "阿里云DoH", "https://223.5.5.5/resolve", "" }, { "腾讯云DoH", "https://1.12.12.12/resolve", "" }, { "360 DoH", "https://180.163.249.75/resolve", "" }, { "DNS.SB(Global)", "https://45.11.45.11/dns-query", "" } };
+        public static string[,] dohs = { { "阿里云DoH", "https://223.5.5.5/resolve", "" }, { "腾讯云DoH", "https://1.12.12.12/resolve", "" }, { "360 DoH", "https://180.163.249.75/resolve", "" }, { "GG(中转)", "https://xbox.skydevil.xyz/resolve", "" } };
         public static DoHServer dohServer = new();
         public static Dictionary<string, DoHServer> dicDoHServer = new();
         public static readonly List<ResouceRecord> lsEmptyIP = new();
@@ -1636,7 +1636,7 @@ namespace XboxDownload
         public static string? DoH(string host, string server, Dictionary<string, string>? headers, bool ipv4 = true, int timeout = 6000)
         {
             string? ip = null;
-            string html = ClassWeb.HttpResponseContent(server + "?name=" + ClassWeb.UrlEncode(host) + "&type=" + (ipv4 ? "A" : "AAAA"), "GET", null, null, headers, timeout);
+            string html = ClassWeb.HttpResponseContent(server + "?name=" + ClassWeb.UrlEncode(host) + "&type=" + (ipv4 ? "A" : "AAAA"), "GET", null, null, headers, timeout, "XboxDownload");
             if (Regex.IsMatch(html.Trim(), @"^{.+}$"))
             {
                 try
