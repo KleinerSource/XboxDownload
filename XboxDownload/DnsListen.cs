@@ -1658,7 +1658,7 @@ namespace XboxDownload
         public static IPAddress[]? DoH2(string host, string server, Dictionary<string, string>? headers, bool ipv4 = true, int timeout = 6000)
         {
             IPAddress[]? ips = null;
-            string html = ClassWeb.HttpResponseContent(server + "?name=" + ClassWeb.UrlEncode(host) + "&type=" + (ipv4 ? "A" : "AAAA"), "GET", null, null, headers, timeout);
+            string html = ClassWeb.HttpResponseContent(server + "?name=" + ClassWeb.UrlEncode(host) + "&type=" + (ipv4 ? "A" : "AAAA"), "GET", null, null, headers, timeout, "XboxDownload");
             if (Regex.IsMatch(html.Trim(), @"^{.+}$"))
             {
                 try
