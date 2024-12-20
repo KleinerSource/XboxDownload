@@ -14,7 +14,7 @@ namespace XboxDownload
     {
         private Socket? socket = null;
         private readonly Form1 parentForm;
-        public static string[,] dohs = { { "阿里云DoH", "https://223.5.5.5/resolve", "" }, { "腾讯云DoH", "https://1.12.12.12/resolve", "" }, { "360 DoH", "https://180.163.249.75/resolve", "" }, { "GG(中转)", "https://xbox.skydevil.xyz/resolve", "" } };
+        public static string[,] dohs = { { "阿里云DoH", "https://223.5.5.5/resolve", "" }, { "腾讯云DoH", "https://1.12.12.12/resolve", "" }, { "360 DoH", "https://180.163.249.75/resolve", "" }, { "GG(中转)", "https://43.198.187.51/resolve", "xbox.skydevil.xyz" } };
         public static DoHServer dohServer = new();
         public static Dictionary<string, DoHServer> dicDoHServer = new();
         public static readonly List<ResouceRecord> lsEmptyIP = new();
