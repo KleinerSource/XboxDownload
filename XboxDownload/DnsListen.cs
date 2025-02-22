@@ -651,6 +651,8 @@ namespace XboxDownload
             {
                 _ = dicServiceV4.TryAdd("uplaypc-s-ubisoft.cdn.ubi.com", lsLocalIP);
                 _ = dicServiceV6.TryAdd("uplaypc-s-ubisoft.cdn.ubi.com", lsEmptyIP);
+                _ = dicServiceV4.TryAdd("ubisoftconnect.cdn.ubi.com", lsEmptyIP);
+                _ = dicServiceV6.TryAdd("ubisoftconnect.cdn.ubi.com", lsEmptyIP);
             }
             if (ubiIP != null)
             {
@@ -937,7 +939,7 @@ namespace XboxDownload
                     "gst.prod.dl.playstation.net", "gs2.ww.prod.dl.playstation.net", "zeus.dl.playstation.net", "ares.dl.playstation.net",
                     "atum.hac.lp1.d4c.nintendo.net", "bugyo.hac.lp1.eshop.nintendo.net", "ctest-dl-lp1.cdn.nintendo.net", "ctest-ul-lp1.cdn.nintendo.net",
                     "origin-a.akamaihd.net", "blzddist1-a.akamaihd.net",
-                    "uplaypc-s-ubisoft.cdn.ubionline.com.cn","uplaypc-s-ubisoft.cdn.ubi.com"
+                    "uplaypc-s-ubisoft.cdn.ubionline.com.cn","uplaypc-s-ubisoft.cdn.ubi.com", "ubisoftconnect.cdn.ubi.com"
                 };
             }
             else
@@ -950,13 +952,12 @@ namespace XboxDownload
                     "gst.prod.dl.playstation.net", "gs2.ww.prod.dl.playstation.net", "zeus.dl.playstation.net", "ares.dl.playstation.net",
                     "atum.hac.lp1.d4c.nintendo.net", "bugyo.hac.lp1.eshop.nintendo.net", "ctest-dl-lp1.cdn.nintendo.net", "ctest-ul-lp1.cdn.nintendo.net",
                     "origin-a.akamaihd.net", "blzddist1-a.akamaihd.net",
-                    "uplaypc-s-ubisoft.cdn.ubionline.com.cn","uplaypc-s-ubisoft.cdn.ubi.com"
+                    "uplaypc-s-ubisoft.cdn.ubionline.com.cn","uplaypc-s-ubisoft.cdn.ubi.com", "ubisoftconnect.cdn.ubi.com"
                 };
             }
             if (!Properties.Settings.Default.EpicCDN) hosts.Add("epicgames-download1.akamaized.net");
             if (string.IsNullOrEmpty(ip))
             {
-
                 foreach (string host in hosts)
                 {
                     if (dicService2V4.TryGetValue(host, out List<ResouceRecord>? vlaue))

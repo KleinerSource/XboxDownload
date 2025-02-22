@@ -30,9 +30,9 @@
         {
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle5 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle6 = new DataGridViewCellStyle();
             toolStrip1 = new ToolStrip();
             toolStripDropDownButton1 = new ToolStripDropDownButton();
             tsmUpdate = new ToolStripMenuItem();
@@ -332,7 +332,7 @@
             tsmUseIPBattle = new ToolStripMenuItem();
             tsmUseIPEpic = new ToolStripMenuItem();
             tsmUseIPUbi = new ToolStripMenuItem();
-            tssUseIP2 = new ToolStripSeparator();
+            tssUseIP3 = new ToolStripSeparator();
             tsmUseAkamai = new ToolStripMenuItem();
             tsmUseIPHosts = new ToolStripMenuItem();
             tsmExportRule = new ToolStripMenuItem();
@@ -349,6 +349,7 @@
             tsmAuthorization1 = new ToolStripMenuItem();
             tsmAuthorization2 = new ToolStripMenuItem();
             timerTraffic = new System.Windows.Forms.Timer(components);
+            tssUseIP2 = new ToolStripSeparator();
             toolStrip1.SuspendLayout();
             tabControl1.SuspendLayout();
             tabService.SuspendLayout();
@@ -1170,9 +1171,9 @@
             // 
             // Col_TTL
             // 
-            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle1.Format = "N0";
-            Col_TTL.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle4.Alignment = DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle4.Format = "N0";
+            Col_TTL.DefaultCellStyle = dataGridViewCellStyle4;
             resources.ApplyResources(Col_TTL, "Col_TTL");
             Col_TTL.Name = "Col_TTL";
             Col_TTL.ReadOnly = true;
@@ -1180,9 +1181,9 @@
             // 
             // Col_RoundtripTime
             // 
-            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle2.Format = "N0";
-            Col_RoundtripTime.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle5.Alignment = DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle5.Format = "N0";
+            Col_RoundtripTime.DefaultCellStyle = dataGridViewCellStyle5;
             resources.ApplyResources(Col_RoundtripTime, "Col_RoundtripTime");
             Col_RoundtripTime.Name = "Col_RoundtripTime";
             Col_RoundtripTime.ReadOnly = true;
@@ -1190,9 +1191,9 @@
             // 
             // Col_Speed
             // 
-            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle3.Format = "N2";
-            Col_Speed.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle6.Alignment = DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle6.Format = "N2";
+            Col_Speed.DefaultCellStyle = dataGridViewCellStyle6;
             resources.ApplyResources(Col_Speed, "Col_Speed");
             Col_Speed.Name = "Col_Speed";
             Col_Speed.ReadOnly = true;
@@ -2484,7 +2485,7 @@
             // 
             // tsmUseIP
             // 
-            tsmUseIP.DropDownItems.AddRange(new ToolStripItem[] { tsmUseIPCn, tsmUseIPCn2, tsmUseIPCom, tsmUseIPXbox, tsmUseIPApp, tssUseIP1, tsmUseIPPS, tsmUseIPNS, tsmUseIPEa, tsmUseIPBattle, tsmUseIPEpic, tsmUseIPUbi, tssUseIP2, tsmUseAkamai, tsmUseIPHosts });
+            tsmUseIP.DropDownItems.AddRange(new ToolStripItem[] { tsmUseIPCn, tsmUseIPCn2, tsmUseIPCom, tsmUseIPXbox, tsmUseIPApp, tssUseIP1, tsmUseIPPS, tsmUseIPNS, tssUseIP2, tsmUseIPEa, tsmUseIPBattle, tsmUseIPEpic, tsmUseIPUbi, tssUseIP3, tsmUseAkamai, tsmUseIPHosts });
             tsmUseIP.Name = "tsmUseIP";
             resources.ApplyResources(tsmUseIP, "tsmUseIP");
             // 
@@ -2564,10 +2565,10 @@
             tsmUseIPUbi.Name = "tsmUseIPUbi";
             tsmUseIPUbi.Click += TsmUseIP_Click;
             // 
-            // tssUseIP2
+            // tssUseIP3
             // 
-            tssUseIP2.Name = "tssUseIP2";
-            resources.ApplyResources(tssUseIP2, "tssUseIP2");
+            tssUseIP3.Name = "tssUseIP3";
+            resources.ApplyResources(tssUseIP3, "tssUseIP3");
             // 
             // tsmUseAkamai
             // 
@@ -2666,6 +2667,11 @@
             // 
             timerTraffic.Interval = 1000;
             timerTraffic.Tick += TimerTraffic_Tick;
+            // 
+            // tssUseIP2
+            // 
+            tssUseIP2.Name = "tssUseIP2";
+            resources.ApplyResources(tssUseIP2, "tssUseIP2");
             // 
             // Form1
             // 
@@ -2844,7 +2850,7 @@
         private ToolStripMenuItem tsmUseIPEa;
         private ToolStripMenuItem tsmUseIPBattle;
         private ToolStripMenuItem tsmUseIPEpic;
-        private ToolStripSeparator tssUseIP2;
+        private ToolStripSeparator tssUseIP3;
         private ToolStripMenuItem tsmUseAkamai;
         private ToolStripMenuItem tsmUseIPHosts;
         private ToolStripMenuItem tsmExportRule;
@@ -3060,5 +3066,6 @@
         private PictureBox pbWebsite;
         private PictureBox pbMsStore;
         private PictureBox pbXboxApp;
+        private ToolStripSeparator tssUseIP2;
     }
 }

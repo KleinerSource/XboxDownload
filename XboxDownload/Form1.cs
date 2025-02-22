@@ -69,7 +69,7 @@ namespace XboxDownload
             toolTip1.SetToolTip(this.labelEA, "包括以下游戏下载域名\norigin-a.akamaihd.net");
             toolTip1.SetToolTip(this.labelBattle, "包括以下游戏下载域名\nblzddist1-a.akamaihd.net\nus.cdn.blizzard.com\neu.cdn.blizzard.com\nkr.cdn.blizzard.com\nlevel3.blizzard.com\nblizzard.gcdn.cloudn.co.kr\n\n#网易国服(校园网可指定Akamai IPv6免流下载)\n*.necdn.leihuo.netease.com");
             toolTip1.SetToolTip(this.labelEpic, "包括以下游戏下载域名\nepicgames-download1-1251447533.file.myqcloud.com\nepicgames-download1.akamaized.net\ndownload.epicgames.com\nfastly-download.epicgames.com\ncloudflare.epicgamescdn.com\n\n建议优先使用国内CDN，速度不理想再选用 Akamai CDN");
-            toolTip1.SetToolTip(this.labelUbi, "包括以下游戏下载域名\nuplaypc-s-ubisoft.cdn.ubionline.com.cn\nuplaypc-s-ubisoft.cdn.ubi.com\n\n注：XDefiant(不羁联盟)不支持使用国内CDN，\n可勾选\"自动优选 Akamai IP\"使用国外CDN。");
+            toolTip1.SetToolTip(this.labelUbi, "包括以下游戏下载域名\nuplaypc-s-ubisoft.cdn.ubionline.com.cn\nuplaypc-s-ubisoft.cdn.ubi.com\nubisoftconnect.cdn.ubi.com\n\n注：XDefiant(不羁联盟)不支持使用国内CDN，\n可勾选\"自动优选 Akamai IP\"使用国外CDN。");
             toolTip1.SetToolTip(this.ckbDoH, "默认使用 阿里云DoH(加密DNS) 解析域名IP，\n防止上游DNS服务器被劫持污染。\nPC用户使用此功能，需要勾选“设置本机 DNS”\n\n注：网络正常可以不勾选。");
             toolTip1.SetToolTip(this.ckbSetDns, "开始监听将把电脑DNS设置为本机IP，停止监听后恢复默认设置，\nPC用户建议勾选，主机用户无需设置。\n\n注：如果退出Xbox下载助手后没网络，请点击旁边“修复”。");
             toolTip1.SetToolTip(this.ckbBetterAkamaiIP, "自动从 Akamai 优选 IP 列表中找出下载速度最快的节点\n支持 Xbox、PS、NS、EA、战网、EPIC、育碧、拳头游戏\n选中后临时忽略自定义IP（Xbox、PS不使用国内IP）\n同时还能解决Xbox安装停止，冷门游戏国内CDN没缓存下载慢等问题\n\n提示：\n更换IP后，Xbox、战网、育碧 拳头游戏 客户端需要暂停下载，然后重新恢复安装，\nEA app、Epic客户端请点击修复/重启，主机需要等待DNS缓存过期(100秒)。");
@@ -1458,6 +1458,7 @@ namespace XboxDownload
                         if (Properties.Settings.Default.UbiStore)
                         {
                             sb.AppendLine(Properties.Settings.Default.LocalIP + " uplaypc-s-ubisoft.cdn.ubi.com");
+                            sb.AppendLine("0.0.0.0 ubisoftconnect.cdn.ubi.com");
                             if (!string.IsNullOrEmpty(Properties.Settings.Default.UbiIP))
                             {
                                 if (Regex.IsMatch(Properties.Settings.Default.UbiIP, @"^\d+\.\d+\.\d+\.\d+$"))
@@ -2054,8 +2055,8 @@ namespace XboxDownload
                         lb1.LinkClicked += new LinkLabelLinkClickedEventHandler(this.LinkTestUrl_LinkClicked);
                         string[,] games = new string[,]
                         {
-                            {"光环: 无限(XS)", "0698b936-d300-4451-b9a0-0be0514bbbe5_xs", "/8/4b767612-474d-402c-9d7d-5084da586476/0698b936-d300-4451-b9a0-0be0514bbbe5/1.4070.30698.0.09b17da4-ea7a-4a0e-a73a-226f18da5a2c/Microsoft.254428597CFE2_1.4070.30698.0_neutral__8wekyb3d8bbwe_xs.xvc" },
-                            {"极限竞速: 地平线5(PC)", "3d263e92-93cd-4f9b-90c7-5438150cecbf", "/14/55e6c982-6931-44b9-9190-f2dbbc92c741/3d263e92-93cd-4f9b-90c7-5438150cecbf/3.667.430.0.bd271a99-ff4c-4db0-96ba-1f4b2c8e221e/Microsoft.624F8B84B80_3.667.430.0_x64__8wekyb3d8bbwe.msixvc" },
+                            {"光环: 无限(XS)", "0698b936-d300-4451-b9a0-0be0514bbbe5_xs", "/1/dba0fd14-9471-4559-abcf-180653d7cb34/0698b936-d300-4451-b9a0-0be0514bbbe5/1.4098.14338.0.267095a8-2f10-4a3d-8a2d-909a28c1437c/Microsoft.254428597CFE2_1.4098.14338.0_neutral__8wekyb3d8bbwe_xs.xvc" },
+                            {"极限竞速: 地平线5(PC)", "3d263e92-93cd-4f9b-90c7-5438150cecbf", "/6/78dc2216-0109-4985-b109-bc17102160d3/3d263e92-93cd-4f9b-90c7-5438150cecbf/3.678.498.0.b0282c70-c104-4953-a37a-1e9290578d1d/Microsoft.624F8B84B80_3.678.498.0_x64__8wekyb3d8bbwe.msixvc" },
                             {"战争机器5(PC)", "1e66a3e7-2f7b-461c-9f46-3ee0aec64b8c", "/8/82e2c767-56a2-4cff-9adf-bc901fd81e1a/1e66a3e7-2f7b-461c-9f46-3ee0aec64b8c/1.1.967.0.4e71a28b-d845-42e5-86bf-36afdd5eb82f/Microsoft.HalifaxBaseGame_1.1.967.0_x64__8wekyb3d8bbwe.msixvc"}
                         };
                         for (int i = 0; i <= games.GetLength(0) - 1; i++)
@@ -2640,14 +2641,15 @@ namespace XboxDownload
                             sb.AppendLine(ip + " blzddist1-a.akamaihd.net # XboxDownload");
                             sb.AppendLine(ip + " epicgames-download1.akamaized.net # XboxDownload");
                             sb.AppendLine(ip + " uplaypc-s-ubisoft.cdn.ubi.com # XboxDownload");
-                            msg = "\nOrigin 的用户可以在“工具 -> EA Origin 切换CDN服务器”中指定使用 Akamai。\n\n战网、Epic、育碧 需要使用监听方式跳转。";
+                            sb.AppendLine(ip + " ubisoftconnect.cdn.ubi.com # XboxDownload");
+                            msg = "\n\n战网、Epic、育碧 需要使用监听方式跳转。";
                         }
                         else
                         {
                             sb.AppendLine(ip + " origin-a.akamaihd.net # XboxDownload");
                             sb.AppendLine("0.0.0.0 ssl-lvlt.cdn.ea.com # XboxDownload");
                             sb.AppendLine(ip + " epicgames-download1.akamaized.net # XboxDownload");
-                            msg = "\nOrigin 的用户可以在“工具 -> EA Origin 切换CDN服务器”中指定使用 Akamai。\n\nNS主机、战网客户端、育碧客户端 不支持使用 IPv6。";
+                            msg = "\n\nNS主机、战网客户端、育碧客户端 不支持使用 IPv6。";
                         }
                         break;
                     case "uplaypc-s-ubisoft.cdn.ubionline.com.cn":
@@ -2813,7 +2815,8 @@ namespace XboxDownload
                             sb.AppendLine("address=/blzddist1-a.akamaihd.net/" + ip);
                             sb.AppendLine("address=/epicgames-download1.akamaized.net/" + ip);
                             sb.AppendLine("address=/uplaypc-s-ubisoft.cdn.ubi.com/" + ip);
-                            msg = "\nOrigin 的用户可以在“工具 -> EA Origin 切换CDN服务器”中指定使用 Akamai。\n\n战网、Epic、育碧 需要使用监听方式跳转。";
+                            sb.AppendLine("address=/ubisoftconnect.cdn.ubi.com/" + ip);
+                            msg = "\n\n战网、Epic、育碧 需要使用监听方式跳转。";
                         }
                         else
                         {
@@ -2821,7 +2824,7 @@ namespace XboxDownload
                             sb.AppendLine("address=/origin-a.akamaihd.net/" + ip);
                             sb.AppendLine("address=/ssl-lvlt.cdn.ea.com/0.0.0.0");
                             sb.AppendLine("address=/epicgames-download1.akamaized.net/" + ip);
-                            msg = "\nOrigin 的用户可以在“工具 -> EA Origin 切换CDN服务器”中指定使用 Akamai。\n\nNS主机、战网客户端、育碧客户端 不支持使用 IPv6。";
+                            msg = "\n\nNS主机、战网客户端、育碧客户端 不支持使用 IPv6。";
                         }
                     }
                     else
@@ -2859,6 +2862,7 @@ namespace XboxDownload
                             sb.AppendLine(ip + " blzddist1-a.akamaihd.net");
                             sb.AppendLine(ip + " epicgames-download1.akamaized.net");
                             sb.AppendLine(ip + " uplaypc-s-ubisoft.cdn.ubi.com");
+                            sb.AppendLine(ip + " ubisoftconnect.cdn.ubi.com");
                             msg = "\nOrigin 的用户可以在“工具 -> EA Origin 切换CDN服务器”中指定使用 Akamai。\n\n战网、Epic、育碧 需要使用监听方式跳转。";
                         }
                         else
@@ -3298,7 +3302,7 @@ namespace XboxDownload
                 foreach (DataGridViewRow dgvr in dgvIpList.Rows)
                 {
                     if (dgvr.Cells["Col_Speed"].Value == null) continue;
-                    if (double.TryParse(dgvr.Cells["Col_Speed"].Value.ToString(), out double speed) && speed >= 10)
+                    if (double.TryParse(dgvr.Cells["Col_Speed"].Value.ToString(), out double speed) && speed >= 15)
                     {
                         bUploadBetterAkamaiIpEnable = true;
                         break;
@@ -4703,7 +4707,7 @@ namespace XboxDownload
                         cbGameBundled.SelectedIndex = 0;
                         this.cbGameBundled.SelectedIndexChanged += new EventHandler(this.CbGameBundled_SelectedIndexChanged);
                     }
-                    tbGameDescription.Text = description;
+                    tbGameDescription.Text = Regex.Replace(description, @"\r\n|\n|\r", Environment.NewLine);
                     tbGameLanguages.Text = gameLanguages;
                     if (MSRP > 0)
                     {
