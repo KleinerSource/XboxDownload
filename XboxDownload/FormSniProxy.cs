@@ -133,7 +133,7 @@ namespace XboxDownload
                 Font font = cbSniProxysIPv6.Font;
                 cbSniProxysIPv6.Font = new Font(font.FontFamily, font.Size);
                 cbSniProxysIPv6.ForeColor = Color.Empty;
-                MessageBox.Show("当前网络可以使用IPv6。", "检测IPv6", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("当前网络可以使用IPv6。", "检测IPv6", MessageBoxButtons.OK, MessageBoxIcon.None);
             }
             else
             {

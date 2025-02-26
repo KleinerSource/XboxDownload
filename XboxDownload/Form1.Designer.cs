@@ -30,9 +30,9 @@
         {
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle5 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle6 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle7 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle8 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle9 = new DataGridViewCellStyle();
             toolStrip1 = new ToolStrip();
             toolStripDropDownButton1 = new ToolStripDropDownButton();
             tsmUpdate = new ToolStripMenuItem();
@@ -328,6 +328,7 @@
             tssUseIP1 = new ToolStripSeparator();
             tsmUseIPPS = new ToolStripMenuItem();
             tsmUseIPNS = new ToolStripMenuItem();
+            tssUseIP2 = new ToolStripSeparator();
             tsmUseIPEa = new ToolStripMenuItem();
             tsmUseIPBattle = new ToolStripMenuItem();
             tsmUseIPEpic = new ToolStripMenuItem();
@@ -349,7 +350,6 @@
             tsmAuthorization1 = new ToolStripMenuItem();
             tsmAuthorization2 = new ToolStripMenuItem();
             timerTraffic = new System.Windows.Forms.Timer(components);
-            tssUseIP2 = new ToolStripSeparator();
             toolStrip1.SuspendLayout();
             tabControl1.SuspendLayout();
             tabService.SuspendLayout();
@@ -1171,9 +1171,9 @@
             // 
             // Col_TTL
             // 
-            dataGridViewCellStyle4.Alignment = DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle4.Format = "N0";
-            Col_TTL.DefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle7.Alignment = DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle7.Format = "N0";
+            Col_TTL.DefaultCellStyle = dataGridViewCellStyle7;
             resources.ApplyResources(Col_TTL, "Col_TTL");
             Col_TTL.Name = "Col_TTL";
             Col_TTL.ReadOnly = true;
@@ -1181,9 +1181,9 @@
             // 
             // Col_RoundtripTime
             // 
-            dataGridViewCellStyle5.Alignment = DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle5.Format = "N0";
-            Col_RoundtripTime.DefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle8.Alignment = DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle8.Format = "N0";
+            Col_RoundtripTime.DefaultCellStyle = dataGridViewCellStyle8;
             resources.ApplyResources(Col_RoundtripTime, "Col_RoundtripTime");
             Col_RoundtripTime.Name = "Col_RoundtripTime";
             Col_RoundtripTime.ReadOnly = true;
@@ -1191,9 +1191,9 @@
             // 
             // Col_Speed
             // 
-            dataGridViewCellStyle6.Alignment = DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle6.Format = "N2";
-            Col_Speed.DefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle9.Alignment = DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle9.Format = "N2";
+            Col_Speed.DefaultCellStyle = dataGridViewCellStyle9;
             resources.ApplyResources(Col_Speed, "Col_Speed");
             Col_Speed.Name = "Col_Speed";
             Col_Speed.ReadOnly = true;
@@ -2541,6 +2541,11 @@
             tsmUseIPNS.Name = "tsmUseIPNS";
             tsmUseIPNS.Click += TsmUseIP_Click;
             // 
+            // tssUseIP2
+            // 
+            tssUseIP2.Name = "tssUseIP2";
+            resources.ApplyResources(tssUseIP2, "tssUseIP2");
+            // 
             // tsmUseIPEa
             // 
             resources.ApplyResources(tsmUseIPEa, "tsmUseIPEa");
@@ -2667,11 +2672,6 @@
             // 
             timerTraffic.Interval = 1000;
             timerTraffic.Tick += TimerTraffic_Tick;
-            // 
-            // tssUseIP2
-            // 
-            tssUseIP2.Name = "tssUseIP2";
-            resources.ApplyResources(tssUseIP2, "tssUseIP2");
             // 
             // Form1
             // 
