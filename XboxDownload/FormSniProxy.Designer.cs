@@ -35,6 +35,7 @@
             textBox1 = new TextBox();
             label1 = new Label();
             groupBox3 = new GroupBox();
+            linkTest = new LinkLabel();
             checkedListBox2 = new CheckedListBox();
             cbSniPorxyOptimized = new CheckBox();
             cbSniProxysIPv6 = new CheckBox();
@@ -112,6 +113,7 @@
             // 
             // groupBox3
             // 
+            groupBox3.Controls.Add(linkTest);
             groupBox3.Controls.Add(checkedListBox2);
             groupBox3.Location = new Point(578, 152);
             groupBox3.Name = "groupBox3";
@@ -120,13 +122,23 @@
             groupBox3.TabStop = false;
             groupBox3.Text = "DoH服务器 (0)";
             // 
+            // linkTest
+            // 
+            linkTest.AutoSize = true;
+            linkTest.Location = new Point(128, 227);
+            linkTest.Name = "linkTest";
+            linkTest.Size = new Size(139, 24);
+            linkTest.TabIndex = 1;
+            linkTest.TabStop = true;
+            linkTest.Text = "测试DoH服务器";
+            linkTest.LinkClicked += LinkTest_LinkClicked;
+            // 
             // checkedListBox2
             // 
-            checkedListBox2.Dock = DockStyle.Fill;
             checkedListBox2.FormattingEnabled = true;
             checkedListBox2.Location = new Point(3, 26);
             checkedListBox2.Name = "checkedListBox2";
-            checkedListBox2.Size = new Size(264, 225);
+            checkedListBox2.Size = new Size(264, 193);
             checkedListBox2.TabIndex = 0;
             // 
             // cbSniPorxyOptimized
@@ -205,6 +217,7 @@
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
             groupBox3.ResumeLayout(false);
+            groupBox3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)nudSniPorxyExpired).EndInit();
             ResumeLayout(false);
             PerformLayout();
@@ -224,5 +237,6 @@
         private LinkLabel linkTestIPv6;
         private NumericUpDown nudSniPorxyExpired;
         private Label label2;
+        private LinkLabel linkTest;
     }
 }

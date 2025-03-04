@@ -124,6 +124,13 @@ namespace XboxDownload
             }));
         }
 
+        private void LinkTest_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            FormDoH dialog = new();
+            dialog.ShowDialog();
+            dialog.Dispose();
+        }
+
         private async void LinkTestIPv6_LinkClickedAsync(object sender, LinkLabelLinkClickedEventArgs e)
         {
             linkTestIPv6.Enabled = false;
