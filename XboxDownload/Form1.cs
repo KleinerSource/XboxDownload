@@ -1797,7 +1797,7 @@ namespace XboxDownload
                     tsmi.Visible = false;
                 }
             }
-            tssUseIP1.Visible = false;
+            tssUseIP1.Visible = tssUseIP2.Visible = tssUseIP3.Visible = false;
             switch (host)
             {
                 case "assets1.xboxlive.cn":
@@ -1805,20 +1805,24 @@ namespace XboxDownload
                 case "d1.xboxlive.cn":
                 case "d2.xboxlive.cn":
                     tsmUseIPCn.Visible = true;
+                    tssUseIP1.Visible = true;
                     break;
                 case "dlassets.xboxlive.cn":
                 case "dlassets2.xboxlive.cn":
                     tsmUseIPCn2.Visible = true;
+                    tssUseIP1.Visible = true;
                     break;
                 case "dl.delivery.mp.microsoft.com":
                 case "tlu.dl.delivery.mp.microsoft.com":
                     tsmUseIPApp.Visible = true;
+                    tssUseIP1.Visible = true;
                     break;
                 case "gst.prod.dl.playstation.net":
                 case "gs2.ww.prod.dl.playstation.net":
                 case "zeus.dl.playstation.net":
                 case "ares.dl.playstation.net":
                     tsmUseIPPS.Visible = true;
+                    tssUseIP2.Visible = true;
                     break;
                 case "Akamai":
                 case "AkamaiV2":
@@ -1828,7 +1832,6 @@ namespace XboxDownload
                 case "blzddist1-a.akamaihd.net":
                 case "epicgames-download1.akamaized.net":
                 case "uplaypc-s-ubisoft.cdn.ubi.com":
-                    tssUseIP1.Visible = true;
                     tsmUseIPCom.Visible = true;
                     tsmUseIPXbox.Visible = true;
                     tsmUseIPApp.Visible = true;
@@ -1840,9 +1843,13 @@ namespace XboxDownload
                     tsmUseIPBattle.Visible = true;
                     tsmUseIPEpic.Visible = true;
                     tsmUseIPUbi.Visible = true;
+                    tssUseIP1.Visible = true;
+                    tssUseIP2.Visible = true;
+                    tssUseIP3.Visible = true;
                     break;
                 case "uplaypc-s-ubisoft.cdn.ubionline.com.cn":
                     tsmUseIPUbi.Visible = true;
+                    tssUseIP3.Visible = true;
                     break;
                 default:
                     break;
@@ -2055,8 +2062,8 @@ namespace XboxDownload
                         lb1.LinkClicked += new LinkLabelLinkClickedEventHandler(this.LinkTestUrl_LinkClicked);
                         string[,] games = new string[,]
                         {
-                            {"光环: 无限(XS)", "0698b936-d300-4451-b9a0-0be0514bbbe5_xs", "/1/dba0fd14-9471-4559-abcf-180653d7cb34/0698b936-d300-4451-b9a0-0be0514bbbe5/1.4098.14338.0.267095a8-2f10-4a3d-8a2d-909a28c1437c/Microsoft.254428597CFE2_1.4098.14338.0_neutral__8wekyb3d8bbwe_xs.xvc" },
-                            {"极限竞速: 地平线5(PC)", "3d263e92-93cd-4f9b-90c7-5438150cecbf", "/6/78dc2216-0109-4985-b109-bc17102160d3/3d263e92-93cd-4f9b-90c7-5438150cecbf/3.678.498.0.b0282c70-c104-4953-a37a-1e9290578d1d/Microsoft.624F8B84B80_3.678.498.0_x64__8wekyb3d8bbwe.msixvc" },
+                            {"光环: 无限(XS)", "0698b936-d300-4451-b9a0-0be0514bbbe5_xs", "/Z/eca149b3-7278-44dc-8a0c-bae1bf3c4ea5/0698b936-d300-4451-b9a0-0be0514bbbe5/1.4110.61456.0.989b2038-bcbf-4e3a-a665-0d449076400f/Microsoft.254428597CFE2_1.4110.61456.0_neutral__8wekyb3d8bbwe_xs.xvc" },
+                            {"极限竞速: 地平线5(PC)", "3d263e92-93cd-4f9b-90c7-5438150cecbf", "/3/be691921-c541-4027-83d0-8e99252ffd97/3d263e92-93cd-4f9b-90c7-5438150cecbf/3.681.890.0.3fe9a0e6-3489-4508-91f4-02e46700f94e/Microsoft.624F8B84B80_3.681.890.0_x64__8wekyb3d8bbwe.msixvc" },
                             {"战争机器5(PC)", "1e66a3e7-2f7b-461c-9f46-3ee0aec64b8c", "/8/82e2c767-56a2-4cff-9adf-bc901fd81e1a/1e66a3e7-2f7b-461c-9f46-3ee0aec64b8c/1.1.967.0.4e71a28b-d845-42e5-86bf-36afdd5eb82f/Microsoft.HalifaxBaseGame_1.1.967.0_x64__8wekyb3d8bbwe.msixvc"}
                         };
                         for (int i = 0; i <= games.GetLength(0) - 1; i++)
