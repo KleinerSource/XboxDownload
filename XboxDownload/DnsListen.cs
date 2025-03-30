@@ -14,7 +14,7 @@ namespace XboxDownload
     {
         private Socket? socket = null;
         private readonly Form1 parentForm;
-        public static string[,] dohs = { { "阿里云DoH", "https://223.5.5.5/resolve", "" }, { "腾讯云DoH", "https://1.12.12.12/resolve", "" }, { "360 DoH", "https://180.163.249.75/resolve", "" }, { "GG(中转)", "https://52.69.240.75/resolve", "xbox.skydevil.xyz" }, { "CF 中转(IPv4)", "https://104.21.89.117/resolve", "dc.skydevil.xyz" }, { "CF 中转(IPv6)", "https://[2606:4700:3033::ac43:d1b3]/resolve", "dc.skydevil.xyz" } };
+        public static string[,] dohs = { { "阿里云DoH", "https://223.5.5.5/resolve", "" }, { "腾讯云DoH", "https://1.12.12.12/resolve", "" }, { "360 DoH", "https://180.163.249.75/resolve", "" }, { "Google", "https://104.21.45.47/resolve", "d2.skydevil.xyz" }, { "DNS.SB(Globa)", "https://52.69.240.75/doh.sb/dns-query", "d1.skydevil.xyz" }, { "DNS.SB(日本东京)", "https://52.69.240.75/jp-nrt.doh.sb/dns-query", "d1.skydevil.xyz" }, { "DNS.SB(韩国首尔)", "https://52.69.240.75/kr-sel.doh.sb/dns-query", "d1.skydevil.xyz" }, { "DNS.SB(新加坡)", "https://52.69.240.75/sg-sin.doh.sb/dns-query", "d1.skydevil.xyz" }, { "DNS.SB(中国香港)", "https://52.69.240.75/hk-hkg.doh.sb/dns-query", "d1.skydevil.xyz" } };
         public static DoHServer dohServer = new();
         public static Dictionary<string, DoHServer> dicDoHServer = new();
         public static readonly List<ResouceRecord> lsEmptyIP = new();
