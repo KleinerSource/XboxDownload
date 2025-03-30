@@ -48,7 +48,7 @@ namespace XboxDownload
                 if (index > DnsListen.dohs.GetLongLength(0)) index = 0;
                 string dohHost = DnsListen.dohs[index, 2];
                 DoHServer doHServer = new() { Website = DnsListen.dohs[index, 1] };
-                if (!string.IsNullOrEmpty(dohHost)) doHServer.Headers = new Dictionary<string, string> { { "Host", dohHost } };
+                if (!string.IsNullOrEmpty(dohHost)) doHServer.Headers = new Dictionary<string, string> { { "Host", dohHost }, { "Accept", "application/dns-json" } };
                 _ = dicDoHServer.TryAdd(host, doHServer);
             }
         }
