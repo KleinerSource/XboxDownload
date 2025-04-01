@@ -47,8 +47,12 @@ namespace XboxDownload
                 int index = Convert.ToInt32(row["DoHServer"].ToString());
                 if (index > DnsListen.dohs.GetLongLength(0)) index = 0;
                 string dohHost = DnsListen.dohs[index, 2];
-                DoHServer doHServer = new() { Website = DnsListen.dohs[index, 1] };
-                if (!string.IsNullOrEmpty(dohHost)) doHServer.Headers = new Dictionary<string, string> { { "Host", dohHost }, { "Accept", "application/dns-json" } };
+                DoHServer doHServer = new()
+                {
+                    Website = DnsListen.dohs[index, 1],
+                    Headers = new Dictionary<string, string> { { "Accept", "application/dns-json" } }
+                };
+                if (!string.IsNullOrEmpty(dohHost)) doHServer.Headers.Add("Host", dohHost);
                 _ = dicDoHServer.TryAdd(host, doHServer);
             }
         }

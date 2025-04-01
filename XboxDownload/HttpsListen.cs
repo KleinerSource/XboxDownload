@@ -453,10 +453,45 @@ namespace XboxDownload
                                                 IPAddress[]? ips = null;
                                                 if (proxy.CustomIP && proxy.IPs == null)
                                                 {
-                                                    if (Properties.Settings.Default.SniProxysIPv6 && Form1.bIPv6Support && proxy.IPv6s != null || proxy.IPv4s == null)
-                                                        proxy.IPs = proxy.IPv6s;
+                                                    IPAddress[]? ipV6 = Properties.Settings.Default.SniProxysIPv6 && Form1.bIPv6Support ? proxy.IPv6s : null, ipV4 = proxy.IPv4s;
+                                                    if (Properties.Settings.Default.SniPorxyOptimized && ipV6 != null && ipV4 != null)
+                                                        proxy.IPs = ipV6.Concat(ipV4).ToArray();
                                                     else
-                                                        proxy.IPs = proxy.IPv4s;
+                                                        proxy.IPs = ipV6 ?? ipV4;
+                                                    if (Properties.Settings.Default.SniPorxyOptimized && proxy.IPs?.Length >= 2)
+                                                    {
+                                                        await proxy.Semaphore.WaitAsync();
+                                                        CancellationTokenSource cts = new();
+                                                        var tasks = proxy.IPs.Select(ip => Task.Run(async () =>
+                                                        {
+                                                            Socket socket = new(ip.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+                                                            try
+                                                            {
+                                                                await Task.Factory.FromAsync(socket.BeginConnect, socket.EndConnect, new IPEndPoint(ip, 443), null);
+                                                                socket.Close();
+                                                                socket.Dispose();
+                                                                if (!cts.IsCancellationRequested)
+                                                                {
+                                                                    return ip;
+                                                                }
+                                                                else
+                                                                {
+                                                                    return null;
+                                                                }
+                                                            }
+                                                            catch
+                                                            {
+                                                                socket.Dispose();
+                                                                if (!cts.IsCancellationRequested)
+                                                                    await Task.Delay(1000, cts.Token);
+                                                                return null;
+                                                            }
+                                                        })).ToArray();
+                                                        IPAddress? ip = await Task.WhenAny(tasks).Result;
+                                                        cts.Cancel();
+                                                        if (ip != null) ips = proxy.IPs = new IPAddress[1] { ip };
+                                                        proxy.Semaphore.Release();
+                                                    }
                                                 }
                                                 else if (proxy.IPs == null || (!proxy.CustomIP && DateTime.Compare(proxy.Expired, DateTime.Now) < 0))
                                                 {
@@ -483,7 +518,10 @@ namespace XboxDownload
                                                                 ipV4 = ClassDNS.DoH2(domain, dohServer, dohHeaders, true);
                                                             });
                                                             await Task.WhenAll(tasks);
-                                                            proxy.IPs = ipV6 ?? ipV4;
+                                                            if (Properties.Settings.Default.SniPorxyOptimized && ipV6 != null && ipV4 != null)
+                                                                proxy.IPs = ipV6.Concat(ipV4).ToArray();
+                                                            else
+                                                                proxy.IPs = ipV6 ?? ipV4;
                                                         }
                                                         else
                                                         {
@@ -529,7 +567,10 @@ namespace XboxDownload
                                                                 await Task.WhenAll(tasks2);
                                                             });
                                                             await Task.WhenAll(tasks);
-                                                            proxy.IPs = !lsIPv6.IsEmpty ? lsIPv6.ToArray() : lsIPv4.ToArray();
+                                                            if (Properties.Settings.Default.SniPorxyOptimized && !lsIPv6.IsEmpty && !lsIPv4.IsEmpty)
+                                                                proxy.IPs = lsIPv6.Concat(lsIPv4).ToArray();
+                                                            else
+                                                                proxy.IPs = !lsIPv6.IsEmpty ? lsIPv6.ToArray() : lsIPv4.ToArray();
                                                         }
                                                         if (Properties.Settings.Default.SniPorxyOptimized && proxy.IPs?.Length >= 2)
                                                         {
