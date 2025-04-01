@@ -610,12 +610,16 @@ namespace XboxDownload
                 if ((new IPAddress(battleIP)).AddressFamily == AddressFamily.InterNetwork)
                 {
                     List<ResouceRecord> lsBattleIP = new() { new ResouceRecord { Datas = battleIP, TTL = 100, QueryClass = 1, QueryType = QueryType.A } };
+                    _ = dicServiceV4.TryAdd("downloader.battle.net", lsBattleIP);
+                    _ = dicServiceV6.TryAdd("downloader.battle.net", lsEmptyIP);
                     _ = dicServiceV4.TryAdd("blzddist1-a.akamaihd.net", lsBattleIP);
                     _ = dicServiceV6.TryAdd("blzddist1-a.akamaihd.net", lsEmptyIP);
                 }
                 else
                 {
                     List<ResouceRecord> lsBattleIP = new() { new ResouceRecord { Datas = battleIP, TTL = 100, QueryClass = 1, QueryType = QueryType.AAAA } };
+                    _ = dicServiceV6.TryAdd("downloader.battle.net", lsBattleIP);
+                    _ = dicServiceV4.TryAdd("downloader.battle.net", lsEmptyIP);
                     _ = dicServiceV6.TryAdd("blzddist1-a.akamaihd.net", lsBattleIP);
                     _ = dicServiceV4.TryAdd("blzddist1-a.akamaihd.net", lsLocalIP);
                 }
@@ -938,7 +942,7 @@ namespace XboxDownload
                     "dl.delivery.mp.microsoft.com", "2.tlu.dl.delivery.mp.microsoft.com",
                     "gst.prod.dl.playstation.net", "gs2.ww.prod.dl.playstation.net", "zeus.dl.playstation.net", "ares.dl.playstation.net",
                     "atum.hac.lp1.d4c.nintendo.net", "bugyo.hac.lp1.eshop.nintendo.net", "ctest-dl-lp1.cdn.nintendo.net", "ctest-ul-lp1.cdn.nintendo.net",
-                    "origin-a.akamaihd.net", "blzddist1-a.akamaihd.net",
+                    "origin-a.akamaihd.net", "downloader.battle.net", "blzddist1-a.akamaihd.net",
                     "uplaypc-s-ubisoft.cdn.ubionline.com.cn","uplaypc-s-ubisoft.cdn.ubi.com", "ubisoftconnect.cdn.ubi.com"
                 };
             }
@@ -951,7 +955,7 @@ namespace XboxDownload
                     "dl.delivery.mp.microsoft.com", "tlu.dl.delivery.mp.microsoft.com", "2.tlu.dl.delivery.mp.microsoft.com",
                     "gst.prod.dl.playstation.net", "gs2.ww.prod.dl.playstation.net", "zeus.dl.playstation.net", "ares.dl.playstation.net",
                     "atum.hac.lp1.d4c.nintendo.net", "bugyo.hac.lp1.eshop.nintendo.net", "ctest-dl-lp1.cdn.nintendo.net", "ctest-ul-lp1.cdn.nintendo.net",
-                    "origin-a.akamaihd.net", "blzddist1-a.akamaihd.net",
+                    "origin-a.akamaihd.net", "downloader.battle.net", "blzddist1-a.akamaihd.net",
                     "uplaypc-s-ubisoft.cdn.ubionline.com.cn","uplaypc-s-ubisoft.cdn.ubi.com", "ubisoftconnect.cdn.ubi.com"
                 };
             }

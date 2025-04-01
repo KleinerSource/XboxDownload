@@ -20,9 +20,10 @@ shared-static-prod.epicgames.com
 
 ####################### Steam ########################
 *.akamai.steamstatic.com
+cdn.steamstatic.com
 video.steamstatic.com
 
-####################### Other ########################
+######### Other (包括 Rockstar、Spotify 等) ##########
 *.akamai.net
 *.akamaihd.net
 *.akamaized.net

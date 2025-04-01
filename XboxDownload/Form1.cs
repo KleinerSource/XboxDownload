@@ -67,7 +67,7 @@ namespace XboxDownload
             toolTip1.SetToolTip(this.labelPS, "包括以下游戏下载域名\ngst.prod.dl.playstation.net\ngs2.ww.prod.dl.playstation.net\nzeus.dl.playstation.net\nares.dl.playstation.net");
             toolTip1.SetToolTip(this.labelNS, "包括以下游戏下载域名\natum.hac.lp1.d4c.nintendo.net\nbugyo.hac.lp1.eshop.nintendo.net\nctest-dl-lp1.cdn.nintendo.net\nctest-ul-lp1.cdn.nintendo.net");
             toolTip1.SetToolTip(this.labelEA, "包括以下游戏下载域名\norigin-a.akamaihd.net");
-            toolTip1.SetToolTip(this.labelBattle, "包括以下游戏下载域名\nblzddist1-a.akamaihd.net\nus.cdn.blizzard.com\neu.cdn.blizzard.com\nkr.cdn.blizzard.com\nlevel3.blizzard.com\nblizzard.gcdn.cloudn.co.kr\n\n#网易国服(校园网可指定Akamai IPv6免流下载)\n*.necdn.leihuo.netease.com");
+            toolTip1.SetToolTip(this.labelBattle, "包括以下游戏下载域名\ndownloader.battle.net\nblzddist1-a.akamaihd.net\nus.cdn.blizzard.com\neu.cdn.blizzard.com\nkr.cdn.blizzard.com\nlevel3.blizzard.com\nblizzard.gcdn.cloudn.co.kr\n\n#网易国服(校园网可指定Akamai IPv6免流下载)\n*.necdn.leihuo.netease.com");
             toolTip1.SetToolTip(this.labelEpic, "包括以下游戏下载域名\nepicgames-download1-1251447533.file.myqcloud.com\nepicgames-download1.akamaized.net\ndownload.epicgames.com\nfastly-download.epicgames.com\ncloudflare.epicgamescdn.com\n\n建议优先使用国内CDN，速度不理想再选用 Akamai CDN");
             toolTip1.SetToolTip(this.labelUbi, "包括以下游戏下载域名\nuplaypc-s-ubisoft.cdn.ubionline.com.cn\nuplaypc-s-ubisoft.cdn.ubi.com\nubisoftconnect.cdn.ubi.com\n\n注：XDefiant(不羁联盟)不支持使用国内CDN，\n可勾选\"自动优选 Akamai IP\"使用国外CDN。");
             toolTip1.SetToolTip(this.ckbDoH, "默认使用 阿里云DoH(加密DNS) 解析域名IP，\n防止上游DNS服务器被劫持污染。\nPC用户使用此功能，需要勾选“设置本机 DNS”\n\n注：网络正常可以不勾选。");
@@ -1428,10 +1428,12 @@ namespace XboxDownload
                             sb.AppendLine("0.0.0.0 level3.ssl.blizzard.com");
                             if (!string.IsNullOrEmpty(akamai))
                             {
+                                sb.AppendLine(akamai + " downloader.battle.net"); 
                                 sb.AppendLine(akamai + " blzddist1-a.akamaihd.net");
                             }
                             else if (!string.IsNullOrEmpty(Properties.Settings.Default.BattleIP))
                             {
+                                sb.AppendLine(Properties.Settings.Default.BattleIP + " downloader.battle.net");
                                 if (Regex.IsMatch(Properties.Settings.Default.BattleIP, @"^\d+\.\d+\.\d+\.\d+$"))
                                     sb.AppendLine(Properties.Settings.Default.BattleIP + " blzddist1-a.akamaihd.net");
                                 else
@@ -2645,6 +2647,7 @@ namespace XboxDownload
                             sb.AppendLine("0.0.0.0 atum-eda.hac.lp1.d4c.nintendo.net # XboxDownload");
                             sb.AppendLine(ip + " origin-a.akamaihd.net # XboxDownload");
                             sb.AppendLine("0.0.0.0 ssl-lvlt.cdn.ea.com # XboxDownload");
+                            sb.AppendLine(ip + " downloader.battle.net # XboxDownload"); 
                             sb.AppendLine(ip + " blzddist1-a.akamaihd.net # XboxDownload");
                             sb.AppendLine(ip + " epicgames-download1.akamaized.net # XboxDownload");
                             sb.AppendLine(ip + " uplaypc-s-ubisoft.cdn.ubi.com # XboxDownload");
@@ -2819,6 +2822,7 @@ namespace XboxDownload
                             sb.AppendLine("# EA、战网、Epic、育碧");
                             sb.AppendLine("address=/origin-a.akamaihd.net/" + ip);
                             sb.AppendLine("address=/ssl-lvlt.cdn.ea.com/0.0.0.0");
+                            sb.AppendLine("address=/downloader.battle.net/" + ip);
                             sb.AppendLine("address=/blzddist1-a.akamaihd.net/" + ip);
                             sb.AppendLine("address=/epicgames-download1.akamaized.net/" + ip);
                             sb.AppendLine("address=/uplaypc-s-ubisoft.cdn.ubi.com/" + ip);
@@ -2866,6 +2870,7 @@ namespace XboxDownload
                             sb.AppendLine("# EA、战网、Epic、育碧");
                             sb.AppendLine(ip + " origin-a.akamaihd.net");
                             sb.AppendLine("0.0.0.0 ssl-lvlt.cdn.ea.com");
+                            sb.AppendLine(ip + " downloader.battle.net");
                             sb.AppendLine(ip + " blzddist1-a.akamaihd.net");
                             sb.AppendLine(ip + " epicgames-download1.akamaized.net");
                             sb.AppendLine(ip + " uplaypc-s-ubisoft.cdn.ubi.com");
