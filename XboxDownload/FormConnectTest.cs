@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.Diagnostics;
+using System.Net;
 using System.Text.RegularExpressions;
 
 namespace XboxDownload
@@ -49,10 +50,13 @@ namespace XboxDownload
         {
             bool verified = false;
             string location = string.Empty, errMsg = string.Empty;
+            Stopwatch sw = new();
             Task[] tasks = new Task[2];
             tasks[0] = new Task(() =>
             {
+                sw.Start();
                 verified = ClassWeb.ConnectTest(uri, ip, true, out errMsg);
+                sw.Stop();
             });
             tasks[1] = new Task(() =>
             {
@@ -63,7 +67,7 @@ namespace XboxDownload
             if (verified)
             {
                 tbMessage.ForeColor = Color.Green;
-                tbMessage.Text = "OK" + location;
+                tbMessage.Text = "OK ("+ sw.ElapsedMilliseconds.ToString("N0") + " ms" + ")" + location;
             }
             else
             {

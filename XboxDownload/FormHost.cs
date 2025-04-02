@@ -120,7 +120,7 @@ namespace XboxDownload
             bool ipv4 = rbIPv4.Checked;
             Uri uri = new("https://" + host);
             DataGridViewRow[] rows = dataGridView1.Rows.Cast<DataGridViewRow>().Where(row => Convert.ToBoolean(row.Cells[0].Value) == true).ToArray();
-            var tasks = rows.Select(dgvr => Task.Run(() => {
+            var tasks = rows.Select(dgvr => Task.Run(async () => {
                 dgvr.Cells[2].Value = dgvr.Cells[3].Value = dgvr.Cells[4].Value = null;
                 dgvr.Cells[2].Style.ForeColor = dgvr.Cells[3].Style.ForeColor = Color.Empty;
                 dgvr.Cells[3].ToolTipText = null;
@@ -136,22 +136,31 @@ namespace XboxDownload
                 if (IPAddress.TryParse(ip, out IPAddress? address))
                 {
                     dgvr.Cells[2].Value = ip;
-                    bool verified = ClassWeb.ConnectTest(uri, address, true, out string errMessage);
-                    if (this.IsDisposed) return;
-                    if (verified)
-                    {
-                        dgvr.Cells[3].Value = "√";
-                        dgvr.Cells[3].Style.ForeColor = Color.Green;
-                    }
-                    else
-                    {
-                        dgvr.Cells[3].Value = "×";
-                        dgvr.Cells[3].ToolTipText = "提示：" + dataGridView1.Columns[3].ToolTipText + "，错误信息：\n" + errMessage;
-                        dgvr.Cells[3].Style.ForeColor = Color.Red;
-                    }
-                    string location = ClassDNS.QueryLocation(ip);
-                    if (this.IsDisposed) return;
-                    dgvr.Cells[4].Value = location;
+                    Task[] tasks = new Task[2];
+                    tasks[0] = Task.Run(() => {
+                        Stopwatch sw = new();
+                        sw.Start();
+                        bool verified = ClassWeb.ConnectTest(uri, address, true, out string errMessage);
+                        sw.Stop();
+                        if (this.IsDisposed) return;
+                        if (verified)
+                        {
+                            dgvr.Cells[3].Value = sw.ElapsedMilliseconds.ToString("N0") + " ms";
+                            dgvr.Cells[3].Style.ForeColor = Color.Green;
+                        }
+                        else
+                        {
+                            dgvr.Cells[3].Value = "×";
+                            dgvr.Cells[3].ToolTipText = "Message: " + errMessage;
+                            dgvr.Cells[3].Style.ForeColor = Color.Red;
+                        }
+                    });
+                    tasks[1] = Task.Run(() => {
+                        string location = ClassDNS.QueryLocation(ip);
+                        if (this.IsDisposed) return;
+                        dgvr.Cells[4].Value = location;
+                    });
+                    await Task.WhenAll(tasks);
                 }
                 else
                 {

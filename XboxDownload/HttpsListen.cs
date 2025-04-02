@@ -360,19 +360,18 @@ namespace XboxDownload
                                                             {
                                                                 Version version = new(m2.Groups["version"].Value);
                                                                 string key = (contentId ?? string.Empty).ToLower();
-                                                                if (XboxGameDownload.dicXboxGame.TryGetValue(key, out XboxGameDownload.Products? XboxGame))
+                                                                if (XboxGameDownload.dicXboxGame.TryGetValue(key, out XboxGameDownload.Products? XboxGame) && XboxGame.Version < version)
                                                                 {
-                                                                    if (XboxGame.Version >= version) return;
+                                                                    XboxGame = new XboxGameDownload.Products
+                                                                    {
+                                                                        Version = version,
+                                                                        FileSize = packageFiles.FileSize,
+                                                                        Url = url
+                                                                    };
+                                                                    XboxGameDownload.dicXboxGame.AddOrUpdate(key, XboxGame, (oldkey, oldvalue) => XboxGame);
+                                                                    XboxGameDownload.SaveXboxGame();
+                                                                    _ = ClassWeb.HttpResponseContent(UpdateFile.website + "/Game/AddGameUrl?url=" + ClassWeb.UrlEncode(XboxGame.Url), "PUT", null, null, null, 30000, "XboxDownload");
                                                                 }
-                                                                XboxGame = new XboxGameDownload.Products
-                                                                {
-                                                                    Version = version,
-                                                                    FileSize = packageFiles.FileSize,
-                                                                    Url = url
-                                                                };
-                                                                XboxGameDownload.dicXboxGame.AddOrUpdate(key, XboxGame, (oldkey, oldvalue) => XboxGame);
-                                                                XboxGameDownload.SaveXboxGame();
-                                                                _ = ClassWeb.HttpResponseContent(UpdateFile.website + "/Game/AddGameUrl?url=" + ClassWeb.UrlEncode(XboxGame.Url), "PUT", null, null, null, 30000, "XboxDownload");
                                                             }
                                                         }
                                                     }
@@ -430,205 +429,171 @@ namespace XboxDownload
                                     default:
                                         if (Properties.Settings.Default.SniProxy)
                                         {
-                                            if (!dicSniProxy.TryGetValue(_host, out SniProxy? proxy))
+                                            if (_host == "github.com" && _filePath.Contains("/releases/download/"))
                                             {
-                                                var proxy2 = dicSniProxy2.Where(kvp => kvp.Key.IsMatch(_host)).Select(x => x.Value).FirstOrDefault();
-                                                if (proxy2 != null)
+                                                string[] proxys = { "gh-proxy.com", "ghproxy.net" };
+                                                string? fastestUrl = await GetFastestDomain(proxys, _url, 1023, new CancellationTokenSource(TimeSpan.FromSeconds(3)));
+                                                if (fastestUrl != null)
                                                 {
-                                                    proxy = new()
-                                                    {
-                                                        Branch = proxy2.Branch,
-                                                        Sni = proxy2.Sni,
-                                                        IPv4s = proxy2.IPv4s,
-                                                        IPv6s = proxy2.IPv6s,
-                                                        CustomIP = proxy2.CustomIP
-                                                    };
-                                                    dicSniProxy.TryAdd(_host, proxy);
+                                                    bFileFound = true;
+                                                    StringBuilder sb = new();
+                                                    sb.Append("HTTP/1.1 302 Moved Temporarily\r\n");
+                                                    sb.Append("Content-Type: text/html\r\n");
+                                                    sb.Append("Location: " + fastestUrl + "\r\n");
+                                                    sb.Append("Content-Length: 0\r\n\r\n");
+                                                    Byte[] _headers = Encoding.ASCII.GetBytes(sb.ToString());
+                                                    ssl.Write(_headers);
+                                                    ssl.Flush();
                                                 }
                                             }
-                                            if (proxy != null)
+                                            if (!bFileFound)
                                             {
-                                                if (Properties.Settings.Default.RecordLog) parentForm.SaveLog("Proxy", _url, ((IPEndPoint)mySocket.RemoteEndPoint!).Address.ToString(), 0x008000);
-                                                bFileFound = true;
-                                                IPAddress[]? ips = null;
-                                                if (proxy.CustomIP && proxy.IPs == null)
+                                                if (!dicSniProxy.TryGetValue(_host, out SniProxy? proxy))
                                                 {
-                                                    IPAddress[]? ipV6 = Properties.Settings.Default.SniProxysIPv6 && Form1.bIPv6Support ? proxy.IPv6s : null, ipV4 = proxy.IPv4s;
-                                                    if (Properties.Settings.Default.SniPorxyOptimized && ipV6 != null && ipV4 != null)
-                                                        proxy.IPs = ipV6.Concat(ipV4).ToArray();
-                                                    else
-                                                        proxy.IPs = ipV6 ?? ipV4;
-                                                    if (Properties.Settings.Default.SniPorxyOptimized && proxy.IPs?.Length >= 2)
+                                                    var proxy2 = dicSniProxy2.Where(kvp => kvp.Key.IsMatch(_host)).Select(x => x.Value).FirstOrDefault();
+                                                    if (proxy2 != null)
                                                     {
-                                                        await proxy.Semaphore.WaitAsync();
-                                                        CancellationTokenSource cts = new();
-                                                        var tasks = proxy.IPs.Select(ip => Task.Run(async () =>
+                                                        proxy = new()
                                                         {
-                                                            Socket socket = new(ip.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-                                                            try
-                                                            {
-                                                                await Task.Factory.FromAsync(socket.BeginConnect, socket.EndConnect, new IPEndPoint(ip, 443), null);
-                                                                socket.Close();
-                                                                socket.Dispose();
-                                                                if (!cts.IsCancellationRequested)
-                                                                {
-                                                                    return ip;
-                                                                }
-                                                                else
-                                                                {
-                                                                    return null;
-                                                                }
-                                                            }
-                                                            catch
-                                                            {
-                                                                socket.Dispose();
-                                                                if (!cts.IsCancellationRequested)
-                                                                    await Task.Delay(1000, cts.Token);
-                                                                return null;
-                                                            }
-                                                        })).ToArray();
-                                                        IPAddress? ip = await Task.WhenAny(tasks).Result;
-                                                        cts.Cancel();
-                                                        if (ip != null) ips = proxy.IPs = new IPAddress[1] { ip };
-                                                        proxy.Semaphore.Release();
+                                                            Branch = proxy2.Branch,
+                                                            Sni = proxy2.Sni,
+                                                            IPv4s = proxy2.IPv4s,
+                                                            IPv6s = proxy2.IPv6s,
+                                                            CustomIP = proxy2.CustomIP
+                                                        };
+                                                        dicSniProxy.TryAdd(_host, proxy);
                                                     }
                                                 }
-                                                else if (proxy.IPs == null || (!proxy.CustomIP && DateTime.Compare(proxy.Expired, DateTime.Now) < 0))
+                                                if (proxy != null)
                                                 {
-                                                    await proxy.Semaphore.WaitAsync();
-                                                    if (proxy.IPs == null || (!proxy.CustomIP && DateTime.Compare(proxy.Expired, DateTime.Now) < 0))
+                                                    if (Properties.Settings.Default.RecordLog) parentForm.SaveLog("Proxy", _url, ((IPEndPoint)mySocket.RemoteEndPoint!).Address.ToString(), 0x008000);
+                                                    bFileFound = true;
+                                                    IPAddress[]? ips = null;
+                                                    if (proxy.CustomIP && proxy.IPs == null)
                                                     {
-                                                        proxy.IPs = null;
-                                                        string domain = proxy.Branch ?? _host;
-                                                        string[] dohs = Properties.Settings.Default.SniProxys.Split(',');
-                                                        if (dohs.Length == 1)
-                                                        {
-                                                            int index = int.Parse(dohs[0]);
-                                                            if (index >= DnsListen.dohs.GetLongLength(0)) index = 3;
-                                                            string dohServer = DnsListen.dohs[index, 1];
-                                                            Dictionary<string, string>? dohHeaders = null;
-                                                            if (!string.IsNullOrEmpty(DnsListen.dohs[index, 2])) dohHeaders = new() { { "Host", DnsListen.dohs[index, 2] } };
-                                                            IPAddress[]? ipV6 = null, ipV4 = null;
-                                                            Task[] tasks = new Task[2];
-                                                            tasks[0] = Task.Run(() => {
-                                                                if (Properties.Settings.Default.SniProxysIPv6 && Form1.bIPv6Support)
-                                                                    ipV6 = ClassDNS.DoH2(domain, dohServer, dohHeaders, false);
-                                                            });
-                                                            tasks[1] = Task.Run(() => {
-                                                                ipV4 = ClassDNS.DoH2(domain, dohServer, dohHeaders, true);
-                                                            });
-                                                            await Task.WhenAll(tasks);
-                                                            if (Properties.Settings.Default.SniPorxyOptimized && ipV6 != null && ipV4 != null)
-                                                                proxy.IPs = ipV6.Concat(ipV4).ToArray();
-                                                            else
-                                                                proxy.IPs = ipV6 ?? ipV4;
-                                                        }
+                                                        IPAddress[]? ipV6 = Properties.Settings.Default.SniProxysIPv6 && Form1.bIPv6Support ? proxy.IPv6s : null, ipV4 = proxy.IPv4s;
+                                                        if (Properties.Settings.Default.SniPorxyOptimized && ipV6 != null && ipV4 != null)
+                                                            proxy.IPs = ipV6.Concat(ipV4).ToArray();
                                                         else
+                                                            proxy.IPs = ipV6 ?? ipV4;
+                                                        if (Properties.Settings.Default.SniPorxyOptimized && proxy.IPs?.Length >= 2)
                                                         {
-                                                            ConcurrentBag<IPAddress> lsIPv6 = new(), lsIPv4 = new();
-                                                            Task[] tasks = new Task[2];
-                                                            tasks[0] = Task.Run(async () => {
-                                                                if (Properties.Settings.Default.SniProxysIPv6 && Form1.bIPv6Support)
-                                                                {
+                                                            await proxy.Semaphore.WaitAsync();
+                                                            var fastestIp = await GetFastestIP(proxy.IPs, 443, new CancellationTokenSource(TimeSpan.FromSeconds(3)));
+                                                            if (fastestIp != null) ips = proxy.IPs = new IPAddress[1] { fastestIp };
+                                                            proxy.Semaphore.Release();
+                                                        }
+                                                    }
+                                                    else if (proxy.IPs == null || (!proxy.CustomIP && DateTime.Compare(proxy.Expired, DateTime.Now) < 0))
+                                                    {
+                                                        await proxy.Semaphore.WaitAsync();
+                                                        if (proxy.IPs == null || (!proxy.CustomIP && DateTime.Compare(proxy.Expired, DateTime.Now) < 0))
+                                                        {
+                                                            proxy.IPs = null;
+                                                            string domain = proxy.Branch ?? _host;
+                                                            string[] dohs = Properties.Settings.Default.SniProxys.Split(',');
+                                                            if (dohs.Length == 1)
+                                                            {
+                                                                int index = int.Parse(dohs[0]);
+                                                                if (index >= DnsListen.dohs.GetLongLength(0)) index = 3;
+                                                                string dohServer = DnsListen.dohs[index, 1];
+                                                                Dictionary<string, string>? dohHeaders = null;
+                                                                if (!string.IsNullOrEmpty(DnsListen.dohs[index, 2])) dohHeaders = new() { { "Host", DnsListen.dohs[index, 2] } };
+                                                                IPAddress[]? ipV6 = null, ipV4 = null;
+                                                                Task[] tasks = new Task[2];
+                                                                tasks[0] = Task.Run(() => {
+                                                                    if (Properties.Settings.Default.SniProxysIPv6 && Form1.bIPv6Support)
+                                                                        ipV6 = ClassDNS.DoH2(domain, dohServer, dohHeaders, false);
+                                                                });
+                                                                tasks[1] = Task.Run(() => {
+                                                                    ipV4 = ClassDNS.DoH2(domain, dohServer, dohHeaders, true);
+                                                                });
+                                                                await Task.WhenAll(tasks);
+                                                                if (Properties.Settings.Default.SniPorxyOptimized && ipV6 != null && ipV4 != null)
+                                                                    proxy.IPs = ipV6.Concat(ipV4).ToArray();
+                                                                else
+                                                                    proxy.IPs = ipV6 ?? ipV4;
+                                                            }
+                                                            else
+                                                            {
+                                                                ConcurrentBag<IPAddress> lsIPv6 = new(), lsIPv4 = new();
+                                                                Task[] tasks = new Task[2];
+                                                                tasks[0] = Task.Run(async () => {
+                                                                    if (Properties.Settings.Default.SniProxysIPv6 && Form1.bIPv6Support)
+                                                                    {
+                                                                        var tasks2 = dohs.Select(i => Task.Run(() =>
+                                                                        {
+                                                                            int index = int.Parse(i);
+                                                                            if (index < DnsListen.dohs.GetLongLength(0))
+                                                                            {
+                                                                                IPAddress[]? iPAddresses = ClassDNS.DoH2(domain, DnsListen.dohs[index, 1], string.IsNullOrEmpty(DnsListen.dohs[index, 2]) ? null : new() { { "Host", DnsListen.dohs[index, 2] } }, false, 3000);
+                                                                                if (iPAddresses != null)
+                                                                                {
+                                                                                    foreach (var item in iPAddresses)
+                                                                                    {
+                                                                                        if (!lsIPv6.Contains(item)) lsIPv6.Add(item);
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        })).ToArray();
+                                                                        await Task.WhenAll(tasks2);
+                                                                    }
+                                                                });
+                                                                tasks[1] = Task.Run(async () => {
                                                                     var tasks2 = dohs.Select(i => Task.Run(() =>
                                                                     {
                                                                         int index = int.Parse(i);
                                                                         if (index < DnsListen.dohs.GetLongLength(0))
                                                                         {
-                                                                            IPAddress[]? iPAddresses = ClassDNS.DoH2(domain, DnsListen.dohs[index, 1], string.IsNullOrEmpty(DnsListen.dohs[index, 2]) ? null : new() { { "Host", DnsListen.dohs[index, 2] } }, false, 3000);
+                                                                            IPAddress[]? iPAddresses = ClassDNS.DoH2(domain, DnsListen.dohs[index, 1], string.IsNullOrEmpty(DnsListen.dohs[index, 2]) ? null : new() { { "Host", DnsListen.dohs[index, 2] } }, true, 3000);
                                                                             if (iPAddresses != null)
                                                                             {
                                                                                 foreach (var item in iPAddresses)
                                                                                 {
-                                                                                    if (!lsIPv6.Contains(item)) lsIPv6.Add(item);
+                                                                                    if (!lsIPv4.Contains(item)) lsIPv4.Add(item);
                                                                                 }
                                                                             }
                                                                         }
                                                                     })).ToArray();
                                                                     await Task.WhenAll(tasks2);
-                                                                }
-                                                            });
-                                                            tasks[1] = Task.Run(async () => {
-                                                                var tasks2 = dohs.Select(i => Task.Run(() =>
-                                                                {
-                                                                    int index = int.Parse(i);
-                                                                    if (index < DnsListen.dohs.GetLongLength(0))
-                                                                    {
-                                                                        IPAddress[]? iPAddresses = ClassDNS.DoH2(domain, DnsListen.dohs[index, 1], string.IsNullOrEmpty(DnsListen.dohs[index, 2]) ? null : new() { { "Host", DnsListen.dohs[index, 2] } }, true, 3000);
-                                                                        if (iPAddresses != null)
-                                                                        {
-                                                                            foreach (var item in iPAddresses)
-                                                                            {
-                                                                                if (!lsIPv4.Contains(item)) lsIPv4.Add(item);
-                                                                            }
-                                                                        }
-                                                                    }
-                                                                })).ToArray();
-                                                                await Task.WhenAll(tasks2);
-                                                            });
-                                                            await Task.WhenAll(tasks);
-                                                            if (Properties.Settings.Default.SniPorxyOptimized && !lsIPv6.IsEmpty && !lsIPv4.IsEmpty)
-                                                                proxy.IPs = lsIPv6.Concat(lsIPv4).ToArray();
-                                                            else
-                                                                proxy.IPs = !lsIPv6.IsEmpty ? lsIPv6.ToArray() : lsIPv4.ToArray();
-                                                        }
-                                                        if (Properties.Settings.Default.SniPorxyOptimized && proxy.IPs?.Length >= 2)
-                                                        {
-                                                            CancellationTokenSource cts = new();
-                                                            var tasks = proxy.IPs.Select(ip => Task.Run(async () =>
+                                                                });
+                                                                await Task.WhenAll(tasks);
+                                                                if (Properties.Settings.Default.SniPorxyOptimized && !lsIPv6.IsEmpty && !lsIPv4.IsEmpty)
+                                                                    proxy.IPs = lsIPv6.Concat(lsIPv4).ToArray();
+                                                                else
+                                                                    proxy.IPs = !lsIPv6.IsEmpty ? lsIPv6.ToArray() : lsIPv4.ToArray();
+                                                            }
+                                                            if (Properties.Settings.Default.SniPorxyOptimized && proxy.IPs?.Length >= 2)
                                                             {
-                                                                Socket socket = new(ip.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-                                                                try
-                                                                {
-                                                                    await Task.Factory.FromAsync(socket.BeginConnect, socket.EndConnect, new IPEndPoint(ip, 443), null);
-                                                                    socket.Close();
-                                                                    socket.Dispose();
-                                                                    if (!cts.IsCancellationRequested)
-                                                                    {
-                                                                        return ip;
-                                                                    }
-                                                                    else
-                                                                    {
-                                                                        return null;
-                                                                    }
-                                                                }
-                                                                catch
-                                                                {
-                                                                    socket.Dispose();
-                                                                    if (!cts.IsCancellationRequested)
-                                                                        await Task.Delay(1000, cts.Token);
-                                                                    return null;
-                                                                }
-                                                            })).ToArray();
-                                                            IPAddress? ip = await Task.WhenAny(tasks).Result;
-                                                            cts.Cancel();
-                                                            if (ip != null) ips = proxy.IPs = new IPAddress[1] { ip };
+                                                                var fastestIp = await GetFastestIP(proxy.IPs, 443, new CancellationTokenSource(TimeSpan.FromSeconds(3)));
+                                                                if (fastestIp != null) ips = proxy.IPs = new IPAddress[1] { fastestIp };
+                                                            }
+                                                            proxy.Expired = DateTime.Now.AddMinutes(Properties.Settings.Default.SniPorxyExpired);
                                                         }
-                                                        proxy.Expired = DateTime.Now.AddMinutes(Properties.Settings.Default.SniPorxyExpired);
+                                                        proxy.Semaphore.Release();
                                                     }
-                                                    proxy.Semaphore.Release();
-                                                }
-                                                ips ??= proxy.IPs?.Length >= 2 ? proxy.IPs.OrderBy(a => Guid.NewGuid()).Take(16).ToArray() : proxy.IPs;
+                                                    ips ??= proxy.IPs?.Length >= 2 ? proxy.IPs.OrderBy(a => Guid.NewGuid()).Take(16).ToArray() : proxy.IPs;
 
-                                                string? errMessae = null;
-                                                if (ips != null)
-                                                {
-                                                    if (!ClassWeb.SniProxy(ips, proxy.Sni, Encoding.ASCII.GetBytes(headers), list.ToArray(), ssl, out IPAddress? remoteIP, out errMessae))
+                                                    string? errMessae = null;
+                                                    if (ips != null)
                                                     {
-                                                        if (!proxy.CustomIP) proxy.IPs = null;
+                                                        if (!ClassWeb.SniProxy(ips, proxy.Sni, Encoding.ASCII.GetBytes(headers), list.ToArray(), ssl, out IPAddress? remoteIP, out errMessae))
+                                                        {
+                                                            if (!proxy.CustomIP) proxy.IPs = null;
+                                                        }
                                                     }
-                                                }
-                                                else errMessae = "Unable to query domain " + _host + ".";
-                                                if (!string.IsNullOrEmpty(errMessae))
-                                                {
-                                                    Byte[] _response = Encoding.ASCII.GetBytes(errMessae);
-                                                    StringBuilder sb = new();
-                                                    sb.Append("HTTP/1.1 500 Server Error\r\n");
-                                                    sb.Append("Content-Type: text/html\r\n");
-                                                    sb.Append("Content-Length: " + _response.Length + "\r\n\r\n");
-                                                    ssl.Write(Encoding.ASCII.GetBytes(sb.ToString()));
-                                                    ssl.Write(_response);
-                                                    ssl.Flush();
+                                                    else errMessae = "Unable to query domain " + _host + ".";
+                                                    if (!string.IsNullOrEmpty(errMessae))
+                                                    {
+                                                        Byte[] _response = Encoding.ASCII.GetBytes(errMessae);
+                                                        StringBuilder sb = new();
+                                                        sb.Append("HTTP/1.1 500 Server Error\r\n");
+                                                        sb.Append("Content-Type: text/html\r\n");
+                                                        sb.Append("Content-Length: " + _response.Length + "\r\n\r\n");
+                                                        ssl.Write(Encoding.ASCII.GetBytes(sb.ToString()));
+                                                        ssl.Write(_response);
+                                                        ssl.Flush();
+                                                    }
                                                 }
                                             }
                                         }
@@ -678,6 +643,80 @@ namespace XboxDownload
             X509Certificate2Collection certificates = store.Certificates.Find(X509FindType.FindBySubjectDistinguishedName, "CN=XboxDownload", false);
             if (certificates.Count > 0) store.RemoveRange(certificates);
             store.Close();
+        }
+
+        static async Task<IPAddress?> GetFastestIP(IPAddress[] ips, int port, CancellationTokenSource cts)
+        {
+            var token = cts.Token;
+            var tasks = ips.Select(ip => TestConnection(ip, port, token)).ToList();
+            while (tasks.Count > 0)
+            {
+                var completedTask = await Task.WhenAny(tasks);
+                tasks.Remove(completedTask);
+                IPAddress? fastestIp = await completedTask;
+                if (fastestIp != null)
+                {
+                    cts.Cancel();
+                    return fastestIp;
+                }
+            }
+            return null;
+        }
+
+        static async Task<IPAddress?> TestConnection(IPAddress ip, int port, CancellationToken token)
+        {
+            using var socket = new Socket(ip.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+            try
+            {
+                var connectTask = Task.Factory.FromAsync(socket.BeginConnect, socket.EndConnect, new IPEndPoint(ip, port), null);
+                var completedTask = await Task.WhenAny(connectTask, Task.Delay(3000, token));
+                if (completedTask == connectTask && socket.Connected)
+                {
+                    return ip;
+                }
+            }
+            catch { }
+            return null;
+        }
+
+        static async Task<string?> GetFastestDomain(string[] domains, string path, int range, CancellationTokenSource cts)
+        {
+            HttpClient httpClient = new();
+            httpClient.DefaultRequestHeaders.Range = new System.Net.Http.Headers.RangeHeaderValue(0, range);
+            httpClient.DefaultRequestHeaders.CacheControl = new System.Net.Http.Headers.CacheControlHeaderValue
+            {
+                NoCache = true,
+                NoStore = true,
+                MustRevalidate = true
+            };
+            var token = cts.Token;
+            var tasks = domains.Select(url => TestDownloadSpeed($"https://{url}/{path}", httpClient, token)).ToList();
+            while (tasks.Count > 0)
+            {
+                var completedTask = await Task.WhenAny(tasks);
+                tasks.Remove(completedTask);
+                string? fastestUrl = await completedTask;
+                if (fastestUrl != null)
+                {
+                    cts.Cancel();
+                    return fastestUrl;
+                }
+            }
+            return null;
+        }
+
+        static async Task<string?> TestDownloadSpeed(string url, HttpClient httpClient, CancellationToken token)
+        {
+            try
+            {
+                using var response = await httpClient.GetAsync(url, HttpCompletionOption.ResponseHeadersRead, token);
+                if (response.IsSuccessStatusCode)
+                {
+                    return url;
+                }
+            }
+            catch { }
+            return null;
         }
     }
 }

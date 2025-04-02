@@ -36,6 +36,11 @@
             tbHost = new TextBox();
             label1 = new Label();
             dataGridView1 = new DataGridView();
+            Column1 = new DataGridViewCheckBoxColumn();
+            Column2 = new DataGridViewTextBoxColumn();
+            Column3 = new DataGridViewTextBoxColumn();
+            Column4 = new DataGridViewTextBoxColumn();
+            Column5 = new DataGridViewTextBoxColumn();
             groupBox2 = new GroupBox();
             tableLayoutPanel1 = new TableLayoutPanel();
             butTest = new Button();
@@ -44,11 +49,6 @@
             rbIPv6 = new RadioButton();
             rbIPv4 = new RadioButton();
             cbCheckAll = new CheckBox();
-            Column1 = new DataGridViewCheckBoxColumn();
-            Column2 = new DataGridViewTextBoxColumn();
-            Column3 = new DataGridViewTextBoxColumn();
-            Column4 = new DataGridViewTextBoxColumn();
-            Column5 = new DataGridViewTextBoxColumn();
             groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             groupBox2.SuspendLayout();
@@ -132,10 +132,56 @@
             dataGridView1.RowHeadersWidth = 40;
             dataGridView1.RowTemplate.Height = 32;
             dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dataGridView1.Size = new Size(1218, 385);
+            dataGridView1.Size = new Size(1218, 395);
             dataGridView1.TabIndex = 2;
             dataGridView1.CellDoubleClick += DataGridView1_CellDoubleClick;
             dataGridView1.RowPostPaint += Dgv_RowPostPaint;
+            // 
+            // Column1
+            // 
+            Column1.HeaderText = "选择";
+            Column1.MinimumWidth = 8;
+            Column1.Name = "Column1";
+            Column1.Resizable = DataGridViewTriState.False;
+            Column1.Width = 43;
+            // 
+            // Column2
+            // 
+            Column2.HeaderText = "DoH 服务器";
+            Column2.MinimumWidth = 8;
+            Column2.Name = "Column2";
+            Column2.ReadOnly = true;
+            Column2.SortMode = DataGridViewColumnSortMode.NotSortable;
+            Column2.Width = 160;
+            // 
+            // Column3
+            // 
+            Column3.HeaderText = "IP 地址";
+            Column3.MinimumWidth = 8;
+            Column3.Name = "Column3";
+            Column3.ReadOnly = true;
+            Column3.SortMode = DataGridViewColumnSortMode.NotSortable;
+            Column3.Width = 140;
+            // 
+            // Column4
+            // 
+            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            Column4.DefaultCellStyle = dataGridViewCellStyle1;
+            Column4.HeaderText = "TLS检测";
+            Column4.MinimumWidth = 8;
+            Column4.Name = "Column4";
+            Column4.ReadOnly = true;
+            Column4.SortMode = DataGridViewColumnSortMode.NotSortable;
+            Column4.Width = 60;
+            // 
+            // Column5
+            // 
+            Column5.HeaderText = "位置";
+            Column5.MinimumWidth = 8;
+            Column5.Name = "Column5";
+            Column5.ReadOnly = true;
+            Column5.SortMode = DataGridViewColumnSortMode.NotSortable;
+            Column5.Width = 310;
             // 
             // groupBox2
             // 
@@ -144,7 +190,7 @@
             groupBox2.Dock = DockStyle.Fill;
             groupBox2.Location = new Point(0, 85);
             groupBox2.Name = "groupBox2";
-            groupBox2.Size = new Size(1224, 459);
+            groupBox2.Size = new Size(1224, 469);
             groupBox2.TabIndex = 2;
             groupBox2.TabStop = false;
             groupBox2.Text = "解释域名IP（双击选择）";
@@ -159,7 +205,7 @@
             tableLayoutPanel1.Controls.Add(linkLabel1, 2, 0);
             tableLayoutPanel1.Controls.Add(panel1, 0, 0);
             tableLayoutPanel1.Dock = DockStyle.Bottom;
-            tableLayoutPanel1.Location = new Point(3, 411);
+            tableLayoutPanel1.Location = new Point(3, 421);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
             tableLayoutPanel1.RowCount = 1;
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
@@ -235,58 +281,12 @@
             cbCheckAll.UseVisualStyleBackColor = true;
             cbCheckAll.CheckedChanged += CbCheckAll_CheckedChanged;
             // 
-            // Column1
-            // 
-            Column1.HeaderText = "选择";
-            Column1.MinimumWidth = 8;
-            Column1.Name = "Column1";
-            Column1.Resizable = DataGridViewTriState.False;
-            Column1.Width = 43;
-            // 
-            // Column2
-            // 
-            Column2.HeaderText = "DoH 服务器";
-            Column2.MinimumWidth = 8;
-            Column2.Name = "Column2";
-            Column2.ReadOnly = true;
-            Column2.SortMode = DataGridViewColumnSortMode.NotSortable;
-            Column2.Width = 160;
-            // 
-            // Column3
-            // 
-            Column3.HeaderText = "IP 地址";
-            Column3.MinimumWidth = 8;
-            Column3.Name = "Column3";
-            Column3.ReadOnly = true;
-            Column3.SortMode = DataGridViewColumnSortMode.NotSortable;
-            Column3.Width = 140;
-            // 
-            // Column4
-            // 
-            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            Column4.DefaultCellStyle = dataGridViewCellStyle1;
-            Column4.HeaderText = "TLS检测";
-            Column4.MinimumWidth = 8;
-            Column4.Name = "Column4";
-            Column4.ReadOnly = true;
-            Column4.SortMode = DataGridViewColumnSortMode.NotSortable;
-            Column4.Width = 60;
-            // 
-            // Column5
-            // 
-            Column5.HeaderText = "位置";
-            Column5.MinimumWidth = 8;
-            Column5.Name = "Column5";
-            Column5.ReadOnly = true;
-            Column5.SortMode = DataGridViewColumnSortMode.NotSortable;
-            Column5.Width = 310;
-            // 
             // FormHost
             // 
             AcceptButton = butTest;
             AutoScaleDimensions = new SizeF(11F, 24F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1224, 544);
+            ClientSize = new Size(1224, 554);
             Controls.Add(groupBox2);
             Controls.Add(groupBox1);
             FormBorderStyle = FormBorderStyle.FixedDialog;
