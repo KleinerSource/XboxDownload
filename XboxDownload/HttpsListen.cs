@@ -431,7 +431,7 @@ namespace XboxDownload
                                         {
                                             if (_host == "github.com" && _filePath.Contains("/releases/download/"))
                                             {
-                                                string? fastestUrl = await GetFastestDomain(UpdateFile.proxys1, _url, new() { { "Range", "bytes=0-1023" } }, new CancellationTokenSource(TimeSpan.FromSeconds(3)));
+                                                string? fastestUrl = await ClassWeb.GetFastestDomain(UpdateFile.proxys1, _url, new() { { "Range", "bytes=0-10239" } }, new CancellationTokenSource(TimeSpan.FromSeconds(3)));
                                                 if (fastestUrl != null)
                                                 {
                                                     bFileFound = true;
@@ -478,7 +478,7 @@ namespace XboxDownload
                                                         if (Properties.Settings.Default.SniPorxyOptimized && proxy.IPs?.Length >= 2)
                                                         {
                                                             await proxy.Semaphore.WaitAsync();
-                                                            var fastestIp = await GetFastestIP(proxy.IPs, 443, new CancellationTokenSource(TimeSpan.FromSeconds(3)));
+                                                            var fastestIp = await ClassWeb.GetFastestIP(proxy.IPs, 443, new CancellationTokenSource(TimeSpan.FromSeconds(3)));
                                                             if (fastestIp != null) ips = proxy.IPs = new IPAddress[1] { fastestIp };
                                                             proxy.Semaphore.Release();
                                                         }
@@ -564,7 +564,7 @@ namespace XboxDownload
                                                             }
                                                             if (Properties.Settings.Default.SniPorxyOptimized && proxy.IPs?.Length >= 2)
                                                             {
-                                                                var fastestIp = await GetFastestIP(proxy.IPs, 443, new CancellationTokenSource(TimeSpan.FromSeconds(3)));
+                                                                var fastestIp = await ClassWeb.GetFastestIP(proxy.IPs, 443, new CancellationTokenSource(TimeSpan.FromSeconds(3)));
                                                                 if (fastestIp != null) ips = proxy.IPs = new IPAddress[1] { fastestIp };
                                                             }
                                                             proxy.Expired = DateTime.Now.AddMinutes(Properties.Settings.Default.SniPorxyExpired);
@@ -642,67 +642,6 @@ namespace XboxDownload
             X509Certificate2Collection certificates = store.Certificates.Find(X509FindType.FindBySubjectDistinguishedName, "CN=XboxDownload", false);
             if (certificates.Count > 0) store.RemoveRange(certificates);
             store.Close();
-        }
-
-        public static async Task<IPAddress?> GetFastestIP(IPAddress[] ips, int port, CancellationTokenSource cts)
-        {
-            var token = cts.Token;
-            var tasks = ips.Select(ip => TestConnection(ip, port, token)).ToList();
-            while (tasks.Count > 0)
-            {
-                var completedTask = await Task.WhenAny(tasks);
-                tasks.Remove(completedTask);
-                IPAddress? fastestIp = await completedTask;
-                if (fastestIp != null)
-                {
-                    cts.Cancel();
-                    return fastestIp;
-                }
-            }
-            return null;
-        }
-
-        static async Task<IPAddress?> TestConnection(IPAddress ip, int port, CancellationToken token)
-        {
-            using var socket = new Socket(ip.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-            try
-            {
-                var connectTask = Task.Factory.FromAsync(socket.BeginConnect, socket.EndConnect, new IPEndPoint(ip, port), null);
-                var completedTask = await Task.WhenAny(connectTask, Task.Delay(6000, token));
-                if (completedTask == connectTask && socket.Connected)
-                {
-                    return ip;
-                }
-            }
-            catch { }
-            return null;
-        }
-
-        public static async Task<string?> GetFastestDomain(string[] domains, string path, Dictionary<string, string> headers, CancellationTokenSource cts)
-        {
-            var tasks = domains.Select(domain => TestDownloadSpeed(domain + path, headers, cts.Token)).ToList();
-            while (tasks.Count > 0)
-            {
-                var completedTask = await Task.WhenAny(tasks);
-                tasks.Remove(completedTask);
-                string? fastestUrl = await completedTask;
-                if (fastestUrl != null)
-                {
-                    cts.Cancel();
-                    return fastestUrl;
-                }
-            }
-            return null;
-        }
-
-        static async Task<string?> TestDownloadSpeed(string url, Dictionary<string, string> headers, CancellationToken token)
-        {
-            using HttpResponseMessage? response = await ClassWeb.HttpResponseMessageAsync(url, "GET", null, null, headers, 6000, "NoCache", token);
-            if (response != null && response.IsSuccessStatusCode)
-            {
-                return url;
-            }
-            return null;
         }
     }
 }

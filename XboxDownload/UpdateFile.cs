@@ -31,11 +31,12 @@ namespace XboxDownload
                     return string.Empty;
                 }
             })).ToList();
+
             string download_url = "";
             while (tasks.Count > 0)
             {
                 var completedTask = await Task.WhenAny(tasks);
-                tasks.Remove(completedTask);
+                tasks.RemoveAll(t => t == completedTask);
                 string html = await completedTask;
                 if (html.Contains(project))
                 {
@@ -68,10 +69,11 @@ namespace XboxDownload
                     }
                 }
             }
+
             if (!string.IsNullOrEmpty(download_url))
             {
-                parentForm.SaveLog("Update", "正在下载更新包，请稍候...", "localhost", 0x008000);
-                string? fastestUrl = await HttpsListen.GetFastestDomain(proxys, download_url, new() { { "Range", "bytes=0-1023" } }, new CancellationTokenSource(TimeSpan.FromSeconds(3)));
+                if (Properties.Settings.Default.RecordLog) parentForm.SaveLog("Update", "正在下载更新包，请稍候...", "localhost", 0x008000);
+                string? fastestUrl = await ClassWeb.GetFastestDomain(proxys, download_url, new() { { "Range", "bytes=0-10239" } }, new CancellationTokenSource(TimeSpan.FromSeconds(3)));
                 if (fastestUrl != null)
                 {
                     using (HttpResponseMessage? response = ClassWeb.HttpResponseMessage(fastestUrl, "GET"))
@@ -112,7 +114,7 @@ namespace XboxDownload
                                                     parentForm.notifyIcon1.Visible = false;
                                                 }));
                                                 string cmd = "chcp 65001\r\nchoice /t 3 /d y /n >nul\r\nxcopy \"" + di.FullName + "\" \"" + Path.GetDirectoryName(Application.ExecutablePath) + "\" /s /e /y\r\ndel /a/f/q " + saveFilepath + "\r\n\"" + Application.ExecutablePath + "\"\r\nrd /s/q " + tempDir;
-                                                File.WriteAllText(tempDir + "\\update.cmd", cmd);
+                                                File.WriteAllText(Path.Combine(tempDir, "update.cmd"), cmd);
                                                 using (Process p = new())
                                                 {
                                                     p.StartInfo.FileName = "cmd.exe";
@@ -165,10 +167,11 @@ namespace XboxDownload
                     return string.Empty;
                 }
             })).ToList();
+
             while (tasks.Count > 0)
             {
                 var completedTask = await Task.WhenAny(tasks);
-                tasks.Remove(completedTask);
+                tasks.RemoveAll(t => t == completedTask);
                 string html = await completedTask;
                 if (html.StartsWith(keywords))
                 {

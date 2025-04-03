@@ -83,7 +83,7 @@ namespace XboxDownload
             }
         }
 
-        public static HttpResponseMessage? HttpResponseMessage(string url, string method = "GET", string? postData = null, string? contentType = null, Dictionary<string, string>? headers = null, int timeOut = 30000, string? name = null, CancellationToken? cts = null)
+        public static HttpResponseMessage? HttpResponseMessage(string url, string method = "GET", string? postData = null, string? contentType = null, Dictionary<string, string>? headers = null, int timeOut = 30000, string? name = null, CancellationToken? token = null)
         {
             HttpResponseMessage? response = null;
             var client = httpClientFactory?.CreateClient(name ?? "default");
@@ -95,22 +95,10 @@ namespace XboxDownload
                     foreach (var header in headers)
                     {
                         if (string.IsNullOrEmpty(header.Value)) continue;
-                        switch (header.Key)
-                        {
-                            case "Host":
-                                client.DefaultRequestHeaders.Host = header.Value;
-                                break;
-                            case "Range":
-                                {
-                                    Match result = Regex.Match(header.Value, @"^bytes=(\d+)-(\d+)$");
-                                    if (result.Success)
-                                        client.DefaultRequestHeaders.Range = new RangeHeaderValue(long.Parse(result.Groups[1].Value), long.Parse(result.Groups[2].Value));
-                                }
-                                break;
-                            default:
-                                client.DefaultRequestHeaders.Add(header.Key, header.Value);
-                                break;
-                        }
+                        if (header.Key == "Host")
+                            client.DefaultRequestHeaders.Host = header.Value;
+                        else
+                            client.DefaultRequestHeaders.TryAddWithoutValidation(header.Key, header.Value);
                     }
                 }
                 HttpRequestMessage httpRequestMessage = new()
@@ -124,10 +112,10 @@ namespace XboxDownload
                     httpRequestMessage.Content = new StringContent(postData, Encoding.UTF8, contentType ?? "application/x-www-form-urlencoded");
                 try
                 {
-                    if (cts == null)
+                    if (token == null)
                         response = client.SendAsync(httpRequestMessage).Result;
                     else
-                        response = client.SendAsync(httpRequestMessage, (CancellationToken)cts).Result;
+                        response = client.SendAsync(httpRequestMessage, (CancellationToken)token).Result;
                 }
                 catch (Exception ex)
                 {
@@ -141,7 +129,7 @@ namespace XboxDownload
             return response;
         }
 
-        public static async Task<HttpResponseMessage?> HttpResponseMessageAsync(string url, string method = "GET", string? postData = null, string? contentType = null, Dictionary<string, string>? headers = null, int timeOut = 30000, string? name = null, CancellationToken? cts = null)
+        public static async Task<HttpResponseMessage?> HttpResponseMessageAsync(string url, string method = "GET", string? postData = null, string? contentType = null, Dictionary<string, string>? headers = null, int timeOut = 30000, string? name = null, CancellationToken? token = null)
         {
             HttpResponseMessage? response = null;
             var client = httpClientFactory?.CreateClient(name ?? "default");
@@ -153,22 +141,10 @@ namespace XboxDownload
                     foreach (var header in headers)
                     {
                         if (string.IsNullOrEmpty(header.Value)) continue;
-                        switch (header.Key)
-                        {
-                            case "Host":
-                                client.DefaultRequestHeaders.Host = header.Value;
-                                break;
-                            case "Range":
-                                {
-                                    Match result = Regex.Match(header.Value, @"^bytes=(\d+)-(\d+)$");
-                                    if (result.Success)
-                                        client.DefaultRequestHeaders.Range = new RangeHeaderValue(long.Parse(result.Groups[1].Value), long.Parse(result.Groups[2].Value));
-                                }
-                                break;
-                            default:
-                                client.DefaultRequestHeaders.Add(header.Key, header.Value);
-                                break;
-                        }
+                        if (header.Key == "Host")
+                            client.DefaultRequestHeaders.Host = header.Value;
+                        else
+                            client.DefaultRequestHeaders.TryAddWithoutValidation(header.Key, header.Value);
                     }
                 }
                 HttpRequestMessage httpRequestMessage = new()
@@ -182,10 +158,10 @@ namespace XboxDownload
                     httpRequestMessage.Content = new StringContent(postData, Encoding.UTF8, contentType ?? "application/x-www-form-urlencoded");
                 try
                 {
-                    if (cts == null)
+                    if (token == null)
                         response = await client.SendAsync(httpRequestMessage);
                     else
-                        response = await client.SendAsync(httpRequestMessage, (CancellationToken)cts);
+                        response = await client.SendAsync(httpRequestMessage, (CancellationToken)token);
                 }
                 catch (Exception ex)
                 {
@@ -199,16 +175,72 @@ namespace XboxDownload
             return response;
         }
 
-        public static String UrlEncode(string str)
+        public static async Task<IPAddress?> GetFastestIP(IPAddress[] ips, int port, CancellationTokenSource cts)
         {
-            if (String.IsNullOrEmpty(str)) return string.Empty;
-            return UrlEncoder.Default.Encode(str);
+            var tasks = ips.Select(async ip =>
+            {
+                using var socket = new Socket(ip.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+                socket.SendTimeout = 6000;
+                socket.ReceiveTimeout = 6000;
+                try
+                {
+                    var connectTask = Task.Factory.FromAsync(socket.BeginConnect, socket.EndConnect, new IPEndPoint(ip, port), null);
+                    var completedTask = await Task.WhenAny(connectTask, Task.Delay(6000, cts.Token));
+                    return (completedTask == connectTask && socket.Connected) ? ip : null;
+                }
+                catch
+                {
+                    return null;
+                }
+            }).ToList();
+
+            while (tasks.Count > 0)
+            {
+                var completedTask = await Task.WhenAny(tasks);
+                tasks.RemoveAll(t => t == completedTask);
+                IPAddress? fastestIp = await completedTask;
+                if (fastestIp != null)
+                {
+                    cts.Cancel();
+                    return fastestIp;
+                }
+            }
+            return null;
         }
 
-        public static string GetMimeMapping(string path)
+        public static async Task<string?> GetFastestDomain(string[] domains, string path, Dictionary<string, string> headers, CancellationTokenSource cts)
         {
-            ClassContentType.TryGetContentType(path, out string? contentType);
-            return contentType ?? "application/octet-stream";
+            var tasks = domains.Select(async domain =>
+            {
+                string url = domain + path;
+                using HttpResponseMessage? response = await ClassWeb.HttpResponseMessageAsync(url, "GET", null, null, headers, 6000, "NoCache", cts.Token);
+                if (response != null && response.IsSuccessStatusCode)
+                {
+                    using var ms = new MemoryStream();
+                    try
+                    {
+                        using var stream = await response.Content.ReadAsStreamAsync(cts.Token);
+                        await stream.CopyToAsync(ms, cts.Token);
+                        return url;
+                    }
+                    catch (TaskCanceledException) { }
+                    catch (Exception) { }
+                }
+                return null;
+            }).ToList();
+
+            while (tasks.Count > 0)
+            {
+                var completedTask = await Task.WhenAny(tasks);
+                tasks.RemoveAll(t => t == completedTask);
+                string? fastestUrl = await completedTask;
+                if (fastestUrl != null)
+                {
+                    cts.Cancel();
+                    return fastestUrl;
+                }
+            }
+            return null;
         }
 
         public static async Task<bool> TestIPv6()
@@ -219,8 +251,21 @@ namespace XboxDownload
                 IPAddress.Parse("2001:4860:4860::8888"),    //谷歌
                 IPAddress.Parse("2606:4700:4700::1111"),    //Cloudflare 
             };
-            var fastestIp = await HttpsListen.GetFastestIP(ips, 443, new CancellationTokenSource(TimeSpan.FromSeconds(3)));
+            var fastestIp = await GetFastestIP(ips, 443, new CancellationTokenSource(TimeSpan.FromSeconds(3)));
             return fastestIp != null;
+        }
+
+
+        public static String UrlEncode(string str)
+        {
+            if (String.IsNullOrEmpty(str)) return string.Empty;
+            return UrlEncoder.Default.Encode(str);
+        }
+
+        public static string GetMimeMapping(string path)
+        {
+            ClassContentType.TryGetContentType(path, out string? contentType);
+            return contentType ?? "application/octet-stream";
         }
 
         public static bool SniProxy(IPAddress[] ips, string? sni, Byte[] send1, Byte[] send2, SslStream clent, out IPAddress? remoteIP, out string? errMessage)
