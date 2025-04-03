@@ -327,7 +327,6 @@ namespace XboxDownload
             {
                 ButStart_Click(null, null);
             }
-            cbSpeedTestTimeOut.SelectedIndex = 1;
         }
 
         private class ComboboxItem
@@ -553,7 +552,6 @@ namespace XboxDownload
         NetworkInterface? adapter = null;
         private long OldUp { get; set; }
         private long OldDown { get; set; }
-
 
         private void TimerTraffic_Tick(object sender, EventArgs e)
         {
@@ -2075,14 +2073,7 @@ namespace XboxDownload
                             {
                                 if (XboxGame.Url != null && XboxGame.Version > new Version(Regex.Match(games[i, 2], @"(\d+\.\d+\.\d+\.\d+)").Value))
                                 {
-                                    url = XboxGame.Url;
-                                    string hosts = Regex.Match(url, @"(?<=://)[a-zA-Z\.0-9]+(?=\/)").Value;
-                                    url = hosts switch
-                                    {
-                                        "xvcf1.xboxlive.com" => url.Replace("xvcf1.xboxlive.com", "assets1.xboxlive.cn"),
-                                        "xvcf2.xboxlive.com" => url.Replace("xvcf2.xboxlive.com", "assets2.xboxlive.cn"),
-                                        _ => url.Replace(".xboxlive.com", ".xboxlive.cn"),
-                                    };
+                                    url = XboxGame.Url.Replace(".xboxlive.com", ".xboxlive.cn");
                                 }
                             }
                             if (string.IsNullOrEmpty(url)) url = "http://assets1.xboxlive.cn" + games[i, 2];
@@ -3202,7 +3193,7 @@ namespace XboxDownload
             string? _tag = dgvIpList.Tag.ToString();
             if (uri != null)
             {
-                int range = Regex.IsMatch(gbIPList.Text, @"Akamai") ? 31457250 : 52428799;  //国外IP测试下载30M，国内IP测试下载50M
+                int range = Regex.IsMatch(gbIPList.Text, @"Akamai") ? 31457279 : 52428799;  //国外IP测试下载30M，国内IP测试下载50M
                 //if (Form1.debug) range = 1048575;     //1M
 
                 string userAgent = uri.Host.EndsWith(".nintendo.net") ? "XboxDownload (Nintendo NX)" : "XboxDownload";
@@ -3227,52 +3218,62 @@ namespace XboxDownload
                     dgvr.Cells["Col_RoundtripTime"].Style.ForeColor = Color.Empty;
                     dgvr.Cells["Col_Speed"].Style.ForeColor = Color.Empty;
                     dgvr.Tag = null;
-                    try
+
+                    Task[] tasks = new Task[2];
+                    tasks[0] = new Task(() =>
                     {
-                        PingReply reply = p1.Send(ip);
-                        if (reply.Status == IPStatus.Success)
+                        try
                         {
-                            dgvr.Cells["Col_TTL"].Value = reply.Options?.Ttl;
-                            dgvr.Cells["Col_RoundtripTime"].Value = reply.RoundtripTime;
+                            PingReply reply = p1.Send(ip);
+                            if (reply.Status == IPStatus.Success)
+                            {
+                                dgvr.Cells["Col_TTL"].Value = reply.Options?.Ttl;
+                                dgvr.Cells["Col_RoundtripTime"].Value = reply.RoundtripTime;
+                            }
                         }
-                    }
-                    catch { }
-                    sw.Restart();
-                    SocketPackage socketPackage = uri.Scheme == "https" ? ClassWeb.TlsRequest(uri, buffer, ip, false, null, timeout, ctsSpeedTest) : ClassWeb.TcpRequest(uri, buffer, ip, false, null, timeout, ctsSpeedTest);
-                    sw.Stop();
-                    if (socketPackage.Headers.StartsWith("HTTP/1.1 302"))
+                        catch { }
+                    });
+                    tasks[1] = new Task(() =>
                     {
-                        dgvr.Cells["Col_302"].Value = true;
-                        Match result = Regex.Match(socketPackage.Headers, @"Location: (.+)");
-                        if (result.Success)
+                        sw.Restart();
+                        SocketPackage socketPackage = uri.Scheme == "https" ? ClassWeb.TlsRequest(uri, buffer, ip, false, null, timeout, ctsSpeedTest) : ClassWeb.TcpRequest(uri, buffer, ip, false, null, timeout, ctsSpeedTest);
+                        sw.Stop();
+                        if (socketPackage.Headers.StartsWith("HTTP/1.1 302"))
                         {
-                            Uri uri2 = new(uri, result.Groups[1].Value);
-                            dgvr.Tag = socketPackage.Headers + "===============临时性重定向(302)===============\n" + uri2.OriginalString + "\n\n";
-                            sb.Clear();
-                            sb.AppendLine("GET " + uri2.PathAndQuery + " HTTP/1.1");
-                            sb.AppendLine("Host: " + uri2.Host);
-                            sb.AppendLine("User-Agent: " + userAgent);
-                            sb.AppendLine("Range: bytes=0-" + range);
-                            sb.AppendLine();
-                            byte[] buffer2 = Encoding.ASCII.GetBytes(sb.ToString());
-                            sw.Restart();
-                            socketPackage = uri2.Scheme == "https" ? ClassWeb.TlsRequest(uri2, buffer2, null, false, null, timeout, ctsSpeedTest) : ClassWeb.TcpRequest(uri2, buffer2, null, false, null, timeout, ctsSpeedTest);
-                            sw.Stop();
+                            dgvr.Cells["Col_302"].Value = true;
+                            Match result = Regex.Match(socketPackage.Headers, @"Location: (.+)");
+                            if (result.Success)
+                            {
+                                Uri uri2 = new(uri, result.Groups[1].Value);
+                                dgvr.Tag = socketPackage.Headers + "===============临时性重定向(302)===============\n" + uri2.OriginalString + "\n\n";
+                                sb.Clear();
+                                sb.AppendLine("GET " + uri2.PathAndQuery + " HTTP/1.1");
+                                sb.AppendLine("Host: " + uri2.Host);
+                                sb.AppendLine("User-Agent: " + userAgent);
+                                sb.AppendLine("Range: bytes=0-" + range);
+                                sb.AppendLine();
+                                byte[] buffer2 = Encoding.ASCII.GetBytes(sb.ToString());
+                                sw.Restart();
+                                socketPackage = uri2.Scheme == "https" ? ClassWeb.TlsRequest(uri2, buffer2, null, false, null, timeout, ctsSpeedTest) : ClassWeb.TcpRequest(uri2, buffer2, null, false, null, timeout, ctsSpeedTest);
+                                sw.Stop();
+                            }
                         }
-                    }
-                    dgvr.Tag += string.IsNullOrEmpty(socketPackage.Err) ? socketPackage.Headers : socketPackage.Err;
-                    if (socketPackage.Headers.StartsWith("HTTP/1.1 206") && socketPackage.Buffer != null)
-                    {
-                        double speed = Math.Round((double)(socketPackage.Buffer.Length) / sw.ElapsedMilliseconds * 1000 / 1024 / 1024, 2, MidpointRounding.AwayFromZero);
-                        dgvr.Cells["Col_Speed"].Value = speed;
-                        dgvr.Tag += "下载：" + ClassMbr.ConvertBytes((ulong)socketPackage.Buffer.Length) + "，耗时：" + sw.ElapsedMilliseconds.ToString("N0") + " 毫秒，平均速度：" + speed + " MB/s";
-                    }
-                    else
-                    {
-                        dgvr.Cells["Col_Speed"].Value = (double)0;
-                        dgvr.Cells["Col_Speed"].Style.ForeColor = Color.Red;
-                    }
-                    socketPackage.Buffer = null;
+                        dgvr.Tag += string.IsNullOrEmpty(socketPackage.Err) ? socketPackage.Headers : socketPackage.Err;
+                        if (socketPackage.Headers.StartsWith("HTTP/1.1 206") && socketPackage.Buffer != null)
+                        {
+                            double speed = Math.Round((double)(socketPackage.Buffer.Length) / sw.ElapsedMilliseconds * 1000 / 1024 / 1024, 2, MidpointRounding.AwayFromZero);
+                            dgvr.Cells["Col_Speed"].Value = speed;
+                            dgvr.Tag += "下载：" + ClassMbr.ConvertBytes((ulong)socketPackage.Buffer.Length) + "，耗时：" + sw.ElapsedMilliseconds.ToString("N0") + " 毫秒，平均速度：" + speed + " MB/s";
+                        }
+                        else
+                        {
+                            dgvr.Cells["Col_Speed"].Value = (double)0;
+                            dgvr.Cells["Col_Speed"].Style.ForeColor = Color.Red;
+                        }
+                        socketPackage.Buffer = null;
+                    });
+                    Array.ForEach(tasks, x => x.Start());
+                    Task.WaitAll(tasks);
                 }
             }
             else

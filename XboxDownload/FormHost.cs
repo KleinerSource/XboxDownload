@@ -145,7 +145,7 @@ namespace XboxDownload
                         if (this.IsDisposed) return;
                         if (verified)
                         {
-                            dgvr.Cells[3].Value = sw.ElapsedMilliseconds.ToString("N0") + " ms";
+                            dgvr.Cells[3].Value = sw.ElapsedMilliseconds.ToString("N0");
                             dgvr.Cells[3].Style.ForeColor = Color.Green;
                         }
                         else

@@ -1,8 +1,6 @@
 ﻿using System.Diagnostics;
 using System.IO.Compression;
 using System.Reflection;
-using System.Text;
-using System.Text.Json;
 using System.Text.RegularExpressions;
 
 namespace XboxDownload
@@ -11,105 +9,122 @@ namespace XboxDownload
     {
         public const string website = "https://xbox.skydevil.xyz";
         public const string project = "https://github.com/skydevil88/XboxDownload";
-        private static readonly string[,] proxys = {
-            { "proxy", "https://py.skydevil.xyz/"},
-            { "proxy", "https://py2.skydevil.xyz/"},
-            { "direct", "" }
-        };
+        public static string[] proxys1 = { "https://gh-proxy.com/", "https://ghproxy.net/" };
+        public static string[] proxys2 = { "https://pxy1.skydevil.xyz/", "https://pxy2.skydevil.xyz/", "" };
 
-        public static void Start(bool autoupdate, Form1 parentForm)
+        public static async void Start(bool autoupdate, Form1 parentForm)
         {
             Properties.Settings.Default.NextUpdate = DateTime.Now.AddDays(7).Ticks;
             Properties.Settings.Default.Save();
 
-            string? releases = null;
-            Task[] tasks = new Task[proxys.GetLongLength(0)];
-            for (int i = 0; i <= tasks.Length - 1; i++)
+            string[] proxys = proxys1.Concat(proxys2).ToArray();
+            var cts = new CancellationTokenSource();
+            var tasks = proxys.Select(proxy => Task.Run(() =>
             {
-                string proxy = proxys[i, 0] switch
+                using HttpResponseMessage? response = ClassWeb.HttpResponseMessage($"{proxy}{project}/releases/latest", "GET", null, null, null, 6000, null, cts.Token);
+                if (response != null && response.IsSuccessStatusCode)
                 {
-                    "proxy" => proxys[i, 1] + UpdateFile.project,
-                    _ => UpdateFile.project
-                };
-                tasks[i] = new Task(() =>
+                    return response.Content.ReadAsStringAsync().Result;
+                }
+                else
                 {
-                    using HttpResponseMessage? response = ClassWeb.HttpResponseMessage(proxy + "/releases/latest", "HEAD", null, null, null, 6000, "XboxDownload");
-                    if (response != null && response.IsSuccessStatusCode && string.IsNullOrEmpty(releases))
-                        releases = response.RequestMessage?.RequestUri?.ToString();
-                    else
-                        Thread.Sleep(6000);
-                });
-            }
-            Array.ForEach(tasks, x => x.Start());
-            Task.WaitAny(tasks);
-            if (!string.IsNullOrEmpty(releases))
+                    return string.Empty;
+                }
+            })).ToList();
+            string download_url = "";
+            while (tasks.Count > 0)
             {
-                Match result = Regex.Match(releases, @"(?<version>\d+(\.\d+){2,3})$");
-                if (result.Success)
+                var completedTask = await Task.WhenAny(tasks);
+                tasks.Remove(completedTask);
+                string html = await completedTask;
+                if (html.Contains(project))
                 {
-                    Version version1 = new(result.Groups["version"].Value);
-                    Version version2 = new((Assembly.GetEntryAssembly()?.GetCustomAttribute<AssemblyFileVersionAttribute>()?.Version) ?? string.Empty);
-                    if (version1 > version2 && version1.Major == 2)
+                    cts.Cancel();
+                    Match result = Regex.Match(html, @"Release v(?<version>\d+(\.\d+){2,3})", RegexOptions.IgnoreCase);
+                    if (result.Success)
                     {
-                        bool isUpdate = false;
-                        parentForm.Invoke(new Action(() =>
+                        Version version1 = new(result.Groups["version"].Value);
+                        Version version2 = new(Assembly.GetEntryAssembly()?.GetCustomAttribute<AssemblyFileVersionAttribute>()?.Version!);
+                        if (version1 > version2)
                         {
-                            isUpdate = MessageBox.Show("已检测到新版本，是否立即更新？", "软件更新", MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk) == DialogResult.Yes;
-                            if (!isUpdate) parentForm.tsmUpdate.Enabled = true;
-                        }));
-                        if (!isUpdate) return;
-                    }
-                    else
-                    {
-                        parentForm.Invoke(new Action(() =>
-                        {
-                            if (!autoupdate) MessageBox.Show("软件已经是最新版本。", "软件更新", MessageBoxButtons.OK, MessageBoxIcon.None);
-                            parentForm.tsmUpdate.Enabled = true;
-                        }));
-                        return;
-                    }
-                    string download = releases.Replace("tag", "download") + "/XboxDownload.zip";
-                    using (HttpResponseMessage? response = ClassWeb.HttpResponseMessage(download, "GET", null, null, null, 6000, "XboxDownload"))
-                    {
-                        if (response != null && response.IsSuccessStatusCode)
-                        {
-                            if (!Directory.Exists(Form1.resourceDirectory))
-                                Directory.CreateDirectory(Form1.resourceDirectory);
-                            byte[] buffer = response.Content.ReadAsByteArrayAsync().Result;
-                            if (buffer.Length > 0)
+                            download_url = $"{project}/releases/download/v{version1}/XboxDownload.zip";
+                            bool isUpdate = false;
+                            parentForm.Invoke(new Action(() =>
                             {
-                                string saveFilepath = Path.Combine(Form1.resourceDirectory, "XboxDownload.zip");
-                                using (FileStream fs = new(saveFilepath, FileMode.Create, FileAccess.Write, FileShare.ReadWrite))
+                                isUpdate = MessageBox.Show($"已检测到新版本(V{version1})，是否立即更新？", "软件更新", MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk, MessageBoxDefaultButton.Button2) == DialogResult.Yes;
+                                if (!isUpdate) parentForm.tsmUpdate.Enabled = true;
+                            }));
+                            if (!isUpdate) return;
+                        }
+                        else
+                        {
+                            parentForm.Invoke(new Action(() =>
+                            {
+                                if (!autoupdate) MessageBox.Show("软件已经是最新版本。", "软件更新", MessageBoxButtons.OK, MessageBoxIcon.None);
+                                parentForm.tsmUpdate.Enabled = true;
+                            }));
+                            return;
+                        }
+                    }
+                }
+            }
+            if (!string.IsNullOrEmpty(download_url))
+            {
+                parentForm.SaveLog("Update", "正在下载更新包，请稍候...", "localhost", 0x008000);
+                string? fastestUrl = await HttpsListen.GetFastestDomain(proxys, download_url, new() { { "Range", "bytes=0-1023" } }, new CancellationTokenSource(TimeSpan.FromSeconds(3)));
+                if (fastestUrl != null)
+                {
+                    using (HttpResponseMessage? response = ClassWeb.HttpResponseMessage(fastestUrl, "GET"))
+                    {
+                        if (response != null && response.IsSuccessStatusCode && string.Equals(response.Content.Headers.ContentType?.MediaType, "application/octet-stream"))
+                        {
+                            if (response.Content.Headers.ContentDisposition != null && string.Equals(response.Content.Headers.ContentDisposition.FileName, "XboxDownload.zip", StringComparison.OrdinalIgnoreCase))
+                            {
+                                if (!Directory.Exists(Form1.resourceDirectory))
+                                    Directory.CreateDirectory(Form1.resourceDirectory);
+                                byte[] buffer = response.Content.ReadAsByteArrayAsync().Result;
+                                if (buffer.Length > 0)
                                 {
-                                    fs.Write(buffer, 0, buffer.Length);
-                                    fs.Flush();
-                                    fs.Close();
-                                }
-                                string tempDir = Path.Combine(Form1.resourceDirectory, ".Temp");
-                                if (Directory.Exists(tempDir))
-                                    Directory.Delete(tempDir, true);
-                                ZipFile.ExtractToDirectory(saveFilepath, tempDir, Encoding.GetEncoding("GBK"), true);
-                                foreach (DirectoryInfo di in new DirectoryInfo(tempDir).GetDirectories())
-                                {
-                                    if (File.Exists(Path.Combine(di.FullName, "XboxDownload.exe")))
+                                    string saveFilepath = Path.Combine(Form1.resourceDirectory, "XboxDownload.zip");
+                                    using (FileStream fs = new(saveFilepath, FileMode.Create, FileAccess.Write, FileShare.ReadWrite))
                                     {
-                                        parentForm.Invoke(new Action(() =>
+                                        fs.Write(buffer, 0, buffer.Length);
+                                        fs.Flush();
+                                        fs.Close();
+                                    }
+                                    string tempDir = Path.Combine(Form1.resourceDirectory, ".Temp");
+                                    if (Directory.Exists(tempDir))
+                                        Directory.Delete(tempDir, true);
+                                    try
+                                    {
+                                        ZipFile.ExtractToDirectory(saveFilepath, tempDir, true);
+                                    }
+                                    catch { }
+                                    if (Directory.Exists(tempDir))
+                                    {
+                                        foreach (DirectoryInfo di in new DirectoryInfo(tempDir).GetDirectories())
                                         {
-                                            if (Form1.bServiceFlag) parentForm.ButStart_Click(null, null);
-                                            parentForm.notifyIcon1.Visible = false;
-                                        }));
-                                        string cmd = "chcp 65001\r\nchoice /t 3 /d y /n >nul\r\nxcopy \"" + di.FullName + "\" \"" + Path.GetDirectoryName(Application.ExecutablePath) + "\" /s /e /y\r\ndel /a/f/q " + saveFilepath + "\r\n\"" + Application.ExecutablePath + "\"\r\nrd /s/q " + tempDir;
-                                        File.WriteAllText(tempDir + "\\update.cmd", cmd);
-                                        using (Process p = new())
-                                        {
-                                            p.StartInfo.FileName = "cmd.exe";
-                                            p.StartInfo.UseShellExecute = false;
-                                            p.StartInfo.CreateNoWindow = true;
-                                            p.StartInfo.Arguments = "/c \"" + tempDir + "\\update.cmd\"";
-                                            p.Start();
+                                            if (File.Exists(Path.Combine(di.FullName, "XboxDownload.exe")))
+                                            {
+                                                parentForm.Invoke(new Action(() =>
+                                                {
+                                                    if (Form1.bServiceFlag) parentForm.ButStart_Click(null, null);
+                                                    parentForm.notifyIcon1.Visible = false;
+                                                }));
+                                                string cmd = "chcp 65001\r\nchoice /t 3 /d y /n >nul\r\nxcopy \"" + di.FullName + "\" \"" + Path.GetDirectoryName(Application.ExecutablePath) + "\" /s /e /y\r\ndel /a/f/q " + saveFilepath + "\r\n\"" + Application.ExecutablePath + "\"\r\nrd /s/q " + tempDir;
+                                                File.WriteAllText(tempDir + "\\update.cmd", cmd);
+                                                using (Process p = new())
+                                                {
+                                                    p.StartInfo.FileName = "cmd.exe";
+                                                    p.StartInfo.UseShellExecute = false;
+                                                    p.StartInfo.CreateNoWindow = true;
+                                                    p.StartInfo.Arguments = "/c \"" + tempDir + "\\update.cmd\"";
+                                                    p.Start();
+                                                }
+                                                Process.GetCurrentProcess().Kill();
+                                                break;
+                                            }
                                         }
-                                        Process.GetCurrentProcess().Kill();
-                                        break;
                                     }
                                 }
                             }
@@ -135,71 +150,37 @@ namespace XboxDownload
 
         public static async Task DownloadIP(FileInfo fi)
         {
-            string? fileUrl = null;
-            Task[] tasks = new Task[proxys.GetLongLength(0)];
-            for (int i = 0; i <= tasks.Length - 1; i++)
+            string[] proxys = proxys1.Concat(proxys2).ToArray();
+            string url = project + "/raw/refs/heads/master/IP/" + fi.Name, keywords = fi.Name[3..^4];
+            var cts = new CancellationTokenSource();
+            var tasks = proxys.Select(proxy => Task.Run(() =>
             {
-                string proxy = proxys[i, 0] switch
-                {
-                    "proxy" => proxys[i, 1] + UpdateFile.project,
-                    _ => UpdateFile.project
-                };
-                tasks[i] = new Task(() =>
-                {
-                    if (proxy.StartsWith("https://py2.skydevil.xyz/")) Thread.Sleep(500);
-                    else if (proxy.StartsWith("https://github.com/")) Thread.Sleep(1000);
-                    string tmpUrl = proxy + "/blob/master/IP/" + fi.Name;
-                    using HttpResponseMessage? response = ClassWeb.HttpResponseMessage(tmpUrl, "HEAD", null, null, null, 6000, "XboxDownload");
-                    if (response != null && response.IsSuccessStatusCode && string.IsNullOrEmpty(fileUrl))
-                        fileUrl = tmpUrl;
-                    else
-                        Thread.Sleep(6000);
-                });
-            }
-            Array.ForEach(tasks, x => x.Start());
-            await Task.WhenAny(tasks);
-            if (!string.IsNullOrEmpty(fileUrl))
-            {
-                using HttpResponseMessage? response = ClassWeb.HttpResponseMessage(fileUrl, "GET", null, null, null, 6000, "XboxDownload");
+                using HttpResponseMessage? response = ClassWeb.HttpResponseMessage(proxy + url, "GET", null, null, null, 6000, null, cts.Token);
                 if (response != null && response.IsSuccessStatusCode)
                 {
-                    string html = response.Content.ReadAsStringAsync().Result;
-                    Match result = Regex.Match(html, @"""rawLines"":(\[[^\]]+\])");
-                    if (result.Success)
+                    return response.Content.ReadAsStringAsync().Result;
+                }
+                else
+                {
+                    return string.Empty;
+                }
+            })).ToList();
+            while (tasks.Count > 0)
+            {
+                var completedTask = await Task.WhenAny(tasks);
+                tasks.Remove(completedTask);
+                string html = await completedTask;
+                if (html.StartsWith(keywords))
+                {
+                    cts.Cancel();
+                    if (fi.DirectoryName != null && !Directory.Exists(fi.DirectoryName))
+                        Directory.CreateDirectory(fi.DirectoryName);
+                    using (FileStream fs = fi.Open(FileMode.Create, FileAccess.Write, FileShare.ReadWrite))
                     {
-                        JsonDocument document = JsonDocument.Parse(result.Groups[1].Value);
-                        JsonElement root = document.RootElement;
-                        if (root.ValueKind == JsonValueKind.Array)
-                        {
-                            StringBuilder sb = new();
-                            foreach (JsonElement element in root.EnumerateArray())
-                            {
-                                sb.AppendLine(element.GetString());
-                            }
-                            if (sb.Length > 0)
-                            {
-                                if (fi.DirectoryName != null && !Directory.Exists(fi.DirectoryName))
-                                    Directory.CreateDirectory(fi.DirectoryName);
-                                using (FileStream fs = fi.Open(FileMode.Create, FileAccess.Write, FileShare.ReadWrite))
-                                {
-                                    using StreamWriter sw = new(fs);
-                                    sw.Write(sb.ToString().Trim());
-                                }
-                                fi.Refresh();
-                            }
-                        }
+                        using StreamWriter sw = new(fs);
+                        sw.Write(html);
                     }
-                    else if (Regex.IsMatch(html, @"([^\s]+\s+\([^\)]+\)\r?\n){10,}"))
-                    {
-                        if (fi.DirectoryName != null && !Directory.Exists(fi.DirectoryName))
-                            Directory.CreateDirectory(fi.DirectoryName);
-                        using (FileStream fs = fi.Open(FileMode.Create, FileAccess.Write, FileShare.ReadWrite))
-                        {
-                            using StreamWriter sw = new(fs);
-                            sw.Write(html.Trim());
-                        }
-                        fi.Refresh();
-                    }
+                    fi.Refresh();
                 }
             }
         }

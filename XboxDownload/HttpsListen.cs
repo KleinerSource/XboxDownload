@@ -431,8 +431,7 @@ namespace XboxDownload
                                         {
                                             if (_host == "github.com" && _filePath.Contains("/releases/download/"))
                                             {
-                                                string[] proxys = { "gh-proxy.com", "ghproxy.net" };
-                                                string? fastestUrl = await GetFastestDomain(proxys, _url, 1023, new CancellationTokenSource(TimeSpan.FromSeconds(3)));
+                                                string? fastestUrl = await GetFastestDomain(UpdateFile.proxys1, _url, new() { { "Range", "bytes=0-1023" } }, new CancellationTokenSource(TimeSpan.FromSeconds(3)));
                                                 if (fastestUrl != null)
                                                 {
                                                     bFileFound = true;
@@ -645,7 +644,7 @@ namespace XboxDownload
             store.Close();
         }
 
-        static async Task<IPAddress?> GetFastestIP(IPAddress[] ips, int port, CancellationTokenSource cts)
+        public static async Task<IPAddress?> GetFastestIP(IPAddress[] ips, int port, CancellationTokenSource cts)
         {
             var token = cts.Token;
             var tasks = ips.Select(ip => TestConnection(ip, port, token)).ToList();
@@ -669,7 +668,7 @@ namespace XboxDownload
             try
             {
                 var connectTask = Task.Factory.FromAsync(socket.BeginConnect, socket.EndConnect, new IPEndPoint(ip, port), null);
-                var completedTask = await Task.WhenAny(connectTask, Task.Delay(3000, token));
+                var completedTask = await Task.WhenAny(connectTask, Task.Delay(6000, token));
                 if (completedTask == connectTask && socket.Connected)
                 {
                     return ip;
@@ -679,18 +678,9 @@ namespace XboxDownload
             return null;
         }
 
-        static async Task<string?> GetFastestDomain(string[] domains, string path, int range, CancellationTokenSource cts)
+        public static async Task<string?> GetFastestDomain(string[] domains, string path, Dictionary<string, string> headers, CancellationTokenSource cts)
         {
-            HttpClient httpClient = new();
-            httpClient.DefaultRequestHeaders.Range = new System.Net.Http.Headers.RangeHeaderValue(0, range);
-            httpClient.DefaultRequestHeaders.CacheControl = new System.Net.Http.Headers.CacheControlHeaderValue
-            {
-                NoCache = true,
-                NoStore = true,
-                MustRevalidate = true
-            };
-            var token = cts.Token;
-            var tasks = domains.Select(url => TestDownloadSpeed($"https://{url}/{path}", httpClient, token)).ToList();
+            var tasks = domains.Select(domain => TestDownloadSpeed(domain + path, headers, cts.Token)).ToList();
             while (tasks.Count > 0)
             {
                 var completedTask = await Task.WhenAny(tasks);
@@ -705,17 +695,13 @@ namespace XboxDownload
             return null;
         }
 
-        static async Task<string?> TestDownloadSpeed(string url, HttpClient httpClient, CancellationToken token)
+        static async Task<string?> TestDownloadSpeed(string url, Dictionary<string, string> headers, CancellationToken token)
         {
-            try
+            using HttpResponseMessage? response = await ClassWeb.HttpResponseMessageAsync(url, "GET", null, null, headers, 6000, "NoCache", token);
+            if (response != null && response.IsSuccessStatusCode)
             {
-                using var response = await httpClient.GetAsync(url, HttpCompletionOption.ResponseHeadersRead, token);
-                if (response.IsSuccessStatusCode)
-                {
-                    return url;
-                }
+                return url;
             }
-            catch { }
             return null;
         }
     }

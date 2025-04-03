@@ -21,8 +21,9 @@ namespace XboxDownload
 
         public static void HttpClientFactory()
         {
-            string userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36";
+            string userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36";
             ServiceCollection services = new();
+
             services.AddHttpClient("default").ConfigureHttpClient(httpClient =>
             {
                 httpClient.DefaultRequestHeaders.Add("User-Agent", userAgent);
@@ -30,6 +31,7 @@ namespace XboxDownload
             {
                 AutomaticDecompression = DecompressionMethods.All
             });
+
             services.AddHttpClient("XboxDownload").ConfigureHttpClient(httpClient =>
             {
                 httpClient.DefaultRequestHeaders.Add("User-Agent", "XboxDownload/" + Assembly.GetEntryAssembly()?.GetCustomAttribute<AssemblyFileVersionAttribute>()?.Version);
@@ -39,6 +41,25 @@ namespace XboxDownload
             {
                 AutomaticDecompression = DecompressionMethods.All
             });
+
+            services.AddHttpClient("NoCache").ConfigureHttpClient(httpClient =>
+            {
+                httpClient.DefaultRequestHeaders.Add("User-Agent", userAgent);
+                httpClient.DefaultRequestHeaders.CacheControl = new CacheControlHeaderValue
+                {
+                    NoCache = true,
+                    NoStore = true,
+                    MustRevalidate = true
+                };
+            }).ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
+            {
+                AutomaticDecompression = DecompressionMethods.All
+            }).ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler
+            {
+                PooledConnectionLifetime = TimeSpan.Zero,
+                UseCookies = false
+            });
+
             httpClientFactory = services.BuildServiceProvider().GetRequiredService<IHttpClientFactory>();
         }
 
@@ -198,23 +219,8 @@ namespace XboxDownload
                 IPAddress.Parse("2001:4860:4860::8888"),    //谷歌
                 IPAddress.Parse("2606:4700:4700::1111"),    //Cloudflare 
             };
-            var tasks = ips.Select(ip => Task.Run(async () =>
-            {
-                Socket socket = new(ip.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-                try
-                {
-                    await Task.Factory.FromAsync(socket.BeginConnect, socket.EndConnect, new IPEndPoint(ip, 443), null);
-                    socket.Close();
-                    socket.Dispose();
-                    return true;
-                }
-                catch
-                {
-                    socket.Dispose();
-                    return false;
-                }
-            })).ToArray();
-            return await Task.WhenAny(tasks).Result;
+            var fastestIp = await HttpsListen.GetFastestIP(ips, 443, new CancellationTokenSource(TimeSpan.FromSeconds(3)));
+            return fastestIp != null;
         }
 
         public static bool SniProxy(IPAddress[] ips, string? sni, Byte[] send1, Byte[] send2, SslStream clent, out IPAddress? remoteIP, out string? errMessage)
