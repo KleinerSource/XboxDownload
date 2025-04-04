@@ -11,7 +11,6 @@ namespace XboxDownload
         public const string project = "https://github.com/skydevil88/XboxDownload";
         public static readonly string[] proxys1 = { "https://gh-proxy.com/", "https://ghproxy.net/" };
         private static readonly string[] proxys2 = { "https://pxy1.skydevil.xyz/", "https://pxy2.skydevil.xyz/", "" };
-        private static string[]? proxys = null;
 
         public static async void Start(bool autoupdate, Form1 parentForm)
         {
@@ -19,7 +18,7 @@ namespace XboxDownload
             Properties.Settings.Default.Save();
 
             string download_url = "";
-            string html = await GetFastestHtml($"{project}/releases/latest", project);
+            string html = await GetFastestHtml(proxys2, $"{project}/releases/latest", project);
             if (!string.IsNullOrEmpty(html))
             {
                 Match result = Regex.Match(html, @"Release v(?<version>\d+(\.\d+){2,3})", RegexOptions.IgnoreCase);
@@ -49,11 +48,11 @@ namespace XboxDownload
                     }
                 }
             }
-            
+
             if (!string.IsNullOrEmpty(download_url))
             {
                 if (Properties.Settings.Default.RecordLog) parentForm.SaveLog("Update", "正在下载更新包，请稍候...", "localhost", 0x008000);
-                string? fastestUrl = await ClassWeb.GetFastestProxy(proxys!, download_url, new() { { "Range", "bytes=0-10239" } }, 3000);
+                string? fastestUrl = await ClassWeb.GetFastestProxy(proxys2, download_url, new() { { "Range", "bytes=0-10239" } }, 3000);
                 if (fastestUrl != null)
                 {
                     using HttpResponseMessage? response = ClassWeb.HttpResponseMessage(fastestUrl, "GET");
@@ -131,7 +130,7 @@ namespace XboxDownload
         public static async Task DownloadIP(FileInfo fi)
         {
             string url = project.Replace("github.com", "raw.githubusercontent.com") + "/refs/heads/master/IP/" + fi.Name, keyword = fi.Name[3..^4];
-            string html = await GetFastestHtml(url, keyword);
+            string html = await GetFastestHtml(proxys2, url, keyword);
             if (!string.IsNullOrEmpty(html))
             {
                 if (fi.DirectoryName != null && !Directory.Exists(fi.DirectoryName))
@@ -145,9 +144,8 @@ namespace XboxDownload
             }
         }
 
-        private static async Task<string> GetFastestHtml(string url, string keyword)
+        private static async Task<string> GetFastestHtml(string[] proxys, string url, string keyword)
         {
-            proxys ??= proxys1.Concat(proxys2).ToArray();
             using var cts = new CancellationTokenSource();
 
             var tasks = proxys.Select(async proxy =>
