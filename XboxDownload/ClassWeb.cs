@@ -188,13 +188,13 @@ namespace XboxDownload
             return null;
         }
 
-        public static async Task<string?> GetFastestDomain(string[] domains, string path, Dictionary<string, string> headers, int timeout)
+        public static async Task<string?> GetFastestProxy(string[] proxys, string path, Dictionary<string, string> headers, int timeout)
         {
             using var cts = new CancellationTokenSource(TimeSpan.FromMilliseconds(timeout));
 
-            var tasks = domains.Select(async domain =>
+            var tasks = proxys.Select(async proxy =>
             {
-                string url = domain + path;
+                string url = proxy + (string.IsNullOrEmpty(proxy) ? path : path.Replace("https://", ""));
                 using HttpResponseMessage? response = await ClassWeb.HttpResponseMessageAsync(url, "GET", null, null, headers, timeout, "NoCache", cts.Token);
                 if (response != null && response.IsSuccessStatusCode)
                 {

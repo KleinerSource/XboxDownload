@@ -431,7 +431,7 @@ namespace XboxDownload
                                         {
                                             if (_host == "github.com" && _filePath.Contains("/releases/download/"))
                                             {
-                                                string? fastestUrl = await ClassWeb.GetFastestDomain(UpdateFile.proxys1, _url, new() { { "Range", "bytes=0-10239" } }, 3000);
+                                                string? fastestUrl = await ClassWeb.GetFastestProxy(UpdateFile.proxys1, _url, new() { { "Range", "bytes=0-10239" } }, 3000);
                                                 if (fastestUrl != null)
                                                 {
                                                     bFileFound = true;

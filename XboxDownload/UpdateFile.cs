@@ -53,7 +53,7 @@ namespace XboxDownload
             if (!string.IsNullOrEmpty(download_url))
             {
                 if (Properties.Settings.Default.RecordLog) parentForm.SaveLog("Update", "正在下载更新包，请稍候...", "localhost", 0x008000);
-                string? fastestUrl = await ClassWeb.GetFastestDomain(proxys!, download_url, new() { { "Range", "bytes=0-10239" } }, 3000);
+                string? fastestUrl = await ClassWeb.GetFastestProxy(proxys!, download_url, new() { { "Range", "bytes=0-10239" } }, 3000);
                 if (fastestUrl != null)
                 {
                     using HttpResponseMessage? response = ClassWeb.HttpResponseMessage(fastestUrl, "GET");
