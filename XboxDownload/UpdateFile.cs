@@ -144,12 +144,13 @@ namespace XboxDownload
             }
         }
 
-        private static async Task<string> GetFastestHtml(string[] proxys, string url, string keyword)
+        private static async Task<string> GetFastestHtml(string[] proxys, string path, string keyword)
         {
             using var cts = new CancellationTokenSource();
 
             var tasks = proxys.Select(async proxy =>
             {
+                string url = proxy + (string.IsNullOrEmpty(proxy) ? path : path.Replace("https://", ""));
                 using var response = await ClassWeb.HttpResponseMessageAsync(proxy + url, "GET", null, null, null, 6000, null, cts.Token);
                 if (response != null && response.IsSuccessStatusCode)
                 {
