@@ -361,3 +361,11 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/IP/IP.Akamai.txt
+/IP/IP.AkamaiV2.txt
+/IP/IP.AkamaiV6.txt
+/IP/IP.assets1.xboxlive.cn.txt
+/IP/IP.dlassets.xboxlive.cn.txt
+/IP/IP.gst.prod.dl.playstation.net.txt
+/IP/IP.uplaypc-s-ubisoft.cdn.ubionline.com.cn.txt
+/IP/IP.tlu.dl.delivery.mp.microsoft.com.txt
