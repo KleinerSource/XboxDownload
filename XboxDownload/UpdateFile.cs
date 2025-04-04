@@ -153,7 +153,7 @@ namespace XboxDownload
         public static async Task DownloadIP(FileInfo fi)
         {
             string[] proxys = proxys1.Concat(proxys2).ToArray();
-            string url = project + "/raw/refs/heads/master/IP/" + fi.Name, keywords = fi.Name[3..^4];
+            string url = project.Replace("github.com", "raw.githubusercontent.com") + "/refs/heads/master/IP/" + fi.Name, keywords = fi.Name[3..^4];
             var cts = new CancellationTokenSource();
             var tasks = proxys.Select(proxy => Task.Run(() =>
             {
