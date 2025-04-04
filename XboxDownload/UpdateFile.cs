@@ -151,7 +151,7 @@ namespace XboxDownload
             var tasks = proxys.Select(async proxy =>
             {
                 string url = proxy + (string.IsNullOrEmpty(proxy) ? path : path.Replace("https://", ""));
-                using var response = await ClassWeb.HttpResponseMessageAsync(proxy + url, "GET", null, null, null, 6000, null, cts.Token);
+                using var response = await ClassWeb.HttpResponseMessageAsync(url, "GET", null, null, null, 6000, null, cts.Token);
                 if (response != null && response.IsSuccessStatusCode)
                 {
                     try
