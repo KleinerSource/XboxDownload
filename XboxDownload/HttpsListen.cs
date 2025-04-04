@@ -431,7 +431,7 @@ namespace XboxDownload
                                         {
                                             if (_host == "github.com" && _filePath.Contains("/releases/download/"))
                                             {
-                                                string? fastestUrl = await ClassWeb.GetFastestDomain(UpdateFile.proxys1, _url, new() { { "Range", "bytes=0-10239" } }, new CancellationTokenSource(TimeSpan.FromSeconds(3)));
+                                                string? fastestUrl = await ClassWeb.GetFastestDomain(UpdateFile.proxys1, _url, new() { { "Range", "bytes=0-10239" } }, 3000);
                                                 if (fastestUrl != null)
                                                 {
                                                     bFileFound = true;
@@ -478,7 +478,7 @@ namespace XboxDownload
                                                         if (Properties.Settings.Default.SniPorxyOptimized && proxy.IPs?.Length >= 2)
                                                         {
                                                             await proxy.Semaphore.WaitAsync();
-                                                            var fastestIp = await ClassWeb.GetFastestIP(proxy.IPs, 443, new CancellationTokenSource(TimeSpan.FromSeconds(3)));
+                                                            var fastestIp = await ClassWeb.GetFastestIP(proxy.IPs, 443, 3000);
                                                             if (fastestIp != null) ips = proxy.IPs = new IPAddress[1] { fastestIp };
                                                             proxy.Semaphore.Release();
                                                         }
@@ -564,7 +564,7 @@ namespace XboxDownload
                                                             }
                                                             if (Properties.Settings.Default.SniPorxyOptimized && proxy.IPs?.Length >= 2)
                                                             {
-                                                                var fastestIp = await ClassWeb.GetFastestIP(proxy.IPs, 443, new CancellationTokenSource(TimeSpan.FromSeconds(3)));
+                                                                var fastestIp = await ClassWeb.GetFastestIP(proxy.IPs, 443, 3000);
                                                                 if (fastestIp != null) ips = proxy.IPs = new IPAddress[1] { fastestIp };
                                                             }
                                                             proxy.Expired = DateTime.Now.AddMinutes(Properties.Settings.Default.SniPorxyExpired);

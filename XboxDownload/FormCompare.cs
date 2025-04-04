@@ -246,7 +246,7 @@ namespace XboxDownload
                     if (dgvr.Tag == null)
                     {
                         string url = "https://displaycatalog.mp.microsoft.com/v7.0/products?bigIds=" + productId + "&market=" + dgvr.Cells["Col_Code"].Value + "&languages=neutral&MS-CV=DGU1mcuYo0WMMp+F.1";
-                        string html = ClassWeb.HttpResponseContent(url, "GET", null, null, null, 30000, null, cts.Token);
+                        string html = ClassWeb.HttpResponseContent(url, "GET", null, null, null, 30000, null, null, cts.Token);
                         if (Regex.IsMatch(html, @"^{.+}$", RegexOptions.Singleline))
                         {
                             var json = JsonSerializer.Deserialize<ClassGame.Game>(html, Form1.jsOptions);

@@ -27,7 +27,7 @@ namespace XboxDownload
             services.AddHttpClient("default").ConfigureHttpClient(httpClient =>
             {
                 httpClient.DefaultRequestHeaders.Add("User-Agent", userAgent);
-            }).ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
+            }).ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler
             {
                 AutomaticDecompression = DecompressionMethods.All
             });
@@ -37,7 +37,7 @@ namespace XboxDownload
                 httpClient.DefaultRequestHeaders.Add("User-Agent", "XboxDownload/" + Assembly.GetEntryAssembly()?.GetCustomAttribute<AssemblyFileVersionAttribute>()?.Version);
                 httpClient.DefaultRequestHeaders.Add("X-Organization", "XboxDownload");
                 httpClient.DefaultRequestHeaders.Add("X-Author", "Devil");
-            }).ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
+            }).ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler
             {
                 AutomaticDecompression = DecompressionMethods.All
             });
@@ -51,31 +51,23 @@ namespace XboxDownload
                     NoStore = true,
                     MustRevalidate = true
                 };
-            }).ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
-            {
-                AutomaticDecompression = DecompressionMethods.All
             }).ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler
             {
+                UseCookies = false,
                 PooledConnectionLifetime = TimeSpan.Zero,
-                UseCookies = false
+                AutomaticDecompression = DecompressionMethods.All
             });
 
             httpClientFactory = services.BuildServiceProvider().GetRequiredService<IHttpClientFactory>();
         }
 
-        public static string HttpResponseContent(string url, string method = "GET", string? postData = null, string? contentType = null, Dictionary<string, string>? headers = null, int timeOut = 30000, string? name = null, CancellationToken? cts = null, string? charset = null)
+        public static string HttpResponseContent(string url, string method = "GET", string? postData = null, string? contentType = null, Dictionary<string, string>? headers = null, int timeOut = 30000, string? name = null, string? charset = null, CancellationToken token = default)
         {
-            using HttpResponseMessage? response = HttpResponseMessage(url, method, postData, contentType, headers, timeOut, name, cts);
+            using HttpResponseMessage? response = HttpResponseMessage(url, method, postData, contentType, headers, timeOut, name, token);
             if (response != null && response.IsSuccessStatusCode)
             {
-                if (charset == null)
-                {
-                    return response.Content.ReadAsStringAsync().Result;
-                }
-                else
-                {
-                    return Encoding.GetEncoding(charset).GetString(response.Content.ReadAsByteArrayAsync().Result);
-                }
+                byte[] responseBytes = response.Content.ReadAsByteArrayAsync(token).Result;
+                return charset is null ? Encoding.UTF8.GetString(responseBytes) : Encoding.GetEncoding(charset).GetString(responseBytes);
             }
             else
             {
@@ -83,7 +75,7 @@ namespace XboxDownload
             }
         }
 
-        public static HttpResponseMessage? HttpResponseMessage(string url, string method = "GET", string? postData = null, string? contentType = null, Dictionary<string, string>? headers = null, int timeOut = 30000, string? name = null, CancellationToken? token = null)
+        public static HttpResponseMessage? HttpResponseMessage(string url, string method = "GET", string? postData = null, string? contentType = null, Dictionary<string, string>? headers = null, int timeOut = 30000, string? name = null, CancellationToken token = default)
         {
             HttpResponseMessage? response = null;
             var client = httpClientFactory?.CreateClient(name ?? "default");
@@ -94,11 +86,7 @@ namespace XboxDownload
                 {
                     foreach (var header in headers)
                     {
-                        if (string.IsNullOrEmpty(header.Value)) continue;
-                        if (header.Key == "Host")
-                            client.DefaultRequestHeaders.Host = header.Value;
-                        else
-                            client.DefaultRequestHeaders.TryAddWithoutValidation(header.Key, header.Value);
+                        client.DefaultRequestHeaders.TryAddWithoutValidation(header.Key, header.Value);
                     }
                 }
                 HttpRequestMessage httpRequestMessage = new()
@@ -112,10 +100,7 @@ namespace XboxDownload
                     httpRequestMessage.Content = new StringContent(postData, Encoding.UTF8, contentType ?? "application/x-www-form-urlencoded");
                 try
                 {
-                    if (token == null)
-                        response = client.SendAsync(httpRequestMessage).Result;
-                    else
-                        response = client.SendAsync(httpRequestMessage, (CancellationToken)token).Result;
+                    response = client.SendAsync(httpRequestMessage, token).Result;
                 }
                 catch (Exception ex)
                 {
@@ -129,7 +114,7 @@ namespace XboxDownload
             return response;
         }
 
-        public static async Task<HttpResponseMessage?> HttpResponseMessageAsync(string url, string method = "GET", string? postData = null, string? contentType = null, Dictionary<string, string>? headers = null, int timeOut = 30000, string? name = null, CancellationToken? token = null)
+        public static async Task<HttpResponseMessage?> HttpResponseMessageAsync(string url, string method = "GET", string? postData = null, string? contentType = null, Dictionary<string, string>? headers = null, int timeOut = 30000, string? name = null, CancellationToken token = default)
         {
             HttpResponseMessage? response = null;
             var client = httpClientFactory?.CreateClient(name ?? "default");
@@ -140,11 +125,7 @@ namespace XboxDownload
                 {
                     foreach (var header in headers)
                     {
-                        if (string.IsNullOrEmpty(header.Value)) continue;
-                        if (header.Key == "Host")
-                            client.DefaultRequestHeaders.Host = header.Value;
-                        else
-                            client.DefaultRequestHeaders.TryAddWithoutValidation(header.Key, header.Value);
+                        client.DefaultRequestHeaders.TryAddWithoutValidation(header.Key, header.Value);
                     }
                 }
                 HttpRequestMessage httpRequestMessage = new()
@@ -158,10 +139,7 @@ namespace XboxDownload
                     httpRequestMessage.Content = new StringContent(postData, Encoding.UTF8, contentType ?? "application/x-www-form-urlencoded");
                 try
                 {
-                    if (token == null)
-                        response = await client.SendAsync(httpRequestMessage);
-                    else
-                        response = await client.SendAsync(httpRequestMessage, (CancellationToken)token);
+                    response = await client.SendAsync(httpRequestMessage, token);
                 }
                 catch (Exception ex)
                 {
@@ -175,17 +153,19 @@ namespace XboxDownload
             return response;
         }
 
-        public static async Task<IPAddress?> GetFastestIP(IPAddress[] ips, int port, CancellationTokenSource cts)
+        public static async Task<IPAddress?> GetFastestIP(IPAddress[] ips, int port, int timeout)
         {
+            using var cts = new CancellationTokenSource(TimeSpan.FromMilliseconds(timeout));
+
             var tasks = ips.Select(async ip =>
             {
                 using var socket = new Socket(ip.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-                socket.SendTimeout = 6000;
-                socket.ReceiveTimeout = 6000;
+                socket.SendTimeout = timeout;
+                socket.ReceiveTimeout = timeout;
                 try
                 {
                     var connectTask = Task.Factory.FromAsync(socket.BeginConnect, socket.EndConnect, new IPEndPoint(ip, port), null);
-                    var completedTask = await Task.WhenAny(connectTask, Task.Delay(6000, cts.Token));
+                    var completedTask = await Task.WhenAny(connectTask, Task.Delay(timeout, cts.Token));
                     return (completedTask == connectTask && socket.Connected) ? ip : null;
                 }
                 catch
@@ -197,7 +177,7 @@ namespace XboxDownload
             while (tasks.Count > 0)
             {
                 var completedTask = await Task.WhenAny(tasks);
-                tasks.RemoveAll(t => t == completedTask);
+                tasks.Remove(completedTask);
                 IPAddress? fastestIp = await completedTask;
                 if (fastestIp != null)
                 {
@@ -208,12 +188,14 @@ namespace XboxDownload
             return null;
         }
 
-        public static async Task<string?> GetFastestDomain(string[] domains, string path, Dictionary<string, string> headers, CancellationTokenSource cts)
+        public static async Task<string?> GetFastestDomain(string[] domains, string path, Dictionary<string, string> headers, int timeout)
         {
+            using var cts = new CancellationTokenSource(TimeSpan.FromMilliseconds(timeout));
+
             var tasks = domains.Select(async domain =>
             {
                 string url = domain + path;
-                using HttpResponseMessage? response = await ClassWeb.HttpResponseMessageAsync(url, "GET", null, null, headers, 6000, "NoCache", cts.Token);
+                using HttpResponseMessage? response = await ClassWeb.HttpResponseMessageAsync(url, "GET", null, null, headers, timeout, "NoCache", cts.Token);
                 if (response != null && response.IsSuccessStatusCode)
                 {
                     using var ms = new MemoryStream();
@@ -232,7 +214,7 @@ namespace XboxDownload
             while (tasks.Count > 0)
             {
                 var completedTask = await Task.WhenAny(tasks);
-                tasks.RemoveAll(t => t == completedTask);
+                tasks.Remove(completedTask);
                 string? fastestUrl = await completedTask;
                 if (fastestUrl != null)
                 {
@@ -251,10 +233,9 @@ namespace XboxDownload
                 IPAddress.Parse("2001:4860:4860::8888"),    //谷歌
                 IPAddress.Parse("2606:4700:4700::1111"),    //Cloudflare 
             };
-            var fastestIp = await GetFastestIP(ips, 443, new CancellationTokenSource(TimeSpan.FromSeconds(3)));
+            var fastestIp = await GetFastestIP(ips, 443, 3000);
             return fastestIp != null;
         }
-
 
         public static String UrlEncode(string str)
         {
@@ -409,8 +390,8 @@ namespace XboxDownload
             {
                 mySocket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.SendTimeout, true);
                 mySocket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReceiveTimeout, true);
-                mySocket.SendTimeout = 6000;
-                mySocket.ReceiveTimeout = 6000;
+                mySocket.SendTimeout = timeout;
+                mySocket.ReceiveTimeout = timeout;
                 try
                 {
                     if (host == null)
@@ -550,8 +531,8 @@ namespace XboxDownload
             {
                 mySocket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.SendTimeout, true);
                 mySocket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReceiveTimeout, true);
-                mySocket.SendTimeout = 6000;
-                mySocket.ReceiveTimeout = 6000;
+                mySocket.SendTimeout = timeout;
+                mySocket.ReceiveTimeout = timeout;
                 try
                 {
                     if (host == null)

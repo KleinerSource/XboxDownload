@@ -2331,11 +2331,11 @@ namespace XboxDownload
             }
         }
 
-        private void GetAppUrl(string wuCategoryId, string extension, CancellationToken? cts = null)
+        private void GetAppUrl(string wuCategoryId, string extension, CancellationToken token = default)
         {
             SetTextBox(tbDlUrl, "正在获取下载链接，请稍候...");
             string? url = null;
-            string html = ClassWeb.HttpResponseContent(UpdateFile.website + "/Game/GetAppPackage?WuCategoryId=" + wuCategoryId, "GET", null, null, null, 30000, "XboxDownload", cts);
+            string html = ClassWeb.HttpResponseContent(UpdateFile.website + "/Game/GetAppPackage?WuCategoryId=" + wuCategoryId, "GET", null, null, null, 30000, "XboxDownload", null, token);
             if (Regex.IsMatch(html.Trim(), @"^{.+}$"))
             {
                 XboxPackage.App? json = null;
@@ -2961,14 +2961,14 @@ namespace XboxDownload
             {
                 linkLabel.Text = text + " (检查位置)";
                 bool bCheckLocation = false;
-                using (HttpResponseMessage? response1 = await ClassWeb.HttpResponseMessageAsync("https://qifu-api.baidubce.com/ip/local/geo/v1/district", "GET", null, null, null, 6000))
+                using (HttpResponseMessage? response = await ClassWeb.HttpResponseMessageAsync("https://qifu-api.baidubce.com/ip/local/geo/v1/district", "GET", null, null, null, 6000))
                 {
-                    if (response1 != null && response1.IsSuccessStatusCode)
+                    if (response != null && response.IsSuccessStatusCode)
                     {
                         JsonDocument? jsonDocument = null;
                         try
                         {
-                            jsonDocument = JsonDocument.Parse(response1.Content.ReadAsStringAsync().Result);
+                            jsonDocument = JsonDocument.Parse(response.Content.ReadAsStringAsync().Result);
                         }
                         catch { }
                         if (jsonDocument != null)
@@ -3196,7 +3196,7 @@ namespace XboxDownload
                 int range = Regex.IsMatch(gbIPList.Text, @"Akamai") ? 31457279 : 52428799;  //国外IP测试下载30M，国内IP测试下载50M
                 //if (Form1.debug) range = 1048575;     //1M
 
-                string userAgent = uri.Host.EndsWith(".nintendo.net") ? "XboxDownload (Nintendo NX)" : "XboxDownload";
+                string userAgent = uri.Host.EndsWith(".nintendo.net") ? "XboxDownload/Nintendo NX" : "XboxDownload";
                 Stopwatch sw = new();
                 StringBuilder sb = new();
                 sb.AppendLine("GET " + uri.PathAndQuery + " HTTP/1.1");
