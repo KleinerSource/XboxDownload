@@ -445,7 +445,6 @@ namespace XboxDownload
             this.Close();
         }
 
-
         bool bTips = true, bClose = false;
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
