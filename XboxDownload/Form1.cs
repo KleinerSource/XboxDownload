@@ -72,7 +72,7 @@ namespace XboxDownload
             toolTip1.SetToolTip(this.labelUbi, "包括以下游戏下载域名\nuplaypc-s-ubisoft.cdn.ubionline.com.cn\nuplaypc-s-ubisoft.cdn.ubi.com\nubisoftconnect.cdn.ubi.com\n\n注：XDefiant(不羁联盟)不支持使用国内CDN，\n可勾选\"自动优选 Akamai IP\"使用国外CDN。");
             toolTip1.SetToolTip(this.ckbDoH, "默认使用 阿里云DoH(加密DNS) 解析域名IP，\n防止上游DNS服务器被劫持污染。\nPC用户使用此功能，需要勾选“设置本机 DNS”\n\n注：网络正常可以不勾选。");
             toolTip1.SetToolTip(this.ckbSetDns, "开始监听将把电脑DNS设置为本机IP，停止监听后恢复默认设置，\nPC用户建议勾选，主机用户无需设置。\n\n注：如果退出Xbox下载助手后没网络，请点击旁边“修复”。");
-            toolTip1.SetToolTip(this.ckbBetterAkamaiIP, "自动从 Akamai 优选 IP 列表中找出下载速度最快的节点\n支持 Xbox、PS、NS、EA、战网、EPIC、育碧、拳头游戏\n选中后临时忽略自定义IP（Xbox、PS不使用国内IP）\n同时还能解决Xbox安装停止，冷门游戏国内CDN没缓存下载慢等问题\n\n提示：\n更换IP后，Xbox、战网、育碧 拳头游戏 客户端需要暂停下载，然后重新恢复安装，\nEA app、Epic客户端请点击修复/重启，主机需要等待DNS缓存过期(100秒)。");
+            toolTip1.SetToolTip(this.ckbBetterAkamaiIP, "自动从 Akamai 优选 IP 列表中找出下载速度最快的 IPv4 节点\n支持 Xbox、PS、NS、EA、战网、EPIC、育碧、拳头游戏\n选中后临时忽略自定义IP（Xbox、PS不使用国内IP）\n同时还能解决Xbox安装停止，冷门游戏国内CDN没缓存下载慢等问题\n\n提示：\n更换IP后，Xbox、战网、育碧 拳头游戏 客户端需要暂停下载，然后重新恢复安装，\nEA app、Epic客户端请点击修复/重启，主机需要等待DNS缓存过期(100秒)。");
 
             tbDnsIP.Text = Properties.Settings.Default.DnsIP;
             tbComIP.Text = Properties.Settings.Default.ComIP;
@@ -445,6 +445,7 @@ namespace XboxDownload
             this.Close();
         }
 
+
         bool bTips = true, bClose = false;
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
@@ -683,7 +684,10 @@ namespace XboxDownload
                     Match result = FormImportIP.rMatchIP.Match(content);
                     while (result.Success)
                     {
-                        lsIP.Add(new string[] { result.Groups["IP"].Value, result.Groups["Location"].Value });
+                        if (IPAddress.TryParse(result.Groups["IP"].Value, out IPAddress? ip) && ip.AddressFamily == AddressFamily.InterNetwork)
+                        {
+                            lsIP.Add(new string[] { ip.ToString(), result.Groups["Location"].Value });
+                        }
                         result = result.NextMatch();
                     }
                 }
@@ -2302,7 +2306,7 @@ namespace XboxDownload
                             LinkColor = Color.Green
                         };
                         lb4.LinkClicked += new LinkLabelLinkClickedEventHandler(this.LinkTestUrl_LinkClicked);
-                        if (host == "Akamai" || host == "AkamaiV2")
+                        if (host == "Akamai" || host == "AkamaiV2" || host == "AkamaiV6")
                         {
                             LinkLabel lb = new()
                             {
@@ -2314,18 +2318,6 @@ namespace XboxDownload
                                 Enabled = false
                             };
                             lb.LinkClicked += new LinkLabelLinkClickedEventHandler(this.Link_UploadBetterAkamaiIp);
-                        }
-                        else if (host == "AkamaiV6")
-                        {
-                            LinkLabel lb = new()
-                            {
-                                Tag = "https://www.test-ipv6.com/",
-                                Text = "IPv6 连接测试",
-                                AutoSize = true,
-                                Parent = this.flpTestUrl,
-                                LinkColor = Color.Red
-                            };
-                            lb.LinkClicked += new LinkLabelLinkClickedEventHandler(this.Link_LinkClicked);
                         }
                     }
                     break;
@@ -2475,7 +2467,6 @@ namespace XboxDownload
         {
             if (dgvIpList.Rows.Count == 0) return;
             string? host = dgvIpList.Tag.ToString();
-            if (host == "AkamaiV2") host = "Akamai";
             SaveFileDialog dlg = new()
             {
                 InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
@@ -3316,7 +3307,7 @@ namespace XboxDownload
 
             bool bUploadBetterAkamaiIpEnable = false;
             LinkLabel? linkUploadBetterAkamaiIp = null;
-            if (_tag == "Akamai" || _tag == "AkamaiV2")
+            if (_tag == "Akamai" || _tag == "AkamaiV2" || _tag == "AkamaiV6")
             {
                 linkUploadBetterAkamaiIp = this.Controls.Find("UploadBetterAkamaiIp", true)[0] as LinkLabel;
                 foreach (DataGridViewRow dgvr in dgvIpList.Rows)
