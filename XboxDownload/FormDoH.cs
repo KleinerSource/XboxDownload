@@ -82,8 +82,8 @@ namespace XboxDownload
             Properties.Settings.Default.DoHServer = cbDoh.SelectedIndex;
             Properties.Settings.Default.Save();
             DnsListen.dohServer.Website = DnsListen.dohs[cbDoh.SelectedIndex, 1];
-            if (!string.IsNullOrEmpty(DnsListen.dohs[cbDoh.SelectedIndex, 2]))   DnsListen.dohServer.Headers = new() { { "Host", DnsListen.dohs[cbDoh.SelectedIndex, 2] } };
-            else DnsListen.dohServer.Headers = null;
+            DnsListen.dohServer.Headers = new() { { "Accept", "application/dns-json" } };
+            if (!string.IsNullOrEmpty(DnsListen.dohs[cbDoh.SelectedIndex, 2])) DnsListen.dohServer.Headers.Add("Host", DnsListen.dohs[cbDoh.SelectedIndex, 2]);
             this.Close();
         }
 
@@ -106,11 +106,8 @@ namespace XboxDownload
                 dgvr.Cells[2].Style.ForeColor = dgvr.Cells[3].Style.ForeColor = dgvr.Cells[4].Style.ForeColor = Color.Empty;
                 string dohServer = DnsListen.dohs[dgvr.Index, 1];
                 string dohHost = DnsListen.dohs[dgvr.Index, 2];
-                Dictionary<string, string>? dohHeaders = null;
-                if (!string.IsNullOrEmpty(dohHost))
-                {
-                    dohHeaders = new Dictionary<string, string> { { "Host", dohHost } };
-                }
+                Dictionary<string, string>? dohHeaders = new() { { "Accept", "application/dns-json" } };
+                if (!string.IsNullOrEmpty(dohHost)) dohHeaders.Add("Host", dohHost);
                 _ = ClassWeb.HttpResponseMessage(dohServer, "HEAD", null, null, dohHeaders, 3000);
                 Stopwatch sw = new();
                 for (int x = 0; x <= hosts.Length - 1; x++)

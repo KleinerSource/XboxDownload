@@ -152,7 +152,8 @@ namespace XboxDownload
 
             int iDohServer = Properties.Settings.Default.DoHServer >= DnsListen.dohs.GetLongLength(0) ? 0 : Properties.Settings.Default.DoHServer;
             DnsListen.dohServer.Website = DnsListen.dohs[iDohServer, 1];
-            if (!string.IsNullOrEmpty(DnsListen.dohs[iDohServer, 2])) DnsListen.dohServer.Headers = new() { { "Host", DnsListen.dohs[iDohServer, 2] } };
+            DnsListen.dohServer.Headers = new() { { "Accept", "application/dns-json" } };
+            if (!string.IsNullOrEmpty(DnsListen.dohs[iDohServer, 2])) DnsListen.dohServer.Headers.Add("Host", DnsListen.dohs[iDohServer, 2]);
 
             rbEpicCDN1.CheckedChanged += RbCDN_CheckedChanged;
             rbEpicCDN2.CheckedChanged += RbCDN_CheckedChanged;
@@ -207,7 +208,7 @@ namespace XboxDownload
             }
 
             cbHosts.SelectedIndex = 0;
-            cbSpeedTestTimeOut.SelectedIndex = 0;
+            cbSpeedTestTimeOut.SelectedIndex = 1;
             cbImportIP.SelectedIndex = 0;
 
             dtHosts.Columns.Add("Enable", typeof(Boolean));
@@ -1426,7 +1427,7 @@ namespace XboxDownload
                             sb.AppendLine("0.0.0.0 level3.ssl.blizzard.com");
                             if (!string.IsNullOrEmpty(akamai))
                             {
-                                sb.AppendLine(akamai + " downloader.battle.net"); 
+                                sb.AppendLine(akamai + " downloader.battle.net");
                                 sb.AppendLine(akamai + " blzddist1-a.akamaihd.net");
                             }
                             else if (!string.IsNullOrEmpty(Properties.Settings.Default.BattleIP))
@@ -2638,7 +2639,7 @@ namespace XboxDownload
                             sb.AppendLine("0.0.0.0 atum-eda.hac.lp1.d4c.nintendo.net # XboxDownload");
                             sb.AppendLine(ip + " origin-a.akamaihd.net # XboxDownload");
                             sb.AppendLine("0.0.0.0 ssl-lvlt.cdn.ea.com # XboxDownload");
-                            sb.AppendLine(ip + " downloader.battle.net # XboxDownload"); 
+                            sb.AppendLine(ip + " downloader.battle.net # XboxDownload");
                             sb.AppendLine(ip + " blzddist1-a.akamaihd.net # XboxDownload");
                             sb.AppendLine(ip + " epicgames-download1.akamaized.net # XboxDownload");
                             sb.AppendLine(ip + " uplaypc-s-ubisoft.cdn.ubi.com # XboxDownload");
@@ -2923,7 +2924,13 @@ namespace XboxDownload
                     control.Enabled = false;
             }
             Col_IPAddress.SortMode = Col_Location.SortMode = Col_TTL.SortMode = Col_RoundtripTime.SortMode = Col_Speed.SortMode = DataGridViewColumnSortMode.NotSortable;
-            ThreadPool.QueueUserWorkItem(delegate { SpeedTest(ls); });
+            var timeout = cbSpeedTestTimeOut.SelectedIndex switch
+            {
+                0 => 3000,
+                1 => 5000,
+                _ => 10000,
+            };
+            ThreadPool.QueueUserWorkItem(delegate { SpeedTest(ls, timeout); });
         }
 
         private void TsmSpeedTestLog_Click(object sender, EventArgs e)
@@ -3126,9 +3133,9 @@ namespace XboxDownload
                 Col_Check.ReadOnly = true;
                 var timeout = cbSpeedTestTimeOut.SelectedIndex switch
                 {
-                    0 => 5000,
-                    1 => 10000,
-                    _ => 15000,
+                    0 => 3000,
+                    1 => 5000,
+                    _ => 10000,
                 };
                 Thread thread = new(new ThreadStart(() =>
                 {
@@ -3148,7 +3155,7 @@ namespace XboxDownload
         }
 
         CancellationTokenSource? ctsSpeedTest = null;
-        private void SpeedTest(List<DataGridViewRow> ls, int timeout = 10000)
+        private void SpeedTest(List<DataGridViewRow> ls, int timeout)
         {
             ctsSpeedTest = new CancellationTokenSource();
             string url = tbDlUrl.Text.Trim();

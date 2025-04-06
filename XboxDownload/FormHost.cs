@@ -126,11 +126,8 @@ namespace XboxDownload
                 dgvr.Cells[3].ToolTipText = null;
                 string dohServer = DnsListen.dohs[dgvr.Index, 1];
                 string dohHost = DnsListen.dohs[dgvr.Index, 2];
-                Dictionary<string, string>? dohHeaders = null;
-                if (!string.IsNullOrEmpty(dohHost))
-                {
-                    dohHeaders = new Dictionary<string, string> { { "Host", dohHost } };
-                }
+                Dictionary<string, string>? dohHeaders = new Dictionary<string, string> { { "Accept", "application/dns-json" } };
+                if (!string.IsNullOrEmpty(dohHost)) dohHeaders.Add("Host", dohHost);
                 string? ip = ClassDNS.DoH(host, dohServer, dohHeaders, ipv4);
                 if (this.IsDisposed) return;
                 if (IPAddress.TryParse(ip, out IPAddress? address))

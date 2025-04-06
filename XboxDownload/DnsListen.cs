@@ -22,7 +22,7 @@ namespace XboxDownload
         public static ConcurrentDictionary<String, List<ResouceRecord>> dicServiceV4 = new(), dicService2V4 = new(), dicHosts1V4 = new(), dicServiceV6 = new(), dicService2V6 = new(), dicHosts1V6 = new();
         public static ConcurrentDictionary<Regex, List<ResouceRecord>> dicHosts2V4 = new(), dicHosts2V6 = new();
         public static ConcurrentDictionary<String, DnsServer> dicNetworkInterfaces = new();
-        private static readonly Regex reMsAppHost = new ("\\.dl\\.delivery\\.mp\\.microsoft\\.com$");
+        private static readonly Regex reMsAppHost = new("\\.dl\\.delivery\\.mp\\.microsoft\\.com$");
 
         public class DnsServer
         {

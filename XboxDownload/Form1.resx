@@ -2712,13 +2712,13 @@
     <value>0</value>
   </data>
   <data name="cbSpeedTestTimeOut.Items" xml:space="preserve">
-    <value>5秒</value>
+    <value>3秒</value>
   </data>
   <data name="cbSpeedTestTimeOut.Items1" xml:space="preserve">
-    <value>10秒</value>
+    <value>5秒</value>
   </data>
   <data name="cbSpeedTestTimeOut.Items2" xml:space="preserve">
-    <value>15秒</value>
+    <value>10秒</value>
   </data>
   <data name="cbSpeedTestTimeOut.Location" type="System.Drawing.Point, System.Drawing">
     <value>1342, 40</value>
