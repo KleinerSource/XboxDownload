@@ -6,7 +6,7 @@ com域名不能使用cn IP，反过来cn域名可以使用部分com IP(Akamai).
 提速原理请参考PC [Xbox下载助手](https://github.com/skydevil88/XboxDownload "Xbox下载助手")，同时支持PC微软商店加速。
 支持Docker路由器(小米、TP-LINK等部分型号)、NAS也可以通过Docker使用macvlan创建独立ip安装Nginx实现跳转国内下载。
 
-Xbox使用此方法需要关闭路由器IPv6功能，如果有其它设备需要用到IPv6，可以在 网络->防火墙->自定义规则 中添加以下规则屏蔽掉Xbox的IPv6地址。（AA:BB:CC:DD:EE:FF 替换成 Xbox Mac 地址）
+Xbox使用此方法需要关闭路由器IPv6功能，如果有其它设备需要用到IPv6，可以在 网络->防火墙->自定义规则 中添加以下规则屏蔽掉Xbox的IPv6。（AA:BB:CC:DD:EE:FF 替换成 Xbox Mac 地址）
 
 规则一，完全禁用 Xbox 的 IPv6 功能
 ```bash
