@@ -8,7 +8,7 @@ com域名不能使用cn IP，反过来cn域名可以使用部分com IP(Akamai).
 
 Xbox使用此方法需要关闭路由器IPv6功能，如果有其它设备需要用到IPv6，可以在 网络->防火墙->自定义规则 中添加以下规则屏蔽掉Xbox的IPv6地址。（AA:BB:CC:DD:EE:FF 替换成 Xbox Mac 地址）
 
-方法一，完全禁用 Xbox 的 IPv6 功能
+规则一，完全禁用 Xbox 的 IPv6 功能
 ```bash
 # 拦截 Xbox 发往路由器本机的 IPv6（INPUT）
 ip6tables -I INPUT -i br-lan -m mac --mac-source AA:BB:CC:DD:EE:FF -j DROP
@@ -18,7 +18,7 @@ ip6tables -I OUTPUT -o br-lan -m mac --mac-source AA:BB:CC:DD:EE:FF -j DROP
 ip6tables -I FORWARD -i br-lan -m mac --mac-source AA:BB:CC:DD:EE:FF -j DROP
 ```
 
-方法二，只阻止 Xbox 自动获取 IPv6 DNS，保留 IPv6 联网
+规则二，只阻止 Xbox 自动获取 IPv6 DNS，保留 IPv6 联网
 ```bash
 # 阻止 Xbox 通过 DHCPv6 获取 DNS（或其他）配置
 ip6tables -I INPUT -i br-lan -p udp --dport 547 -m mac --mac-source AA:BB:CC:DD:EE:FF -j DROP
