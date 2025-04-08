@@ -9,7 +9,7 @@ ip6tables -I INPUT -p udp -m mac --mac-source AA:BB:CC:DD:EE:FF --dport 547 -j D
 ip6tables -I INPUT -p icmpv6 -m mac --mac-source AA:BB:CC:DD:EE:FF -j DROP
 ```
 
-注意：以下教程里面的 192.168.1.1 替换为您的Openwrt路由器的ip地址
+以下教程里面的 192.168.1.1 替换为您的Openwrt路由器的ip地址
 
 ## 方法一：Lighttpd 
 B站视频教程：https://www.bilibili.com/video/BV1wP4y1G7zf
