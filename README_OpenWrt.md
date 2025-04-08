@@ -6,10 +6,24 @@ com域名不能使用cn IP，反过来cn域名可以使用部分com IP(Akamai).
 提速原理请参考PC [Xbox下载助手](https://github.com/skydevil88/XboxDownload "Xbox下载助手")，同时支持PC微软商店加速。
 支持Docker路由器(小米、TP-LINK等部分型号)、NAS也可以通过Docker使用macvlan创建独立ip安装Nginx实现跳转国内下载。
 
-Xbox使用此方法需要关闭路由器IPv6功能，如果有其它设备需要用到IPv6，可以在 网络->防火墙->自定义规则 中添加以下两条规则屏蔽掉Xbox的IPv6地址。（XBOX_MAC替换成Xbox Mac地址，地址之间要用“:”号分隔，不能用“-”，用有线网络就两个都填有线mac, 用无线网络就两个都填无线mac）
+Xbox使用此方法需要关闭路由器IPv6功能，如果有其它设备需要用到IPv6，可以在 网络->防火墙->自定义规则 中添加以下规则屏蔽掉Xbox的IPv6地址。（AA:BB:CC:DD:EE:FF 替换成 Xbox Mac 地址）
+
+方法一，完全禁用 Xbox 的 IPv6 功能
 ```bash
-ip6tables -I INPUT -p icmpv6 -m mac --mac-source XBOX_MAC -j DROP 
-ip6tables -I INPUT -p udp -m mac --mac-source XBOX_MAC --dport 547 -j DROP
+# 拦截 Xbox 发往路由器本机的 IPv6（INPUT）
+ip6tables -I INPUT -i br-lan -m mac --mac-source AA:BB:CC:DD:EE:FF -j DROP
+# 拦截路由器发给 Xbox 的 IPv6（OUTPUT）
+ip6tables -I OUTPUT -o br-lan -m mac --mac-source AA:BB:CC:DD:EE:FF -j DROP
+# 拦截 Xbox 发往外网的 IPv6（FORWARD）
+ip6tables -I FORWARD -i br-lan -m mac --mac-source AA:BB:CC:DD:EE:FF -j DROP
+```
+
+方法二，只阻止 Xbox 自动获取 IPv6 DNS，保留 IPv6 联网
+```bash
+# 阻止 Xbox 通过 DHCPv6 获取 DNS（或其他）配置
+ip6tables -I INPUT -i br-lan -p udp --dport 547 -m mac --mac-source AA:BB:CC:DD:EE:FF -j DROP
+# 阻止 Xbox 接收 Router Advertisement（RA）中带的 RDNSS（即自动 DNS）
+ip6tables -t raw -I PREROUTING -i br-lan -p icmpv6 --icmpv6-type 134 -m mac --mac-source AA:BB:CC:DD:EE:FF -j DROP
 ```
 
 注意：以下教程里面的 192.168.1.1 替换为您的Openwrt路由器的ip地址
