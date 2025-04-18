@@ -350,7 +350,7 @@ namespace XboxDownload
             Task.Run(async () =>
             {
                 bIPv6Support = await ClassWeb.TestIPv6();
-                if (bIPv6Support) SaveLog("提示信息", "检测到正在使用IPv6联网，如果加速主机下载(Xbox、PS)，必需进入路由器后台关闭，PC用户忽略此信息。", "localhost", 0x0000FF);
+                if (bIPv6Support) SaveLog("提示信息", "检测到正在使用IPv6联网，如果加速Xbox主机下载，必需进入路由器后台关闭，PC用户忽略此信息。", "localhost", 0x0000FF);
             });
             if (Environment.OSVersion.Version.Major == 10 && Environment.OSVersion.Version.Build >= 1803)
             {
@@ -372,20 +372,36 @@ namespace XboxDownload
                         p.WaitForExit();
                     }
                     catch { }
-                    Match result = Regex.Match(outputString, @"DownBackLimitBps\s+:\s+(\d+)\r\n[a-zA-Z]+\s+:\s+[a-zA-Z]+\r\nDownloadForegroundLimitBps\s+:\s+(\d+)");
-                    if (result.Success)
+
+                    var keyValuePairs = new Dictionary<string, string>();
+                    var regex = new Regex(@"^\s*(\S.*?)\s*:\s*(.*?)\s*$", RegexOptions.Multiline);
+                    var matches = regex.Matches(outputString);
+                    foreach (Match match in matches)
                     {
-                        double DownBackLimitBps = double.Parse(result.Groups[1].Value);
-                        double DownloadForegroundLimitBps = double.Parse(result.Groups[2].Value);
-                        if (DownBackLimitBps > 0 || DownloadForegroundLimitBps > 0)
-                        {
-                            StringBuilder sb = new();
-                            sb.Append("系统设置限速，");
-                            if (DownBackLimitBps > 0) sb.Append("后台下载被限制" + Math.Round(DownBackLimitBps / 131072, 1, MidpointRounding.AwayFromZero) + "Mbps，");
-                            if (DownloadForegroundLimitBps > 0) sb.Append("前台下载被限制" + Math.Round(DownloadForegroundLimitBps / 131072, 1, MidpointRounding.AwayFromZero) + "Mbps，");
-                            sb.Append("请在Windows系统搜索“传递优化高级设置”解除限制。");
-                            SaveLog("警告信息", sb.ToString(), "localhost", 0xFF0000);
-                        }
+                        var key = match.Groups[1].Value.Trim();
+                        var value = match.Groups[2].Value.Trim();
+                        keyValuePairs[key] = value;
+                    }
+                    StringBuilder sb = new();
+                    if (keyValuePairs.TryGetValue("DownBackLimitBpsProvider", out string? DownBackLimitBpsProvider) && DownBackLimitBpsProvider != "DefaultProvider" && keyValuePairs.TryGetValue("DownBackLimitBps", out string? DownBackLimitBps) && DownBackLimitBps != "0")
+                    {
+                        sb.Append("后台限制 " + Math.Round(double.Parse(DownBackLimitBps) / 131072, 1, MidpointRounding.AwayFromZero) + "Mbps，");
+                    }
+                    if (keyValuePairs.TryGetValue("DownloadForegroundLimitBpsProvider", out string? DownloadForegroundLimitBpsProvider) && DownloadForegroundLimitBpsProvider != "DefaultProvider" && keyValuePairs.TryGetValue("DownloadForegroundLimitBps", out string? DownloadForegroundLimitBps) && DownloadForegroundLimitBps != "0")
+                    {
+                        sb.Append("前台限制 " + Math.Round(double.Parse(DownloadForegroundLimitBps) / 131072, 1, MidpointRounding.AwayFromZero) + "Mbps，");
+                    }
+                    if (keyValuePairs.TryGetValue("DownBackLimitPctProvider", out string? DownBackLimitPctProvider) && DownBackLimitPctProvider != "DefaultProvider" && keyValuePairs.TryGetValue("DownBackLimitPct", out string? DownBackLimitPct) && DownBackLimitPct != "0")
+                    {
+                        sb.Append("后台限制 " + DownBackLimitPct + "%，");
+                    }
+                    if (keyValuePairs.TryGetValue("DownloadForegroundLimitPctProvider", out string? DownloadForegroundLimitPctProvider) && DownloadForegroundLimitPctProvider != "DefaultProvider" && keyValuePairs.TryGetValue("DownloadForegroundLimitPct", out string? DownloadForegroundLimitPct) && DownloadForegroundLimitPct != "0")
+                    {
+                        sb.Append("前台限制 " + DownloadForegroundLimitPct + "%，");
+                    }
+                    if (sb.Length > 0)
+                    {
+                        SaveLog("警告信息", "系统设置限制下载时使用的带宽，" + sb.ToString() + "请在Windows系统搜索“传递优化设置”解除限制。", "localhost", 0xFF0000);
                     }
                 });
             }

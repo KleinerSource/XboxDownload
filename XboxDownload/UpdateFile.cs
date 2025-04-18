@@ -20,31 +20,36 @@ namespace XboxDownload
 
             string tag_name = "", value = "";
             using var cts = new CancellationTokenSource();
-            Task[] tasks = new Task[proxys2.Length];
-            for (int i = 0; i <= tasks.Length - 1; i++)
-            {
-                string url = $"{proxys2[i]}{project}/releases/latest";
-                tasks[i] = new Task(() =>
+            var regex = new Regex(@"/releases/tag/(?<tag_name>[^\d]*(?<value>\d+(\.\d+){2,3}))$", RegexOptions.Compiled);
+            object lockObj = new();
+            var tasks = proxys2.Select(proxy =>
+                Task.Run(() =>
                 {
+                    string url = $"{proxy}{project}/releases/latest";
                     using var response = ClassWeb.HttpResponseMessage(url, "HEAD", null, null, null, 3000, null, cts.Token);
                     if (response != null && response.IsSuccessStatusCode)
                     {
-                        string? url = response.RequestMessage?.RequestUri?.ToString();
-                        if (!string.IsNullOrEmpty(url))
+                        string? finalUrl = response.RequestMessage?.RequestUri?.ToString();
+                        if (!string.IsNullOrEmpty(finalUrl))
                         {
-                            Match result = Regex.Match(url, @"/releases/tag/(?<tag_name>[^\d]*(?<value>\d+(\.\d+){2,3}))$", RegexOptions.IgnoreCase);
+                            Match result = regex.Match(finalUrl);
                             if (result.Success)
                             {
-                                cts.Cancel();
-                                tag_name = result.Groups["tag_name"].Value;
-                                value = result.Groups["value"].Value;
+                                lock (lockObj)
+                                {
+                                    if (string.IsNullOrEmpty(tag_name))
+                                    {
+                                        tag_name = result.Groups["tag_name"].Value;
+                                        value = result.Groups["value"].Value;
+                                        cts.Cancel();
+                                    }
+                                }
                             }
                         }
                     }
-                });
-            }
-            Array.ForEach(tasks, x => x.Start());
-            await Task.WhenAny(tasks);
+                }, cts.Token)
+            ).ToArray();
+            await Task.WhenAll(tasks);
 
             if (string.IsNullOrEmpty(tag_name))
             {
@@ -75,7 +80,7 @@ namespace XboxDownload
             {
                 parentForm.Invoke(new Action(() =>
                 {
-                    if (!autoupdate) MessageBox.Show("软件已经是最新版本。", "软件更新", MessageBoxButtons.OK, MessageBoxIcon.None);
+                    if (!autoupdate) MessageBox.Show($"软件已经是最新版本 {version1}。", "软件更新", MessageBoxButtons.OK, MessageBoxIcon.None);
                     parentForm.tsmUpdate.Enabled = true;
                 }));
                 return;
@@ -165,6 +170,7 @@ namespace XboxDownload
                 return string.Empty;
             }).ToList();
 
+            bool isOK = false;
             while (tasks.Count > 0)
             {
                 var completedTask = await Task.WhenAny(tasks);
@@ -181,6 +187,34 @@ namespace XboxDownload
                         sw.Write(html);
                     }
                     fi.Refresh();
+                    isOK = true;
+                }
+            }
+
+            if (!isOK)
+            {
+                string html = string.Empty;
+                using var response = await ClassWeb.HttpResponseMessageAsync($"https://testingcf.jsdelivr.net/gh/{project.Replace("https://github.com/", "")}/IP/{fi.Name}");
+                if (response != null && response.IsSuccessStatusCode)
+                {
+                    try
+                    {
+                        html = await response.Content.ReadAsStringAsync();
+                    }
+                    catch (TaskCanceledException) { }
+                    catch (Exception) { }
+                }
+                if (html.StartsWith(keyword))
+                {
+                    if (fi.DirectoryName != null && !Directory.Exists(fi.DirectoryName))
+                        Directory.CreateDirectory(fi.DirectoryName);
+                    using (FileStream fs = fi.Open(FileMode.Create, FileAccess.Write, FileShare.ReadWrite))
+                    {
+                        using StreamWriter sw = new(fs);
+                        sw.Write(html);
+                    }
+                    fi.Refresh();
+                    isOK = true;
                 }
             }
         }
