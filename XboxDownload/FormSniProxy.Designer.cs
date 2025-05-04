@@ -107,9 +107,9 @@
             label1.AutoSize = true;
             label1.Location = new Point(3, 570);
             label1.Name = "label1";
-            label1.Size = new Size(673, 48);
+            label1.Size = new Size(811, 48);
             label1.TabIndex = 3;
-            label1.Text = "此功能可以抵御部分网站被SNI阻断攻击无法访问的问题，DoH服务器请使用国外。\r\n*整个代理过程在用户自己的电脑上完成，并不涉及任何第三方服务。";
+            label1.Text = "此功能可以抵御部分网站被SNI阻断攻击无法访问的问题，DoH服务器请使用国外(可同时勾选多个)。\r\n*整个代理过程在用户自己的电脑上完成，并不涉及任何第三方服务。";
             // 
             // groupBox3
             // 

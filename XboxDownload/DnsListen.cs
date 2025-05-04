@@ -554,11 +554,17 @@ namespace XboxDownload
                 {
                     List<ResouceRecord> lsNsIP = new() { new ResouceRecord { Datas = nsIP, TTL = 100, QueryClass = 1, QueryType = QueryType.A } };
                     _ = dicServiceV4.TryAdd("atum.hac.lp1.d4c.nintendo.net", lsNsIP);
-                    _ = dicServiceV4.TryAdd("bugyo.hac.lp1.eshop.nintendo.net", lsNsIP);
+                    _ = dicServiceV4.TryAdd("nemof.p01.lp1.nemo.srv.nintendo.net", lsNsIP);
+                    _ = dicServiceV4.TryAdd("nemof.hac.lp1.nemo.srv.nintendo.net", lsNsIP); 
+                    _ = dicServiceV4.TryAdd("ctest-dl.p01.lp1.ctest.srv.nintendo.net", lsNsIP);
+                    _ = dicServiceV4.TryAdd("ctest-ul.p01.lp1.ctest.srv.nintendo.net", lsNsIP);
                     _ = dicServiceV4.TryAdd("ctest-dl-lp1.cdn.nintendo.net", lsNsIP);
                     _ = dicServiceV4.TryAdd("ctest-ul-lp1.cdn.nintendo.net", lsNsIP);
                     _ = dicServiceV6.TryAdd("atum.hac.lp1.d4c.nintendo.net", lsEmptyIP);
-                    _ = dicServiceV6.TryAdd("bugyo.hac.lp1.eshop.nintendo.net", lsEmptyIP);
+                    _ = dicServiceV6.TryAdd("nemof.p01.lp1.nemo.srv.nintendo.net", lsEmptyIP);
+                    _ = dicServiceV6.TryAdd("nemof.hac.lp1.nemo.srv.nintendo.net", lsEmptyIP); 
+                    _ = dicServiceV6.TryAdd("ctest-dl.p01.lp1.ctest.srv.nintendo.net", lsEmptyIP);
+                    _ = dicServiceV6.TryAdd("ctest-ul.p01.lp1.ctest.srv.nintendo.net", lsEmptyIP);
                     _ = dicServiceV6.TryAdd("ctest-dl-lp1.cdn.nintendo.net", lsEmptyIP);
                     _ = dicServiceV6.TryAdd("ctest-ul-lp1.cdn.nintendo.net", lsEmptyIP);
                 }
@@ -566,17 +572,25 @@ namespace XboxDownload
                 {
                     List<ResouceRecord> lsNsIP = new() { new ResouceRecord { Datas = nsIP, TTL = 100, QueryClass = 1, QueryType = QueryType.AAAA } };
                     _ = dicServiceV6.TryAdd("atum.hac.lp1.d4c.nintendo.net", lsNsIP);
-                    _ = dicServiceV6.TryAdd("bugyo.hac.lp1.eshop.nintendo.net", lsNsIP);
+                    _ = dicServiceV6.TryAdd("nemof.p01.lp1.nemo.srv.nintendo.net", lsNsIP);
+                    _ = dicServiceV6.TryAdd("nemof.hac.lp1.nemo.srv.nintendo.net", lsNsIP); 
+                    _ = dicServiceV6.TryAdd("ctest-dl.p01.lp1.ctest.srv.nintendo.net", lsNsIP);
+                    _ = dicServiceV6.TryAdd("ctest-ul.p01.lp1.ctest.srv.nintendo.net", lsNsIP);
                     _ = dicServiceV6.TryAdd("ctest-dl-lp1.cdn.nintendo.net", lsNsIP);
                     _ = dicServiceV6.TryAdd("ctest-ul-lp1.cdn.nintendo.net", lsNsIP);
                     _ = dicServiceV4.TryAdd("atum.hac.lp1.d4c.nintendo.net", lsEmptyIP);
-                    _ = dicServiceV4.TryAdd("bugyo.hac.lp1.eshop.nintendo.net", lsEmptyIP);
+                    _ = dicServiceV4.TryAdd("nemof.p01.lp1.nemo.srv.nintendo.net", lsEmptyIP);
+                    _ = dicServiceV4.TryAdd("nemof.hac.lp1.nemo.srv.nintendo.net", lsEmptyIP); 
+                    _ = dicServiceV4.TryAdd("ctest-dl.p01.lp1.ctest.srv.nintendo.net", lsEmptyIP);
+                    _ = dicServiceV4.TryAdd("ctest-ul.p01.lp1.ctest.srv.nintendo.net", lsEmptyIP);
                     _ = dicServiceV4.TryAdd("ctest-dl-lp1.cdn.nintendo.net", lsEmptyIP);
                     _ = dicServiceV4.TryAdd("ctest-ul-lp1.cdn.nintendo.net", lsEmptyIP);
                 }
             }
             _ = dicServiceV4.TryAdd("atum-eda.hac.lp1.d4c.nintendo.net", lsEmptyIP);
             _ = dicServiceV6.TryAdd("atum-eda.hac.lp1.d4c.nintendo.net", lsEmptyIP);
+            _ = dicServiceV4.TryAdd("atum-4ff.hac.lp1.d4c.nintendo.net", lsEmptyIP);
+            _ = dicServiceV6.TryAdd("atum-4ff.hac.lp1.d4c.nintendo.net", lsEmptyIP);
             if (eaIP != null)
             {
                 if ((new IPAddress(eaIP)).AddressFamily == AddressFamily.InterNetwork)
@@ -945,7 +959,7 @@ namespace XboxDownload
                     "assets2.xboxlive.cn","d2.xboxlive.cn", "dlassets2.xboxlive.cn",
                     "dl.delivery.mp.microsoft.com", "2.tlu.dl.delivery.mp.microsoft.com",
                     "gst.prod.dl.playstation.net", "gs2.ww.prod.dl.playstation.net", "zeus.dl.playstation.net", "ares.dl.playstation.net",
-                    "atum.hac.lp1.d4c.nintendo.net", "bugyo.hac.lp1.eshop.nintendo.net", "ctest-dl-lp1.cdn.nintendo.net", "ctest-ul-lp1.cdn.nintendo.net",
+                    "atum.hac.lp1.d4c.nintendo.net", "nemof.p01.lp1.nemo.srv.nintendo.net", "nemof.hac.lp1.nemo.srv.nintendo.net", "ctest-dl.p01.lp1.ctest.srv.nintendo.net", "ctest-ul.p01.lp1.ctest.srv.nintendo.net", "ctest-dl-lp1.cdn.nintendo.net", "ctest-ul-lp1.cdn.nintendo.net",
                     "origin-a.akamaihd.net", "downloader.battle.net", "blzddist1-a.akamaihd.net",
                     "uplaypc-s-ubisoft.cdn.ubionline.com.cn","uplaypc-s-ubisoft.cdn.ubi.com", "ubisoftconnect.cdn.ubi.com"
                 };
@@ -958,7 +972,7 @@ namespace XboxDownload
                     "assets1.xboxlive.cn", "assets2.xboxlive.cn", "d1.xboxlive.cn", "d2.xboxlive.cn", "dlassets.xboxlive.cn", "dlassets2.xboxlive.cn",
                     "dl.delivery.mp.microsoft.com", "tlu.dl.delivery.mp.microsoft.com", "2.tlu.dl.delivery.mp.microsoft.com",
                     "gst.prod.dl.playstation.net", "gs2.ww.prod.dl.playstation.net", "zeus.dl.playstation.net", "ares.dl.playstation.net",
-                    "atum.hac.lp1.d4c.nintendo.net", "bugyo.hac.lp1.eshop.nintendo.net", "ctest-dl-lp1.cdn.nintendo.net", "ctest-ul-lp1.cdn.nintendo.net",
+                    "atum.hac.lp1.d4c.nintendo.net", "nemof.p01.lp1.nemo.srv.nintendo.net", "nemof.hac.lp1.nemo.srv.nintendo.net", "ctest-dl.p01.lp1.ctest.srv.nintendo.net", "ctest-ul.p01.lp1.ctest.srv.nintendo.net", "ctest-dl-lp1.cdn.nintendo.net", "ctest-ul-lp1.cdn.nintendo.net",
                     "origin-a.akamaihd.net", "downloader.battle.net", "blzddist1-a.akamaihd.net",
                     "uplaypc-s-ubisoft.cdn.ubionline.com.cn","uplaypc-s-ubisoft.cdn.ubi.com", "ubisoftconnect.cdn.ubi.com"
                 };

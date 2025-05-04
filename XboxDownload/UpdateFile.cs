@@ -18,9 +18,9 @@ namespace XboxDownload
             Properties.Settings.Default.NextUpdate = DateTime.Now.AddDays(7).Ticks;
             Properties.Settings.Default.Save();
 
-            string tag_name = "", value = "";
+            string tag_name = "", version = "";
             using var cts = new CancellationTokenSource();
-            var regex = new Regex(@"/releases/tag/(?<tag_name>[^\d]*(?<value>\d+(\.\d+){2,3}))$", RegexOptions.Compiled);
+            var regex = new Regex(@"/releases/tag/(?<tag_name>[^\d]*(?<version>\d+(\.\d+){2,3}))$", RegexOptions.Compiled);
             object lockObj = new();
             var tasks = proxys2.Select(proxy =>
                 Task.Run(() =>
@@ -40,7 +40,7 @@ namespace XboxDownload
                                     if (string.IsNullOrEmpty(tag_name))
                                     {
                                         tag_name = result.Groups["tag_name"].Value;
-                                        value = result.Groups["value"].Value;
+                                        version = result.Groups["version"].Value;
                                         cts.Cancel();
                                     }
                                 }
@@ -64,14 +64,14 @@ namespace XboxDownload
                 return;
             }
 
-            Version version1 = new(value);
-            Version version2 = new(Assembly.GetEntryAssembly()?.GetCustomAttribute<AssemblyFileVersionAttribute>()?.Version!);
-            if (version1 > version2)
+            Version version_latest = new(version);
+            Version version_current = new(Assembly.GetEntryAssembly()?.GetCustomAttribute<AssemblyFileVersionAttribute>()?.Version!);
+            if (version_latest > version_current)
             {
                 bool isUpdate = false;
                 parentForm.Invoke(new Action(() =>
                 {
-                    isUpdate = MessageBox.Show($"已检测到新版本 {version1}，是否立即更新？", "软件更新", MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk, MessageBoxDefaultButton.Button2) == DialogResult.Yes;
+                    isUpdate = MessageBox.Show($"已检测到新版本 {version_latest}，是否立即更新？", "软件更新", MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk, MessageBoxDefaultButton.Button2) == DialogResult.Yes;
                     if (!isUpdate) parentForm.tsmUpdate.Enabled = true;
                 }));
                 if (!isUpdate) return;
@@ -80,7 +80,7 @@ namespace XboxDownload
             {
                 parentForm.Invoke(new Action(() =>
                 {
-                    if (!autoupdate) MessageBox.Show($"软件已经是最新版本 {version1}。", "软件更新", MessageBoxButtons.OK, MessageBoxIcon.None);
+                    if (!autoupdate) MessageBox.Show($"软件已经是最新版本 {version_current}。", "软件更新", MessageBoxButtons.OK, MessageBoxIcon.None);
                     parentForm.tsmUpdate.Enabled = true;
                 }));
                 return;
@@ -194,14 +194,13 @@ namespace XboxDownload
             if (!isOK)
             {
                 string html = string.Empty;
-                using var response = await ClassWeb.HttpResponseMessageAsync($"https://testingcf.jsdelivr.net/gh/{project.Replace("https://github.com/", "")}/IP/{fi.Name}");
+                using var response = await ClassWeb.HttpResponseMessageAsync($"{project.Replace("github.com", "testingcf.jsdelivr.net/gh")}/IP/{fi.Name}");
                 if (response != null && response.IsSuccessStatusCode)
                 {
                     try
                     {
                         html = await response.Content.ReadAsStringAsync();
                     }
-                    catch (TaskCanceledException) { }
                     catch (Exception) { }
                 }
                 if (html.StartsWith(keyword))
@@ -214,7 +213,6 @@ namespace XboxDownload
                         sw.Write(html);
                     }
                     fi.Refresh();
-                    isOK = true;
                 }
             }
         }

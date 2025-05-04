@@ -8,6 +8,7 @@ download.xbox.com		#Xbox360主机下载域名
 *.hac.lp1.d4c.nintendo.net
 *.hac.lp1.eshop.nintendo.net
 *.hac.lp1.dragons.nintendo.net
+*.lp1.d4c.srv.nintendo.net	#系统更新、内容服务 (Switch 2)
 *.cdn.nintendo.net
 
 ######################## Epic ########################

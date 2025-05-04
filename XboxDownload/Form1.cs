@@ -65,7 +65,7 @@ namespace XboxDownload
             toolTip1.SetToolTip(this.labelCn2, "包括以下cn游戏下载域名\ndlassets.xboxlive.cn\ndlassets2.xboxlive.cn\n\n注：XboxOne部分老游戏下载域名，\nPC、主机新游戏都不再使用此域名。");
             toolTip1.SetToolTip(this.labelApp, "包括以下应用下载域名\ndl.delivery.mp.microsoft.com\ntlu.dl.delivery.mp.microsoft.com\n*.dl.delivery.mp.microsoft.com");
             toolTip1.SetToolTip(this.labelPS, "包括以下游戏下载域名\ngst.prod.dl.playstation.net\ngs2.ww.prod.dl.playstation.net\nzeus.dl.playstation.net\nares.dl.playstation.net");
-            toolTip1.SetToolTip(this.labelNS, "包括以下游戏下载域名\natum.hac.lp1.d4c.nintendo.net\nbugyo.hac.lp1.eshop.nintendo.net\nctest-dl-lp1.cdn.nintendo.net\nctest-ul-lp1.cdn.nintendo.net");
+            toolTip1.SetToolTip(this.labelNS, "包括以下游戏下载域名\natum.hac.lp1.d4c.nintendo.net\nnemof.p01.lp1.nemo.srv.nintendo.net\nnemof.hac.lp1.nemo.srv.nintendo.net\nctest-dl.p01.lp1.ctest.srv.nintendo.net\nctest-ul.p01.lp1.ctest.srv.nintendo.net\nctest-dl-lp1.cdn.nintendo.net\nctest-ul-lp1.cdn.nintendo.net");
             toolTip1.SetToolTip(this.labelEA, "包括以下游戏下载域名\norigin-a.akamaihd.net");
             toolTip1.SetToolTip(this.labelBattle, "包括以下游戏下载域名\ndownloader.battle.net\nblzddist1-a.akamaihd.net\nus.cdn.blizzard.com\neu.cdn.blizzard.com\nkr.cdn.blizzard.com\nlevel3.blizzard.com\nblizzard.gcdn.cloudn.co.kr\n\n#网易国服(校园网可指定Akamai IPv6免流下载)\n*.necdn.leihuo.netease.com");
             toolTip1.SetToolTip(this.labelEpic, "包括以下游戏下载域名\nepicgames-download1-1251447533.file.myqcloud.com\nepicgames-download1.akamaized.net\ndownload.epicgames.com\nfastly-download.epicgames.com\ncloudflare.epicgamescdn.com\n\n建议优先使用国内CDN，速度不理想再选用 Akamai CDN");
@@ -2639,10 +2639,14 @@ namespace XboxDownload
                         if (Regex.IsMatch(ip, @"\d+\.\d+\.\d+\.\d+"))
                         {
                             sb.AppendLine(ip + " atum.hac.lp1.d4c.nintendo.net # XboxDownload");
-                            sb.AppendLine(ip + " bugyo.hac.lp1.eshop.nintendo.net # XboxDownload");
+                            sb.AppendLine(ip + " nemof.p01.lp1.nemo.srv.nintendo.net # XboxDownload");
+                            sb.AppendLine(ip + " nemof.hac.lp1.nemo.srv.nintendo.net # XboxDownload"); 
                             sb.AppendLine(ip + " ctest-ul-lp1.cdn.nintendo.net # XboxDownload");
+                            sb.AppendLine(ip + " ctest-dl.p01.lp1.ctest.srv.nintendo.net # XboxDownload");
+                            sb.AppendLine(ip + " ctest-ul.p01.lp1.ctest.srv.nintendo.net # XboxDownload");
                             sb.AppendLine(ip + " ctest-dl-lp1.cdn.nintendo.net # XboxDownload");
                             sb.AppendLine("0.0.0.0 atum-eda.hac.lp1.d4c.nintendo.net # XboxDownload");
+                            sb.AppendLine("0.0.0.0 atum-4ff.hac.lp1.d4c.nintendo.net # XboxDownload");
                             sb.AppendLine(ip + " origin-a.akamaihd.net # XboxDownload");
                             sb.AppendLine("0.0.0.0 ssl-lvlt.cdn.ea.com # XboxDownload");
                             sb.AppendLine(ip + " downloader.battle.net # XboxDownload");
@@ -2812,10 +2816,14 @@ namespace XboxDownload
                         {
                             sb.AppendLine("# Nintendo Switch");
                             sb.AppendLine("address=/atum.hac.lp1.d4c.nintendo.net/" + ip);
-                            sb.AppendLine("address=/bugyo.hac.lp1.eshop.nintendo.net/" + ip);
+                            sb.AppendLine("address=/nemof.p01.lp1.nemo.srv.nintendo.net/" + ip);
+                            sb.AppendLine("address=/nemof.hac.lp1.nemo.srv.nintendo.net/" + ip); 
+                            sb.AppendLine("address=/ctest-dl.p01.lp1.ctest.srv.nintendo.net/" + ip);
+                            sb.AppendLine("address=/ctest-ul.p01.lp1.ctest.srv.nintendo.net/" + ip);
                             sb.AppendLine("address=/ctest-ul-lp1.cdn.nintendo.net/" + ip);
                             sb.AppendLine("address=/ctest-dl-lp1.cdn.nintendo.net/" + ip);
                             sb.AppendLine("address=/atum-eda.hac.lp1.d4c.nintendo.net/0.0.0.0");
+                            sb.AppendLine("address=/atum-4ff.hac.lp1.d4c.nintendo.net/0.0.0.0");
                             sb.AppendLine();
                             sb.AppendLine("# EA、战网、Epic、育碧");
                             sb.AppendLine("address=/origin-a.akamaihd.net/" + ip);
@@ -2860,10 +2868,14 @@ namespace XboxDownload
                         {
                             sb.AppendLine("# Nintendo Switch");
                             sb.AppendLine(ip + " atum.hac.lp1.d4c.nintendo.net");
-                            sb.AppendLine(ip + " bugyo.hac.lp1.eshop.nintendo.net");
+                            sb.AppendLine(ip + " nemof.p01.lp1.nemo.srv.nintendo.net");
+                            sb.AppendLine(ip + " nemof.hac.lp1.nemo.srv.nintendo.net"); 
+                            sb.AppendLine(ip + " ctest-dl.p01.lp1.ctest.srv.nintendo.net");
+                            sb.AppendLine(ip + " ctest-ul.p01.lp1.ctest.srv.nintendo.net");
                             sb.AppendLine(ip + " ctest-ul-lp1.cdn.nintendo.net");
                             sb.AppendLine(ip + " ctest-dl-lp1.cdn.nintendo.net");
                             sb.AppendLine("0.0.0.0 atum-eda.hac.lp1.d4c.nintendo.net");
+                            sb.AppendLine("0.0.0.0 atum-4ff.hac.lp1.d4c.nintendo.net");
                             sb.AppendLine();
                             sb.AppendLine("# EA、战网、Epic、育碧");
                             sb.AppendLine(ip + " origin-a.akamaihd.net");
