@@ -946,7 +946,7 @@ namespace XboxDownload
                 {
                     if (IPAddress.TryParse(tbCnIP2.Text.Trim(), out IPAddress? ipAddress))
                     {
-                        cnIP = tbCnIP2.Text = ipAddress.ToString();
+                        cnIP2 = tbCnIP2.Text = ipAddress.ToString();
                     }
                     else
                     {
