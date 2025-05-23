@@ -14,7 +14,7 @@ namespace XboxDownload
     {
         private Socket? socket = null;
         private readonly Form1 parentForm;
-        public static string[,] dohs = { { "阿里云", "https://223.5.5.5/resolve", "" }, { "腾讯云", "https://1.12.12.12/resolve", "" }, { "360", "https://180.163.249.75/resolve", "" }, { "Google", "https://104.21.45.47/resolve", "dh1.skydevil.xyz" }, { "DNS.SB(Globa)", "https://52.69.240.75/doh.sb/dns-query", "xbox.skydevil.xyz" }, { "DNS.SB(日本东京)", "https://52.69.240.75/jp-nrt.doh.sb/dns-query", "xbox.skydevil.xyz" }, { "DNS.SB(韩国首尔)", "https://52.69.240.75/kr-sel.doh.sb/dns-query", "xbox.skydevil.xyz" }, { "DNS.SB(新加坡)", "https://52.69.240.75/sg-sin.doh.sb/dns-query", "xbox.skydevil.xyz" }, { "DNS.SB(中国香港)", "https://52.69.240.75/hk-hkg.doh.sb/dns-query", "xbox.skydevil.xyz" }, { "DNS.SB(印度班加罗尔)", "https://52.69.240.75/in-blr.doh.sb/dns-query", "xbox.skydevil.xyz" }, { "DNS.SB(美国圣何塞)", "https://52.69.240.75/us-sjc.doh.sb/dns-query", "xbox.skydevil.xyz" } };
+        public static string[,] dohs = { { "阿里云", "https://223.5.5.5/resolve", "" }, { "腾讯云", "https://1.12.12.12/resolve", "" }, { "360", "https://180.163.249.75/resolve", "" }, { "Google", "https://104.21.45.47/resolve", "dh1.skydevil.xyz" }, { "DNS.SB(Globa)", "https://104.21.45.47/doh.sb/dns-query", "dh1.skydevil.xyz" }, { "DNS.SB(日本大阪)", "https://104.21.45.47/jp-kix.doh.sb/dns-query", "dh1.skydevil.xyz" }, { "DNS.SB(韩国首尔)", "https://104.21.45.47/kr-sel.doh.sb/dns-query", "dh1.skydevil.xyz" }, { "DNS.SB(新加坡)", "https://104.21.45.47/sg-sin.doh.sb/dns-query", "dh1.skydevil.xyz" }, { "DNS.SB(中国香港)", "https://104.21.45.47/hk-hkg.doh.sb/dns-query", "dh1.skydevil.xyz" }, { "DNS.SB(印度班加罗尔)", "https://104.21.45.47/in-blr.doh.sb/dns-query", "dh1.skydevil.xyz" }, { "DNS.SB(美国圣何塞)", "https://104.21.45.47/us-sjc.doh.sb/dns-query", "dh1.skydevil.xyz" } };
         public static DoHServer dohServer = new();
         public static Dictionary<string, DoHServer> dicDoHServer = new();
         public static readonly List<ResouceRecord> lsEmptyIP = new();
@@ -555,14 +555,14 @@ namespace XboxDownload
                     List<ResouceRecord> lsNsIP = new() { new ResouceRecord { Datas = nsIP, TTL = 100, QueryClass = 1, QueryType = QueryType.A } };
                     _ = dicServiceV4.TryAdd("atum.hac.lp1.d4c.nintendo.net", lsNsIP);
                     _ = dicServiceV4.TryAdd("nemof.p01.lp1.nemo.srv.nintendo.net", lsNsIP);
-                    _ = dicServiceV4.TryAdd("nemof.hac.lp1.nemo.srv.nintendo.net", lsNsIP); 
+                    _ = dicServiceV4.TryAdd("nemof.hac.lp1.nemo.srv.nintendo.net", lsNsIP);
                     _ = dicServiceV4.TryAdd("ctest-dl.p01.lp1.ctest.srv.nintendo.net", lsNsIP);
                     _ = dicServiceV4.TryAdd("ctest-ul.p01.lp1.ctest.srv.nintendo.net", lsNsIP);
                     _ = dicServiceV4.TryAdd("ctest-dl-lp1.cdn.nintendo.net", lsNsIP);
                     _ = dicServiceV4.TryAdd("ctest-ul-lp1.cdn.nintendo.net", lsNsIP);
                     _ = dicServiceV6.TryAdd("atum.hac.lp1.d4c.nintendo.net", lsEmptyIP);
                     _ = dicServiceV6.TryAdd("nemof.p01.lp1.nemo.srv.nintendo.net", lsEmptyIP);
-                    _ = dicServiceV6.TryAdd("nemof.hac.lp1.nemo.srv.nintendo.net", lsEmptyIP); 
+                    _ = dicServiceV6.TryAdd("nemof.hac.lp1.nemo.srv.nintendo.net", lsEmptyIP);
                     _ = dicServiceV6.TryAdd("ctest-dl.p01.lp1.ctest.srv.nintendo.net", lsEmptyIP);
                     _ = dicServiceV6.TryAdd("ctest-ul.p01.lp1.ctest.srv.nintendo.net", lsEmptyIP);
                     _ = dicServiceV6.TryAdd("ctest-dl-lp1.cdn.nintendo.net", lsEmptyIP);
@@ -573,14 +573,14 @@ namespace XboxDownload
                     List<ResouceRecord> lsNsIP = new() { new ResouceRecord { Datas = nsIP, TTL = 100, QueryClass = 1, QueryType = QueryType.AAAA } };
                     _ = dicServiceV6.TryAdd("atum.hac.lp1.d4c.nintendo.net", lsNsIP);
                     _ = dicServiceV6.TryAdd("nemof.p01.lp1.nemo.srv.nintendo.net", lsNsIP);
-                    _ = dicServiceV6.TryAdd("nemof.hac.lp1.nemo.srv.nintendo.net", lsNsIP); 
+                    _ = dicServiceV6.TryAdd("nemof.hac.lp1.nemo.srv.nintendo.net", lsNsIP);
                     _ = dicServiceV6.TryAdd("ctest-dl.p01.lp1.ctest.srv.nintendo.net", lsNsIP);
                     _ = dicServiceV6.TryAdd("ctest-ul.p01.lp1.ctest.srv.nintendo.net", lsNsIP);
                     _ = dicServiceV6.TryAdd("ctest-dl-lp1.cdn.nintendo.net", lsNsIP);
                     _ = dicServiceV6.TryAdd("ctest-ul-lp1.cdn.nintendo.net", lsNsIP);
                     _ = dicServiceV4.TryAdd("atum.hac.lp1.d4c.nintendo.net", lsEmptyIP);
                     _ = dicServiceV4.TryAdd("nemof.p01.lp1.nemo.srv.nintendo.net", lsEmptyIP);
-                    _ = dicServiceV4.TryAdd("nemof.hac.lp1.nemo.srv.nintendo.net", lsEmptyIP); 
+                    _ = dicServiceV4.TryAdd("nemof.hac.lp1.nemo.srv.nintendo.net", lsEmptyIP);
                     _ = dicServiceV4.TryAdd("ctest-dl.p01.lp1.ctest.srv.nintendo.net", lsEmptyIP);
                     _ = dicServiceV4.TryAdd("ctest-ul.p01.lp1.ctest.srv.nintendo.net", lsEmptyIP);
                     _ = dicServiceV4.TryAdd("ctest-dl-lp1.cdn.nintendo.net", lsEmptyIP);
@@ -777,7 +777,7 @@ namespace XboxDownload
                                         }
                                         if (dicDoHServer.TryGetValue(queryName, out DoHServer? doh) || Properties.Settings.Default.DoH)
                                         {
-                                            string html = ClassWeb.HttpResponseContent((doh?.Website ?? DnsListen.dohServer.Website) + "?name=" + ClassWeb.UrlEncode(queryName) + "&type=A", "GET", null, null, (doh != null ? doh.Headers : DnsListen.dohServer.Headers), 6000);
+                                            string html = ClassWeb.HttpResponseContent((doh?.Website ?? DnsListen.dohServer.Website) + "?name=" + ClassWeb.UrlEncode(queryName) + "&type=A", "GET", null, null, (doh != null ? doh.Headers : DnsListen.dohServer.Headers), 6000, "XboxDownload");
                                             if (Regex.IsMatch(html.Trim(), @"^{.+}$"))
                                             {
                                                 ClassDNS.Api? json = null;
@@ -868,7 +868,7 @@ namespace XboxDownload
                                         {
                                             if (dicDoHServer.TryGetValue(queryName, out DoHServer? doh) || Properties.Settings.Default.DoH)
                                             {
-                                                string html = ClassWeb.HttpResponseContent((doh?.Website ?? DnsListen.dohServer.Website) + "?name=" + ClassWeb.UrlEncode(queryName) + "&type=AAAA", "GET", null, null, (doh != null ? doh.Headers : DnsListen.dohServer.Headers), 6000);
+                                                string html = ClassWeb.HttpResponseContent((doh?.Website ?? DnsListen.dohServer.Website) + "?name=" + ClassWeb.UrlEncode(queryName) + "&type=AAAA", "GET", null, null, (doh != null ? doh.Headers : DnsListen.dohServer.Headers), 6000, "XboxDownload");
                                                 if (Regex.IsMatch(html.Trim(), @"^{.+}$"))
                                                 {
                                                     ClassDNS.Api? json = null;

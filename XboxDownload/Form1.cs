@@ -72,7 +72,7 @@ namespace XboxDownload
             toolTip1.SetToolTip(this.labelUbi, "包括以下游戏下载域名\nuplaypc-s-ubisoft.cdn.ubionline.com.cn\nuplaypc-s-ubisoft.cdn.ubi.com\nubisoftconnect.cdn.ubi.com\n\n注：XDefiant(不羁联盟)不支持使用国内CDN，\n可勾选\"自动优选 Akamai IP\"使用国外CDN。");
             toolTip1.SetToolTip(this.ckbDoH, "默认使用 阿里云DoH(加密DNS) 解析域名IP，\n防止上游DNS服务器被劫持污染。\nPC用户使用此功能，需要勾选“设置本机 DNS”\n\n注：网络正常可以不勾选。");
             toolTip1.SetToolTip(this.ckbSetDns, "开始监听将把电脑DNS设置为本机IP，停止监听后恢复默认设置，\nPC用户建议勾选，主机用户无需设置。\n\n注：如果退出Xbox下载助手后没网络，请点击旁边“修复”。");
-            toolTip1.SetToolTip(this.ckbBetterAkamaiIP, "自动从 Akamai 优选 IP 列表中找出下载速度最快的 IPv4 节点\n支持 Xbox、PS、NS、EA、战网、EPIC、育碧、拳头游戏\n选中后临时忽略自定义IP（Xbox、PS不使用国内IP）\n同时还能解决Xbox安装停止，冷门游戏国内CDN没缓存下载慢等问题\n\n提示：\n更换IP后，Xbox、战网、育碧 拳头游戏 客户端需要暂停下载，然后重新恢复安装，\nEA app、Epic客户端请点击修复/重启，主机需要等待DNS缓存过期(100秒)。");
+            toolTip1.SetToolTip(this.ckbBetterAkamaiIP, "自动从 Akamai 优选 IP 列表中找出下载速度最快的 IPv4 节点\n支持 Xbox、PS、NS、EA、战网、EPIC、育碧、拳头游戏、Rockstar、Spotify...\n选中后临时忽略自定义IP（Xbox、PS不使用国内IP）\n同时还能解决Xbox安装停止，冷门游戏国内CDN没缓存下载慢等问题\n\n提示：\n更换IP后，Xbox、战网、育碧 拳头游戏 客户端需要暂停下载，然后重新恢复安装，\nEA app、Epic客户端请点击修复/重启，主机需要等待DNS缓存过期(100秒)。");
 
             tbDnsIP.Text = Properties.Settings.Default.DnsIP;
             tbComIP.Text = Properties.Settings.Default.ComIP;
@@ -4553,11 +4553,14 @@ namespace XboxDownload
                                                             bool find = false;
                                                             if (XboxGameDownload.dicXboxGame.TryGetValue(key, out XboxGameDownload.Products? XboxGame))
                                                             {
+                                                                item.SubItems[3].Tag = XboxGame.Url;
+                                                                item.SubItems[3].Text = Path.GetFileName(XboxGame.Url);
                                                                 if (XboxGame.FileSize == packages.MaxDownloadSizeInBytes)
-                                                                {
                                                                     find = true;
-                                                                    item.SubItems[3].Tag = XboxGame.Url;
-                                                                    item.SubItems[3].Text = Path.GetFileName(XboxGame.Url);
+                                                                else
+                                                                {
+                                                                    item.ForeColor = Color.Red;
+                                                                    item.SubItems[2].Text = ClassMbr.ConvertBytes(XboxGame.FileSize);
                                                                 }
                                                             }
                                                             if (!find)
@@ -4823,10 +4826,7 @@ namespace XboxDownload
                         }
                         else
                         {
-                            if (platform != 2)
-                            {
-                                item.ForeColor = Color.Red;
-                            }
+                            item.ForeColor = Color.Red;
                         }
                         item.SubItems[2].Text = ClassMbr.ConvertBytes(XboxGame.FileSize);
                         item.SubItems[3].Tag = XboxGame.Url;
@@ -4887,7 +4887,6 @@ namespace XboxDownload
                             {
                                 Properties.Settings.Default.Authorization = null;
                                 Properties.Settings.Default.Save();
-                                if (platform == 2) url = "授权已失效，请使用监听方式打开Xbox app，随便找一个游戏点击安装（无需实际安装），等待日志显示下载链接即可更新授权。";
                             }
                         }
                     }
@@ -4905,13 +4904,6 @@ namespace XboxDownload
                         }
                     }));
                     if (Regex.IsMatch(url, @"^https?://")) _ = ClassWeb.HttpResponseContent(UpdateFile.website + "/Game/AddGameUrl?url=" + ClassWeb.UrlEncode(url), "PUT", null, null, null, 30000, "XboxDownload");
-                }
-                else if (platform == 2)
-                {
-                    this.Invoke(new Action(() =>
-                    {
-                        item.SubItems[3].Text = "授权已失效，请使用监听方式打开Xbox app，随便找一个游戏点击安装（无需实际安装），等待日志显示下载链接即可更新授权。";
-                    }));
                 }
             }
         }
@@ -5060,12 +5052,10 @@ namespace XboxDownload
                         tsmCopyUrl2.Visible = tsmCopyUrl3.Visible = isGame;
                         tsmCopyUrl3.Enabled = isGame && item.SubItems[3].Tag != null && Regex.IsMatch(item.SubItems[3].Tag.ToString() ?? string.Empty, @"http://[^\.]+\.xboxlive\.com/(\d{1,2}|Z)/");
                         tsmAllUrl.Visible = !isGame && lvGame.Tag != null && item.SubItems[0].Text == "Windows PC";
-                        tsmAuthorization.Visible = false;
                     }
                     else
                     {
                         tsmCopyUrl1.Visible = tsmCopyUrl2.Visible = tsmCopyUrl3.Visible = tsmAllUrl.Visible = false;
-                        tsmAuthorization.Visible = true;
                     }
                     cmsCopyUrl.Show(MousePosition.X, MousePosition.Y);
                 }
@@ -5171,23 +5161,6 @@ namespace XboxDownload
                     }
                 }));
             });
-        }
-
-        private void TsmAuthorization_Click(object sender, EventArgs e)
-        {
-            if (Environment.OSVersion.Version.Major < 10)
-            {
-                MessageBox.Show("只支持Win10或以上版本操作系统。", "操作系统版本过低", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-            }
-            else if (bServiceFlag && Properties.Settings.Default.HttpService && Properties.Settings.Default.MicrosoftStore)
-            {
-                ToolStripMenuItem tsmi = (ToolStripMenuItem)sender;
-                Process.Start(new ProcessStartInfo("msxbox://game/?productId=" + (tsmi.Tag ?? lvGame.SelectedItems[0].SubItems[1].Tag)) { UseShellExecute = true });
-            }
-            else
-            {
-                MessageBox.Show("请先启动监听方式并且加勾选 启用HTTP(S)服务、加速微软商店 选项。", "提示", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
-            }
         }
         #endregion
 
@@ -5592,11 +5565,19 @@ namespace XboxDownload
                 {
                     File.Move(appSignature, appSignature + ".bak");
                 }
-                cmd = "-noexit \"Add-AppxPackage -Register '" + filepath + "'\necho 部署脚本执行完毕，如果没有其它需要可以直接关闭此窗口\"";
+                cmd = "-noexit \"Add-AppPackage -Register '" + filepath + "'\necho 部署脚本执行完毕，如果没有其它需要可以直接关闭此窗口\"";
             }
             else
             {
-                cmd = "-noexit \"Add-AppxPackage -Path '" + filepath + "' -Volume '" + cbAppxDrive.Text + "'\necho 部署脚本执行完毕，如果没有其它需要可以直接关闭此窗口。\"";
+                OperatingSystem os = Environment.OSVersion;
+                if (os.Version.Major == 10 && os.Version.Build >= 22000)
+                {
+                    cmd = "-noexit \"Add-AppPackage -AllowUnsigned -Path '" + filepath + "' -Volume '" + cbAppxDrive.Text + "'\necho 部署脚本执行完毕，如果没有其它需要可以直接关闭此窗口。\"";
+                }
+                else
+                {
+                    cmd = "-noexit \"Add-AppPackage -Path '" + filepath + "' -Volume '" + cbAppxDrive.Text + "'\necho 部署脚本执行完毕，如果没有其它需要可以直接关闭此窗口。\"";
+                }
             }
             try
             {

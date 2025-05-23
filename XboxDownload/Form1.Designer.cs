@@ -30,9 +30,9 @@
         {
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle5 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle6 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
             toolStrip1 = new ToolStrip();
             toolStripDropDownButton1 = new ToolStripDropDownButton();
             tsmUpdate = new ToolStripMenuItem();
@@ -64,6 +64,7 @@
             cbLocalIP = new ComboBox();
             label24 = new Label();
             groupBox1 = new GroupBox();
+            linkXbox4 = new LinkLabel();
             label8 = new Label();
             tbCnIP2 = new TextBox();
             labelCn2 = new Label();
@@ -346,9 +347,6 @@
             tsmCopyUrl2 = new ToolStripMenuItem();
             tsmCopyUrl3 = new ToolStripMenuItem();
             tsmAllUrl = new ToolStripMenuItem();
-            tsmAuthorization = new ToolStripMenuItem();
-            tsmAuthorization1 = new ToolStripMenuItem();
-            tsmAuthorization2 = new ToolStripMenuItem();
             timerTraffic = new System.Windows.Forms.Timer(components);
             toolStrip1.SuspendLayout();
             tabControl1.SuspendLayout();
@@ -608,6 +606,7 @@
             // 
             // groupBox1
             // 
+            groupBox1.Controls.Add(linkXbox4);
             groupBox1.Controls.Add(label8);
             groupBox1.Controls.Add(tbCnIP2);
             groupBox1.Controls.Add(labelCn2);
@@ -681,6 +680,14 @@
             resources.ApplyResources(groupBox1, "groupBox1");
             groupBox1.Name = "groupBox1";
             groupBox1.TabStop = false;
+            // 
+            // linkXbox4
+            // 
+            resources.ApplyResources(linkXbox4, "linkXbox4");
+            linkXbox4.Name = "linkXbox4";
+            linkXbox4.TabStop = true;
+            linkXbox4.Tag = "https://www.bilibili.com/video/BV1p5yyY7ExE/";
+            linkXbox4.LinkClicked += Link_LinkClicked;
             // 
             // label8
             // 
@@ -1171,9 +1178,9 @@
             // 
             // Col_TTL
             // 
-            dataGridViewCellStyle4.Alignment = DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle4.Format = "N0";
-            Col_TTL.DefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle1.Format = "N0";
+            Col_TTL.DefaultCellStyle = dataGridViewCellStyle1;
             resources.ApplyResources(Col_TTL, "Col_TTL");
             Col_TTL.Name = "Col_TTL";
             Col_TTL.ReadOnly = true;
@@ -1181,9 +1188,9 @@
             // 
             // Col_RoundtripTime
             // 
-            dataGridViewCellStyle5.Alignment = DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle5.Format = "N0";
-            Col_RoundtripTime.DefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle2.Format = "N0";
+            Col_RoundtripTime.DefaultCellStyle = dataGridViewCellStyle2;
             resources.ApplyResources(Col_RoundtripTime, "Col_RoundtripTime");
             Col_RoundtripTime.Name = "Col_RoundtripTime";
             Col_RoundtripTime.ReadOnly = true;
@@ -1191,9 +1198,9 @@
             // 
             // Col_Speed
             // 
-            dataGridViewCellStyle6.Alignment = DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle6.Format = "N2";
-            Col_Speed.DefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle3.Format = "N2";
+            Col_Speed.DefaultCellStyle = dataGridViewCellStyle3;
             resources.ApplyResources(Col_Speed, "Col_Speed");
             Col_Speed.Name = "Col_Speed";
             Col_Speed.ReadOnly = true;
@@ -2620,7 +2627,7 @@
             // cmsCopyUrl
             // 
             cmsCopyUrl.ImageScalingSize = new Size(24, 24);
-            cmsCopyUrl.Items.AddRange(new ToolStripItem[] { tsmCopyUrl1, tsmCopyUrl2, tsmCopyUrl3, tsmAllUrl, tsmAuthorization });
+            cmsCopyUrl.Items.AddRange(new ToolStripItem[] { tsmCopyUrl1, tsmCopyUrl2, tsmCopyUrl3, tsmAllUrl });
             cmsCopyUrl.Name = "cmsCopyUrl";
             resources.ApplyResources(cmsCopyUrl, "cmsCopyUrl");
             // 
@@ -2648,25 +2655,6 @@
             tsmAllUrl.Name = "tsmAllUrl";
             resources.ApplyResources(tsmAllUrl, "tsmAllUrl");
             tsmAllUrl.Click += TsmAllUrl_Click;
-            // 
-            // tsmAuthorization
-            // 
-            tsmAuthorization.DropDownItems.AddRange(new ToolStripItem[] { tsmAuthorization1, tsmAuthorization2 });
-            tsmAuthorization.Name = "tsmAuthorization";
-            resources.ApplyResources(tsmAuthorization, "tsmAuthorization");
-            // 
-            // tsmAuthorization1
-            // 
-            tsmAuthorization1.Name = "tsmAuthorization1";
-            resources.ApplyResources(tsmAuthorization1, "tsmAuthorization1");
-            tsmAuthorization1.Click += TsmAuthorization_Click;
-            // 
-            // tsmAuthorization2
-            // 
-            tsmAuthorization2.Name = "tsmAuthorization2";
-            resources.ApplyResources(tsmAuthorization2, "tsmAuthorization2");
-            tsmAuthorization2.Tag = "9PP5G1F0C2B6";
-            tsmAuthorization2.Click += TsmAuthorization_Click;
             // 
             // timerTraffic
             // 
@@ -2981,9 +2969,6 @@
         private DataGridViewTextBoxColumn Col_Mode;
         private ToolStripMenuItem tsmAllUrl;
         private ToolStripMenuItem tsmSpeedTestLog;
-        private ToolStripMenuItem tsmAuthorization;
-        private ToolStripMenuItem tsmAuthorization1;
-        private ToolStripMenuItem tsmAuthorization2;
         private LinkLabel linkPcInstall2;
         private Label labelInstallationLocation;
         private LinkLabel linkFixAppxDrive;
@@ -3067,5 +3052,6 @@
         private PictureBox pbMsStore;
         private PictureBox pbXboxApp;
         private ToolStripSeparator tssUseIP2;
+        private LinkLabel linkXbox4;
     }
 }

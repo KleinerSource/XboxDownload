@@ -250,7 +250,7 @@ namespace XboxDownload
                                 }
                                 if (fs != null)
                                 {
-                                    if (Properties.Settings.Default.RecordLog) parentForm.SaveLog("本地上传", _localPath, ((IPEndPoint)mySocket.RemoteEndPoint!).Address.ToString());
+                                    if (Properties.Settings.Default.RecordLog) parentForm.SaveLog("本地上传", _localPath, ((IPEndPoint)mySocket.RemoteEndPoint!).Address.ToString(), 0x008000);
                                     using BinaryReader br = new(fs);
                                     string _contentRange = string.Empty, _status = "200 OK";
                                     long _fileLength = br.BaseStream.Length, _startPosition = 0;
