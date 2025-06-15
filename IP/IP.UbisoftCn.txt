@@ -1,4 +1,4 @@
-uplaypc-s-ubisoft.cdn.ubionline.com.cn
+UbisoftCn
 
 27.155.111.209	(中国福建福州 电信)
 221.194.158.142	(中国河北廊坊 联通)
