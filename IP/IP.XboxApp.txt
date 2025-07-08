@@ -1,4 +1,4 @@
-tlu.dl.delivery.mp.microsoft.com
+XboxApp
 
 223.215.189.47	(中国安徽池州 电信)
 112.26.228.59	(中国安徽阜阳 移动)
