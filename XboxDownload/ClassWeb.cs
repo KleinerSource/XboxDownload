@@ -92,12 +92,10 @@ namespace XboxDownload
                 HttpRequestMessage httpRequestMessage = new()
                 {
                     Method = new HttpMethod(method),
-                    RequestUri = new Uri(url),
-                    Version = HttpVersion.Version11,
-                    VersionPolicy = HttpVersionPolicy.RequestVersionOrHigher
+                    RequestUri = new Uri(url)
                 };
-                if (postData != null && httpRequestMessage.Method == HttpMethod.Post)
-                    httpRequestMessage.Content = new StringContent(postData, Encoding.UTF8, contentType ?? "application/x-www-form-urlencoded");
+                if ((httpRequestMessage.Method == HttpMethod.Post || httpRequestMessage.Method == HttpMethod.Put))
+                    httpRequestMessage.Content = new StringContent(postData ?? string.Empty, Encoding.UTF8, contentType ?? "application/x-www-form-urlencoded");
                 try
                 {
                     response = client.SendAsync(httpRequestMessage, token).Result;
@@ -131,12 +129,10 @@ namespace XboxDownload
                 HttpRequestMessage httpRequestMessage = new()
                 {
                     Method = new HttpMethod(method),
-                    RequestUri = new Uri(url),
-                    Version = HttpVersion.Version11,
-                    VersionPolicy = HttpVersionPolicy.RequestVersionOrHigher
+                    RequestUri = new Uri(url)
                 };
-                if (postData != null && (httpRequestMessage.Method == HttpMethod.Post || httpRequestMessage.Method == HttpMethod.Put))
-                    httpRequestMessage.Content = new StringContent(postData, Encoding.UTF8, contentType ?? "application/x-www-form-urlencoded");
+                if ((httpRequestMessage.Method == HttpMethod.Post || httpRequestMessage.Method == HttpMethod.Put))
+                    httpRequestMessage.Content = new StringContent(postData ?? string.Empty, Encoding.UTF8, contentType ?? "application/x-www-form-urlencoded");
                 try
                 {
                     response = await client.SendAsync(httpRequestMessage, token);

@@ -1,5 +1,5 @@
 ##################### Microsoft ######################
-download.xbox.com		#Xbox360主机游戏下载域名
+download.xbox.com	#Xbox360主机游戏下载域名
 catalog.gamepass.com	#XGP游戏库
 s7mbrstream.scene7.com	#游戏预告片
 *.video.microsoft.com	#商店电影和电视

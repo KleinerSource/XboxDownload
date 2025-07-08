@@ -1562,13 +1562,13 @@
     <value>4, 478</value>
   </data>
   <data name="label22.Size" type="System.Drawing.Size, System.Drawing">
-    <value>1433, 24</value>
+    <value>1187, 24</value>
   </data>
   <data name="label22.TabIndex" type="System.Int32, mscorlib">
     <value>43</value>
   </data>
   <data name="label22.Text" xml:space="preserve">
-    <value>主机使用：点击开始监听，然后在 Xbox、PS、NS 网络设置 DNS IP 设为本机IP，辅助DNS留空；下载完成后改回自动获取。 注意：加速 Xbox 主机必需进路由器后台关闭 IPv6。</value>
+    <value>主机加速：点击“开始监听”，在主机网络设置中将 DNS 设为本机 IP，辅助 DNS 留空。下载后改回自动获取。注意：Xbox 需在路由器中关闭 IPv6。</value>
   </data>
   <data name="&gt;&gt;label22.Name" xml:space="preserve">
     <value>label22</value>
@@ -4943,7 +4943,7 @@
     <value>Fill</value>
   </data>
   <data name="groupBox7.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 360</value>
+    <value>0, 399</value>
   </data>
   <data name="groupBox7.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>2, 2, 2, 2</value>
@@ -4952,7 +4952,7 @@
     <value>2, 2, 2, 2</value>
   </data>
   <data name="groupBox7.Size" type="System.Drawing.Size, System.Drawing">
-    <value>1436, 484</value>
+    <value>1436, 445</value>
   </data>
   <data name="groupBox7.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
@@ -5045,7 +5045,7 @@
     <value>40</value>
   </data>
   <data name="dgvDevice.Size" type="System.Drawing.Size, System.Drawing">
-    <value>1282, 333</value>
+    <value>1282, 306</value>
   </data>
   <data name="dgvDevice.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
@@ -5061,6 +5061,58 @@
   </data>
   <data name="&gt;&gt;dgvDevice.ZOrder" xml:space="preserve">
     <value>0</value>
+  </data>
+  <data name="label49.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="label49.Location" type="System.Drawing.Point, System.Drawing">
+    <value>6, 8</value>
+  </data>
+  <data name="label49.Size" type="System.Drawing.Size, System.Drawing">
+    <value>1162, 48</value>
+  </data>
+  <data name="label49.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="label49.Text" xml:space="preserve">
+    <value>此功能可以把Xbox外置移动硬盘转换为PC可读写模式，转换PC模式后需要重拨插硬盘。
+注：操作可能导致安全软件拦截，建议提前关闭防护；该过程存在数据丢失风险，请务必使用空闲硬盘并做好备份，使用者需自行承担操作风险。</value>
+  </data>
+  <data name="&gt;&gt;label49.Name" xml:space="preserve">
+    <value>label49</value>
+  </data>
+  <data name="&gt;&gt;label49.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;label49.Parent" xml:space="preserve">
+    <value>panel3</value>
+  </data>
+  <data name="&gt;&gt;label49.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="panel3.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Bottom</value>
+  </data>
+  <data name="panel3.Location" type="System.Drawing.Point, System.Drawing">
+    <value>2, 331</value>
+  </data>
+  <data name="panel3.Size" type="System.Drawing.Size, System.Drawing">
+    <value>1282, 66</value>
+  </data>
+  <data name="panel3.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="&gt;&gt;panel3.Name" xml:space="preserve">
+    <value>panel3</value>
+  </data>
+  <data name="&gt;&gt;panel3.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;panel3.Parent" xml:space="preserve">
+    <value>groupBox6</value>
+  </data>
+  <data name="&gt;&gt;panel3.ZOrder" xml:space="preserve">
+    <value>1</value>
   </data>
   <data name="linkConsoleInstall1.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -5186,7 +5238,7 @@
     <value>2, 2, 2, 2</value>
   </data>
   <data name="panel5.Size" type="System.Drawing.Size, System.Drawing">
-    <value>150, 333</value>
+    <value>150, 372</value>
   </data>
   <data name="panel5.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -5201,7 +5253,7 @@
     <value>groupBox6</value>
   </data>
   <data name="&gt;&gt;panel5.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>2</value>
   </data>
   <data name="groupBox6.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Top</value>
@@ -5216,13 +5268,13 @@
     <value>2, 2, 2, 2</value>
   </data>
   <data name="groupBox6.Size" type="System.Drawing.Size, System.Drawing">
-    <value>1436, 360</value>
+    <value>1436, 399</value>
   </data>
   <data name="groupBox6.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
   </data>
   <data name="groupBox6.Text" xml:space="preserve">
-    <value>Xbox外置存储设备(本功能可以把Xbox外置移动硬盘转换成PC可读写的模式，需要使用Win10或以上版本操作系统，关闭腾讯电脑管家)</value>
+    <value>Xbox外置存储设备</value>
   </data>
   <data name="&gt;&gt;groupBox6.Name" xml:space="preserve">
     <value>groupBox6</value>

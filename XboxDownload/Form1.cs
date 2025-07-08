@@ -1975,16 +1975,16 @@ namespace XboxDownload
             switch (cbImportIP.SelectedIndex)
             {
                 case 1:
-                    display = host = "assets1.xboxlive.cn";
+                    display = host = "XboxCn1";
                     break;
                 case 2:
-                    display = host = "dlassets.xboxlive.cn";
+                    display = host = "XboxCn2";
                     break;
                 case 3:
-                    display = host = "tlu.dl.delivery.mp.microsoft.com";
+                    display = host = "XboxApp";
                     break;
                 case 4:
-                    display = host = "gst.prod.dl.playstation.net";
+                    display = host = "Ps";
                     break;
                 case 5:
                     display = host = "Akamai";
@@ -1998,7 +1998,7 @@ namespace XboxDownload
                     host = "AkamaiV6";
                     break;
                 case 8:
-                    display = host = "uplaypc-s-ubisoft.cdn.ubionline.com.cn";
+                    display = host = "UbisoftCn";
                     break;
             }
             dgvIpList.Tag = host;
@@ -2621,7 +2621,7 @@ namespace XboxDownload
                     case "blzddist1-a.akamaihd.net":
                     case "epicgames-download1.akamaized.net":
                     case "uplaypc-s-ubisoft.cdn.ubi.com":
-                        sHosts = Regex.Replace(sHosts, @"[^\s]+\s+[^\s]+(\.xboxlive\.com|\.delivery\.mp\.microsoft\.com|\.dl\.playstation\.net|\.nintendo\.net|\.cdn\.ea\.com|\.akamaihd\.net|\.akamaized\.net|\.ubi\.net)\s+# (XboxDownload|Xbox下载助手)\r\n", "");
+                        sHosts = Regex.Replace(sHosts, @"[^\s]+\s+[^\s]+(\.xboxlive\.com|\.delivery\.mp\.microsoft\.com|\.dl\.playstation\.net|\.nintendo\.net|\.cdn\.ea\.com|\.battle\.net|\.ubi\.com|\.akamaihd\.net|\.akamaized\.net|\.ubi\.net)\s+# (XboxDownload|Xbox下载助手)\r\n", "");
                         sb.AppendLine(ip + " xvcf1.xboxlive.com # XboxDownload");
                         sb.AppendLine(ip + " xvcf2.xboxlive.com # XboxDownload");
                         sb.AppendLine(ip + " assets1.xboxlive.com # XboxDownload");
@@ -3743,6 +3743,7 @@ namespace XboxDownload
                     dgvDevice.SelectedRows[0].Cells["Col_Mode"].Value = "PC 模式";
                     dgvDevice.ClearSelection();
                     butEnablePc.Enabled = false;
+                    /*
                     using (Process p = new())
                     {
                         p.StartInfo.FileName = "diskpart.exe";
@@ -3754,7 +3755,8 @@ namespace XboxDownload
                         p.StandardInput.WriteLine("exit");
                         p.Close();
                     }
-                    MessageBox.Show("成功转换PC模式。", "转换PC模式", MessageBoxButtons.OK, MessageBoxIcon.None);
+                    */
+                    MessageBox.Show("成功转换PC模式，请重新插拔移动硬盘。", "转换PC模式", MessageBoxButtons.OK, MessageBoxIcon.None);
                 }
             }
         }
@@ -5565,18 +5567,18 @@ namespace XboxDownload
                 {
                     File.Move(appSignature, appSignature + ".bak");
                 }
-                cmd = "-noexit \"Add-AppPackage -Register '" + filepath + "'\necho 部署脚本执行完毕，如果没有其它需要可以直接关闭此窗口\"";
+                cmd = "-noexit \"Add-AppxPackage -Register '" + filepath + "'\necho 部署脚本执行完毕，如果没有其它需要可以直接关闭此窗口\"";
             }
             else
             {
                 OperatingSystem os = Environment.OSVersion;
                 if (os.Version.Major == 10 && os.Version.Build >= 22000)
                 {
-                    cmd = "-noexit \"Add-AppPackage -AllowUnsigned -Path '" + filepath + "' -Volume '" + cbAppxDrive.Text + "'\necho 部署脚本执行完毕，如果没有其它需要可以直接关闭此窗口。\"";
+                    cmd = "-noexit \"Add-AppxPackage -AllowUnsigned -Path '" + filepath + "' -Volume '" + cbAppxDrive.Text + "'\necho 部署脚本执行完毕，如果没有其它需要可以直接关闭此窗口。\"";
                 }
                 else
                 {
-                    cmd = "-noexit \"Add-AppPackage -Path '" + filepath + "' -Volume '" + cbAppxDrive.Text + "'\necho 部署脚本执行完毕，如果没有其它需要可以直接关闭此窗口。\"";
+                    cmd = "-noexit \"Add-AppxPackage -Path '" + filepath + "' -Volume '" + cbAppxDrive.Text + "'\necho 部署脚本执行完毕，如果没有其它需要可以直接关闭此窗口。\"";
                 }
             }
             try

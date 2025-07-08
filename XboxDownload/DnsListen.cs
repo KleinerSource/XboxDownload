@@ -14,7 +14,7 @@ namespace XboxDownload
     {
         private Socket? socket = null;
         private readonly Form1 parentForm;
-        public static string[,] dohs = { { "阿里云", "https://223.5.5.5/resolve", "" }, { "腾讯云", "https://1.12.12.12/resolve", "" }, { "360", "https://180.163.249.75/resolve", "" }, { "Google", "https://104.21.45.47/resolve", "dh1.skydevil.xyz" }, { "DNS.SB(Globa)", "https://104.21.45.47/doh.sb/dns-query", "dh1.skydevil.xyz" }, { "DNS.SB(日本大阪)", "https://104.21.45.47/jp-kix.doh.sb/dns-query", "dh1.skydevil.xyz" }, { "DNS.SB(韩国首尔)", "https://104.21.45.47/kr-sel.doh.sb/dns-query", "dh1.skydevil.xyz" }, { "DNS.SB(新加坡)", "https://104.21.45.47/sg-sin.doh.sb/dns-query", "dh1.skydevil.xyz" }, { "DNS.SB(中国香港)", "https://104.21.45.47/hk-hkg.doh.sb/dns-query", "dh1.skydevil.xyz" }, { "DNS.SB(印度班加罗尔)", "https://104.21.45.47/in-blr.doh.sb/dns-query", "dh1.skydevil.xyz" }, { "DNS.SB(美国圣何塞)", "https://104.21.45.47/us-sjc.doh.sb/dns-query", "dh1.skydevil.xyz" } };
+        public static string[,] dohs = { { "阿里云", "https://223.5.5.5/resolve", "" }, { "腾讯云", "https://1.12.12.12/resolve", "" }, { "360", "https://180.163.249.75/resolve", "" }, { "Google", "https://104.21.45.47/resolve", "dh1.skydevil.xyz" }, { "DNS.SB(Global)", "https://104.21.45.47/doh.sb/dns-query", "dh1.skydevil.xyz" }, { "DNS.SB(日本大阪)", "https://104.21.45.47/jp-kix.doh.sb/dns-query", "dh1.skydevil.xyz" }, { "DNS.SB(韩国首尔)", "https://104.21.45.47/kr-sel.doh.sb/dns-query", "dh1.skydevil.xyz" }, { "DNS.SB(新加坡)", "https://104.21.45.47/sg-sin.doh.sb/dns-query", "dh1.skydevil.xyz" }, { "DNS.SB(中国香港)", "https://104.21.45.47/hk-hkg.doh.sb/dns-query", "dh1.skydevil.xyz" }, { "DNS.SB(印度班加罗尔)", "https://104.21.45.47/in-blr.doh.sb/dns-query", "dh1.skydevil.xyz" }, { "DNS.SB(美国圣何塞)", "https://104.21.45.47/us-sjc.doh.sb/dns-query", "dh1.skydevil.xyz" } };
         public static DoHServer dohServer = new();
         public static Dictionary<string, DoHServer> dicDoHServer = new();
         public static readonly List<ResouceRecord> lsEmptyIP = new();
@@ -1009,14 +1009,14 @@ namespace XboxDownload
                 List<ResouceRecord> lsIP = new() { new ResouceRecord { Datas = IPAddress.Parse(ip).GetAddressBytes(), TTL = 100, QueryClass = 1, QueryType = QueryType.A } };
                 foreach (string host in hosts)
                 {
-                    if (dicServiceV4.TryGetValue(host, out List<ResouceRecord>? vlaue))
+                    if (dicServiceV4.TryGetValue(host, out List<ResouceRecord>? value))
                     {
-                        dicService2V4.TryAdd(host, vlaue);
+                        dicService2V4.TryAdd(host, value);
                     }
                     dicServiceV4.AddOrUpdate(host, lsIP, (oldkey, oldvalue) => lsIP);
-                    if (dicServiceV6.TryGetValue(host, out List<ResouceRecord>? vlaueV6))
+                    if (dicServiceV6.TryGetValue(host, out List<ResouceRecord>? valueV6))
                     {
-                        dicService2V6.TryAdd(host, vlaueV6);
+                        dicService2V6.TryAdd(host, valueV6);
                     }
                     dicServiceV6.AddOrUpdate(host, lsEmptyIP, (oldkey, oldvalue) => lsEmptyIP);
                 }

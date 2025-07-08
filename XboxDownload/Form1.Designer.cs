@@ -231,6 +231,8 @@
             Col_InterfaceType = new DataGridViewTextBoxColumn();
             Col_Size = new DataGridViewTextBoxColumn();
             Col_Mode = new DataGridViewTextBoxColumn();
+            panel3 = new Panel();
+            label49 = new Label();
             panel5 = new Panel();
             linkConsoleInstall1 = new LinkLabel();
             butScan = new Button();
@@ -374,6 +376,7 @@
             groupBox7.SuspendLayout();
             groupBox6.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvDevice).BeginInit();
+            panel3.SuspendLayout();
             panel5.SuspendLayout();
             tabStore.SuspendLayout();
             gbGameInfo.SuspendLayout();
@@ -1774,6 +1777,7 @@
             // groupBox6
             // 
             groupBox6.Controls.Add(dgvDevice);
+            groupBox6.Controls.Add(panel3);
             groupBox6.Controls.Add(panel5);
             resources.ApplyResources(groupBox6, "groupBox6");
             groupBox6.Name = "groupBox6";
@@ -1828,6 +1832,17 @@
             Col_Mode.Name = "Col_Mode";
             Col_Mode.ReadOnly = true;
             Col_Mode.SortMode = DataGridViewColumnSortMode.NotSortable;
+            // 
+            // panel3
+            // 
+            panel3.Controls.Add(label49);
+            resources.ApplyResources(panel3, "panel3");
+            panel3.Name = "panel3";
+            // 
+            // label49
+            // 
+            resources.ApplyResources(label49, "label49");
+            label49.Name = "label49";
             // 
             // panel5
             // 
@@ -2709,6 +2724,8 @@
             groupBox7.PerformLayout();
             groupBox6.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)dgvDevice).EndInit();
+            panel3.ResumeLayout(false);
+            panel3.PerformLayout();
             panel5.ResumeLayout(false);
             panel5.PerformLayout();
             tabStore.ResumeLayout(false);
@@ -3053,5 +3070,7 @@
         private PictureBox pbXboxApp;
         private ToolStripSeparator tssUseIP2;
         private LinkLabel linkXbox4;
+        private Panel panel3;
+        private Label label49;
     }
 }

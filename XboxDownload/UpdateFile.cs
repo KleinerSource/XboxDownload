@@ -10,8 +10,8 @@ namespace XboxDownload
     {
         public const string website = "https://xbox.skydevil.xyz";
         public const string project = "https://github.com/skydevil88/XboxDownload";
-        public static readonly string[] proxys1 = { "https://gh-proxy.com/", "https://ghproxy.net/" };
-        private static readonly string[] proxys2 = { "https://pxy1.skydevil.xyz/", "https://pxy2.skydevil.xyz/", "" };
+        public static readonly string[] proxies1 = { "https://gh-proxy.com/", "https://ghproxy.net/" };
+        private static readonly string[] proxies2 = { "https://pxy1.skydevil.xyz/", "https://pxy2.skydevil.xyz/", "" };
 
         public static async void Start(bool autoupdate, Form1 parentForm)
         {
@@ -22,7 +22,7 @@ namespace XboxDownload
             using var cts = new CancellationTokenSource();
             var regex = new Regex(@"/releases/tag/(?<tag_name>[^\d]*(?<version>\d+(\.\d+){2,3}))$", RegexOptions.Compiled);
             object lockObj = new();
-            var tasks = proxys2.Select(proxy =>
+            var tasks = proxies2.Select(proxy =>
                 Task.Run(() =>
                 {
                     string url = $"{proxy}{project}/releases/latest";
@@ -65,6 +65,17 @@ namespace XboxDownload
             }
 
             Version version_latest = new(version);
+            if (version_latest.Major >= 3)
+            {
+                if (!autoupdate)
+                {
+                    parentForm.Invoke(new Action(() =>
+                    {
+                        MessageBox.Show("已有 v3 版本，请前往 GitHub 下载更新。", "软件更新", MessageBoxButtons.OK, MessageBoxIcon.None);
+                    }));
+                }
+                return;
+            }
             Version version_current = new(Assembly.GetEntryAssembly()?.GetCustomAttribute<AssemblyFileVersionAttribute>()?.Version!);
             if (version_latest > version_current)
             {
@@ -87,7 +98,7 @@ namespace XboxDownload
             }
 
             if (Properties.Settings.Default.RecordLog) parentForm.SaveLog("Update", "正在下载更新包，请稍候...", "localhost", 0x008000);
-            string? fastestUrl = await ClassWeb.GetFastestProxy(proxys1.Concat(proxys2).ToArray(), $"{project}/releases/download/{tag_name}/XboxDownload.zip", new() { { "Range", "bytes=0-10239" } }, 3000);
+            string? fastestUrl = await ClassWeb.GetFastestProxy(proxies1.Concat(proxies2).ToArray(), $"{project}/releases/download/{tag_name}/XboxDownload.zip", new() { { "Range", "bytes=0-10239" } }, 3000);
             if (fastestUrl != null)
             {
                 using HttpResponseMessage? response = ClassWeb.HttpResponseMessage(fastestUrl);
@@ -154,7 +165,7 @@ namespace XboxDownload
         {
             string url = project.Replace("github.com", "raw.githubusercontent.com") + "/refs/heads/master/IP/" + fi.Name, keyword = fi.Name[3..^4];
             using var cts = new CancellationTokenSource();
-            var tasks = proxys2.Select(async proxy =>
+            var tasks = proxies2.Select(async proxy =>
             {
                 using var response = await ClassWeb.HttpResponseMessageAsync(proxy + url, "GET", null, null, null, 6000, null, cts.Token);
                 if (response != null && response.IsSuccessStatusCode)
