@@ -2066,6 +2066,7 @@ namespace XboxDownload
         {
             switch (host)
             {
+                case "XboxCn1":
                 case "assets1.xboxlive.cn":
                 case "assets2.xboxlive.cn":
                 case "d1.xboxlive.cn":
@@ -2116,6 +2117,7 @@ namespace XboxDownload
                         };
                     }
                     break;
+                case "XboxCn2":
                 case "dlassets.xboxlive.cn":
                 case "dlassets2.xboxlive.cn":
                     {
@@ -2170,6 +2172,7 @@ namespace XboxDownload
                         toolTip1.SetToolTip(lbTip, "PC、主机新游戏都不再使用此域名。\n下载慢可以勾选“自动优选 Akamai IP”，使用国外CDN服务器。");
                     }
                     break;
+                case "XboxApp":
                 case "dl.delivery.mp.microsoft.com":
                 case "tlu.dl.delivery.mp.microsoft.com":
                     {
@@ -2224,6 +2227,7 @@ namespace XboxDownload
                         toolTip1.SetToolTip(lbTip, "Xbox app 提示 “此游戏不支持安装到特定文件夹。它将与其他 Windows 应用一起安装。”，\n以上游戏都是使用 tlu.dl.delivery.mp.microsoft.com 应用域名下载。");
                     }
                     break;
+                case "Ps":
                 case "gst.prod.dl.playstation.net":
                 case "gs2.ww.prod.dl.playstation.net":
                 case "zeus.dl.playstation.net":
