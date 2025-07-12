@@ -1820,6 +1820,7 @@ namespace XboxDownload
             tssUseIP1.Visible = tssUseIP2.Visible = tssUseIP3.Visible = false;
             switch (host)
             {
+                case "XboxCn1":
                 case "assets1.xboxlive.cn":
                 case "assets2.xboxlive.cn":
                 case "d1.xboxlive.cn":
@@ -1827,16 +1828,19 @@ namespace XboxDownload
                     tsmUseIPCn.Visible = true;
                     tssUseIP1.Visible = true;
                     break;
+                case "XboxCn2":
                 case "dlassets.xboxlive.cn":
                 case "dlassets2.xboxlive.cn":
                     tsmUseIPCn2.Visible = true;
                     tssUseIP1.Visible = true;
                     break;
+                case "XboxApp":
                 case "dl.delivery.mp.microsoft.com":
                 case "tlu.dl.delivery.mp.microsoft.com":
                     tsmUseIPApp.Visible = true;
                     tssUseIP1.Visible = true;
                     break;
+                case "Ps":
                 case "gst.prod.dl.playstation.net":
                 case "gs2.ww.prod.dl.playstation.net":
                 case "zeus.dl.playstation.net":
@@ -1867,6 +1871,7 @@ namespace XboxDownload
                     tssUseIP2.Visible = true;
                     tssUseIP3.Visible = true;
                     break;
+                case "UbisoftCn":
                 case "uplaypc-s-ubisoft.cdn.ubionline.com.cn":
                     tsmUseIPUbi.Visible = true;
                     tssUseIP3.Visible = true;
@@ -2583,6 +2588,7 @@ namespace XboxDownload
                 string msg = string.Empty;
                 switch (host)
                 {
+                    case "XboxCn1":
                     case "assets1.xboxlive.cn":
                     case "assets2.xboxlive.cn":
                     case "d1.xboxlive.cn":
@@ -2594,6 +2600,7 @@ namespace XboxDownload
                         sb.AppendLine(ip + " d2.xboxlive.cn # XboxDownload");
                         msg = "\nXbox、PC商店游戏下载可能会使用com域名，只写入cn域名加速不一定有效。";
                         break;
+                    case "XboxCn2":
                     case "dlassets.xboxlive.cn":
                     case "dlassets2.xboxlive.cn":
                         sHosts = Regex.Replace(sHosts, @"[^\s]+\s+(dlassets2?)\.xboxlive\.cn\s+# (XboxDownload|Xbox下载助手)\r\n", "");
@@ -2601,12 +2608,14 @@ namespace XboxDownload
                         sb.AppendLine(ip + " dlassets2.xboxlive.cn # XboxDownload");
                         msg = "\nXbox、PC商店游戏下载可能会使用com域名，只写入cn域名加速不一定有效。";
                         break;
+                    case "XboxApp":
                     case "dl.delivery.mp.microsoft.com":
                     case "tlu.dl.delivery.mp.microsoft.com":
                         sHosts = Regex.Replace(sHosts, @"[^\s]+\s+((tlu\.)?dl\.delivery\.mp\.microsoft\.com)\s+# (XboxDownload|Xbox下载助手)\r\n", "");
                         sb.AppendLine(ip + " dl.delivery.mp.microsoft.com # XboxDownload");
                         sb.AppendLine(ip + " tlu.dl.delivery.mp.microsoft.com # XboxDownload");
                         break;
+                    case "Ps":
                     case "gst.prod.dl.playstation.net":
                     case "gs2.ww.prod.dl.playstation.net":
                     case "zeus.dl.playstation.net":
@@ -2668,6 +2677,7 @@ namespace XboxDownload
                             msg = "\n\nNS主机、战网客户端、育碧客户端 不支持使用 IPv6。";
                         }
                         break;
+                    case "UbisoftCn":
                     case "uplaypc-s-ubisoft.cdn.ubionline.com.cn":
                         if (Regex.IsMatch(ip, @"\d+\.\d+\.\d+\.\d+"))
                         {
@@ -2722,6 +2732,7 @@ namespace XboxDownload
             string msg = string.Empty;
             switch (host)
             {
+                case "XboxCn1":
                 case "assets1.xboxlive.cn":
                 case "assets2.xboxlive.cn":
                 case "d1.xboxlive.cn":
@@ -2742,6 +2753,7 @@ namespace XboxDownload
                     }
                     msg = "\nXbox、PC商店游戏下载可能会使用com域名，只写入cn域名加速不一定有效。";
                     break;
+                case "XboxCn2":
                 case "dlassets.xboxlive.cn":
                 case "dlassets2.xboxlive.cn":
                     if (tsmi.Name == "tsmDNSmasp")
@@ -2756,6 +2768,7 @@ namespace XboxDownload
                     }
                     msg = "\nXbox、PC商店游戏下载可能会使用com域名，只写入cn域名加速不一定有效。";
                     break;
+                case "XboxApp":
                 case "dl.delivery.mp.microsoft.com":
                 case "tlu.dl.delivery.mp.microsoft.com":
                     if (tsmi.Name == "tsmDNSmasp")
@@ -2769,6 +2782,7 @@ namespace XboxDownload
                         sb.AppendLine(ip + " tlu.dl.delivery.mp.microsoft.com");
                     }
                     break;
+                case "Ps":
                 case "gst.prod.dl.playstation.net":
                 case "gs2.ww.prod.dl.playstation.net":
                 case "zeus.dl.playstation.net":
@@ -2901,6 +2915,7 @@ namespace XboxDownload
                         }
                     }
                     break;
+                case "UbisoftCn":
                 case "uplaypc-s-ubisoft.cdn.ubionline.com.cn":
                     if (Regex.IsMatch(ip, @"\d+\.\d+\.\d+\.\d+"))
                     {
