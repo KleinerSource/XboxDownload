@@ -50,7 +50,7 @@ namespace XboxDownload
                 new("Romania", "罗马尼亚", "RO", "ro-RO"),
                 new("Malaysia", "马来西亚", "MY", "en-MY"),
                 new("Mauritania", "毛里塔尼亚乌吉亚", "MR", "ar-MR"),
-                new("Bengal", "孟加拉", "BD", "en-BD"),
+                new("Bangladesh", "孟加拉", "BD", "en-BD"),
                 new("Peru", "秘鲁", "PE", "es-PE"),
                 new("Nigeria", "尼日利亚", "NG", "en-NG"),
                 new("Serbia", "塞尔维亚", "RS", "en-RS"),
@@ -235,6 +235,15 @@ namespace XboxDownload
         private void Price(List<DataGridViewRow> list)
         {
             cts = new CancellationTokenSource();
+
+            if (Form1.dicExchangeRate.IsEmpty)
+            {
+                if (ClassGame.ExchangeRate("CNY", Form1.dicExchangeRate))
+                {
+                    Form1.NextUpdatedRates = DateTime.UtcNow.AddHours(12);
+                }
+            }
+
             Task[] tasks = new Task[list.Count];
             for (int i = 0; i < list.Count; i++)
             {
@@ -262,11 +271,16 @@ namespace XboxDownload
                                     double WholesalePrice_1 = product.DisplaySkuAvailabilities[0].Availabilities[0].OrderManagementData.Price.WholesalePrice;
                                     double WholesalePrice_2 = product.DisplaySkuAvailabilities[0].Availabilities.Count >= 2 ? product.DisplaySkuAvailabilities[0].Availabilities[1].OrderManagementData.Price.WholesalePrice : 0;
                                     if (ListPrice_1 > MSRP) MSRP = ListPrice_1;
-                                    if (!string.IsNullOrEmpty(CurrencyCode) && MSRP > 0 && CurrencyCode != "CNY" && !Form1.dicExchangeRate.ContainsKey(CurrencyCode))
+
+                                    double ExchangeRate = 0;
+                                    if (CurrencyCode != "CNY")
                                     {
-                                        ClassGame.ExchangeRate(CurrencyCode);
+                                        if (Form1.dicExchangeRate.TryGetValue(CurrencyCode, out var value))
+                                        {
+                                            ExchangeRate = Math.Round(1 / value, 8);
+                                        }
                                     }
-                                    double ExchangeRate = Form1.dicExchangeRate.ContainsKey(CurrencyCode) ? Form1.dicExchangeRate[CurrencyCode] : 0;
+
                                     dgvr.Tag = true;
                                     if (MSRP > 0)
                                     {
@@ -325,11 +339,15 @@ namespace XboxDownload
                         double MSRP = Convert.ToDouble(dgvr.Cells["Col_MSRP"].Value);
                         if (MSRP > 0)
                         {
-                            if (!string.IsNullOrEmpty(CurrencyCode) && MSRP > 0 && CurrencyCode != "CNY" && !Form1.dicExchangeRate.ContainsKey(CurrencyCode))
+                            double ExchangeRate = 0;
+                            if (CurrencyCode != "CNY")
                             {
-                                ClassGame.ExchangeRate(CurrencyCode);
+                                if (Form1.dicExchangeRate.TryGetValue(CurrencyCode, out var value))
+                                {
+                                    ExchangeRate = Math.Round(1 / value, 8);
+                                }
                             }
-                            double ExchangeRate = Form1.dicExchangeRate.ContainsKey(CurrencyCode) ? Form1.dicExchangeRate[CurrencyCode] : 0;
+
                             if (ExchangeRate > 0)
                             {
                                 double ListPrice_1 = Convert.ToDouble(dgvr.Cells["Col_ListPrice_1"].Value);

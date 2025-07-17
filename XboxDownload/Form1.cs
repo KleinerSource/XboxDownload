@@ -287,7 +287,7 @@ namespace XboxDownload
                 new("Saudi Arabia", "沙特阿拉伯", "SA", "ar-SA"),
                 new("Slovakia", "斯洛伐克", "SK", "sk-SK"),
                 //new("Taiwan", "台湾", "TW", "zh-TW"),
-                new("Turkey", "土尔其", "TR", "tr-TR"),
+                new("Turkey", "土耳其", "TR", "tr-TR"),
                 new("Spain", "西班牙", "ES", "es-ES"),
                 new("Greece", "希腊", "GR", "el-GR"),
                 //new("Hong Kong SAR", "香港", "HK", "zh-HK"),
@@ -4392,7 +4392,8 @@ namespace XboxDownload
         }
 
 
-        internal static ConcurrentDictionary<String, Double> dicExchangeRate = new();
+        internal static DateTime NextUpdatedRates = DateTime.MinValue;
+        internal static ConcurrentDictionary<string, double> dicExchangeRate = new();
 
         private void StoreParse(Market market, ClassGame.Game json, int index, string language)
         {
@@ -4704,11 +4705,23 @@ namespace XboxDownload
                 double WholesalePrice_1 = DisplaySkuAvailabilities[0].Availabilities[0].OrderManagementData.Price.WholesalePrice;
                 double WholesalePrice_2 = DisplaySkuAvailabilities[0].Availabilities.Count >= 2 ? DisplaySkuAvailabilities[0].Availabilities[1].OrderManagementData.Price.WholesalePrice : 0;
                 if (ListPrice_1 > MSRP) MSRP = ListPrice_1;
-                if (!string.IsNullOrEmpty(CurrencyCode) && MSRP > 0 && CurrencyCode != "CNY" && !dicExchangeRate.ContainsKey(CurrencyCode))
+
+                double ExchangeRate = 0;
+                if (CurrencyCode != "CNY")
                 {
-                    ClassGame.ExchangeRate(CurrencyCode);
+                    if (dicExchangeRate.IsEmpty || NextUpdatedRates <= DateTime.UtcNow)
+                    {
+                        if (ClassGame.ExchangeRate("CNY", dicExchangeRate))
+                        {
+                            NextUpdatedRates = DateTime.UtcNow.AddHours(12);
+                        }
+                    }
+
+                    if (dicExchangeRate.TryGetValue(CurrencyCode, out var value))
+                    {
+                        ExchangeRate = Math.Round(1 / value, 8);
+                    }
                 }
-                double ExchangeRate = dicExchangeRate.ContainsKey(CurrencyCode) ? dicExchangeRate[CurrencyCode] : 0;
 
                 StringBuilder sbPrice = new();
                 if (MSRP > 0)

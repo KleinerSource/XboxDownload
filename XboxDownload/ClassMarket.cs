@@ -199,43 +199,50 @@ namespace XboxDownload
             public string Value { get; set; } = "";
         }
 
-        public static void ExchangeRate(string CurrencyCode)
+        public static bool ExchangeRate(string currency, ConcurrentDictionary<string, double> exchangeRates)
         {
-            if (CurrencyCode == "CNY") return;
-            string html;
-            Match result;
+            var url = $"https://latest.currency-api.pages.dev/v1/currencies/{currency.ToLowerInvariant()}.min.json";
+            var responseString = ClassWeb.HttpResponseContent(url, "GET", null, null, null, 5000);
 
-            html = ClassWeb.HttpResponseContent("https://hq.sinajs.cn/list=fx_s" + CurrencyCode.ToLowerInvariant() + "cny", "GET", null, null, new() { { "Referer", "https://finance.sina.com.cn/" } });
-            result = Regex.Match(html, @"\d{2}:\d{2}:\d{2}(,[^,]*){7},(?<ExchangeRate>[^,]+)");
-            if (result.Success)
+            if (string.IsNullOrEmpty(responseString))
             {
-                if (double.TryParse(result.Groups["ExchangeRate"].Value, out double ExchangeRate))
-                {
-                    Form1.dicExchangeRate.AddOrUpdate(CurrencyCode, ExchangeRate, (oldkey, oldvalue) => ExchangeRate);
-                    return;
-                }
-            }
-            html = ClassWeb.HttpResponseContent("https://www.majorexchangerates.com/" + CurrencyCode.ToLowerInvariant() + "/cny.html");
-            result = Regex.Match(html, @"<a [^>]+>1 " + CurrencyCode + " = (?<ExchangeRate>.+) CNY</a>");
-            if (result.Success)
-            {
-                if (double.TryParse(result.Groups["ExchangeRate"].Value, out double ExchangeRate))
-                {
-                    Form1.dicExchangeRate.AddOrUpdate(CurrencyCode, ExchangeRate, (oldkey, oldvalue) => ExchangeRate);
-                    return;
-                }
+                url = $"https://testingcf.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/{currency.ToLowerInvariant()}.min.json";
+                responseString = ClassWeb.HttpResponseContent(url, "GET", null, null, null, 5000);
             }
 
-            html = ClassWeb.HttpResponseContent("https://www.convertworld.com/zh-hans/currency/mauritania/" + CurrencyCode.ToLowerInvariant() + "-cny.html");
-            result = Regex.Match(html, @"一个" + CurrencyCode + "是(?<ExchangeRate>.+) CNY");
-            if (result.Success)
+            if (string.IsNullOrEmpty(responseString))
+                return false;
+
+            try
             {
-                if (double.TryParse(result.Groups["ExchangeRate"].Value, out double ExchangeRate))
+                using var doc = JsonDocument.Parse(responseString);
+                var root = doc.RootElement;
+
+                if (!root.TryGetProperty(currency.ToLowerInvariant(), out var currencyNode))
+                    return false;
+
+                exchangeRates.Clear();
+                foreach (var property in currencyNode.EnumerateObject())
                 {
-                    Form1.dicExchangeRate.AddOrUpdate(CurrencyCode, ExchangeRate, (oldkey, oldvalue) => ExchangeRate);
-                    return;
+                    if (property.Value.ValueKind == JsonValueKind.Number &&
+                        property.Value.TryGetDouble(out var rate))
+                    {
+                        exchangeRates[property.Name.ToUpperInvariant()] = rate;
+                    }
                 }
+
+                return true;
             }
+            catch (JsonException ex)
+            {
+                Console.WriteLine("JSON error: " + ex.Message);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("General error: " + ex.Message);
+            }
+
+            return false;
         }
     }
 
