@@ -217,7 +217,7 @@ namespace XboxDownload
                             if (!result.Success)
                             {
                                 mySocket.Close();
-                                continue;
+                                break;
                             }
                             string _method = result.Groups["method"].Value;
                             string _filePath = Regex.Replace(result.Groups["path"].Value.Trim(), @"^https?://[^/]+", "");
@@ -225,7 +225,7 @@ namespace XboxDownload
                             if (!result.Success)
                             {
                                 mySocket.Close();
-                                continue;
+                                break;
                             }
                             string _host = result.Groups[1].Value.Trim().ToLower();
                             string _tmpPath = Regex.Replace(_filePath, @"\?.+$", ""), _localPath = string.Empty;

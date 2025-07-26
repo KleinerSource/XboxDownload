@@ -4566,7 +4566,7 @@ namespace XboxDownload
                                                         {
                                                             Tag = "Game"
                                                         };
-                                                        item.SubItems[0].Tag = 2;
+                                                        item.SubItems[0].Tag = 9;
                                                         item.SubItems[1].Tag = product.ProductId;
                                                         item.SubItems[2].Tag = key;
                                                         lsDownloadUrl.Add(item);
@@ -4587,7 +4587,7 @@ namespace XboxDownload
                                                             }
                                                             if (!find)
                                                             {
-                                                                ThreadPool.QueueUserWorkItem(delegate { GetGamePackage(item, contentId, key, 2, packages); });
+                                                                ThreadPool.QueueUserWorkItem(delegate { GetGamePackage(item, contentId, key, 9, packages); });
                                                             }
                                                         }
                                                     }
@@ -4609,7 +4609,7 @@ namespace XboxDownload
                                                             {
                                                                 Tag = "App"
                                                             };
-                                                            item.SubItems[0].Tag = 2;
+                                                            item.SubItems[0].Tag = 9;
                                                             item.SubItems[1].Tag = version;
                                                             item.SubItems[2].Tag = key;
                                                             item.SubItems[3].Tag = filename;
@@ -4868,7 +4868,7 @@ namespace XboxDownload
                     }));
                 }
             }
-            if (!succeed && (platform == 0 || platform == 2))
+            if (!succeed && (platform == 0 || platform == 9))
             {
                 if (!string.IsNullOrEmpty(Properties.Settings.Default.Authorization))
                 {

@@ -61,7 +61,7 @@ namespace XboxDownload
                     if (!result.Success)
                     {
                         mySocket.Close();
-                        continue;
+                        break;
                     }
                     string _method = result.Groups["method"].Value;
                     string _filePath = Regex.Replace(result.Groups["path"].Value.Trim(), @"^https?://[^/]+", "");
@@ -69,7 +69,7 @@ namespace XboxDownload
                     if (!result.Success)
                     {
                         mySocket.Close();
-                        continue;
+                        break;
                     }
 
                     string _host = result.Groups[1].Value.Trim().ToLower();
@@ -115,7 +115,7 @@ namespace XboxDownload
                             sb.Append("HTTP/1.1 " + _status + "\r\n");
                             sb.Append("Content-Type: " + ClassWeb.GetMimeMapping(_filePath) + "\r\n");
                             sb.Append("Content-Length: " + (_endPosition - _startPosition) + "\r\n");
-                            if (_contentRange != null) sb.Append("Content-Range: " + _contentRange + "\r\n");
+                            if (!string.IsNullOrEmpty(_contentRange)) sb.Append("Content-Range: " + _contentRange + "\r\n");
                             sb.Append("Accept-Ranges: bytes\r\n\r\n");
 
                             Byte[] _headers = Encoding.ASCII.GetBytes(sb.ToString());
